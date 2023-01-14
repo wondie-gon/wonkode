@@ -30,7 +30,28 @@ if ( ! class_exists( 'WonKode_Custom_Nav_Walker' ) ) {
          * @param stdClass $args   An object of wp_nav_menu() arguments.
          */
         public function start_lvl( &$output, $depth = 0, $args = array() ) {
-            $output .= '<ul class="dropdown-menu">';
+            if ( isset( $args->item_spacing ) && 'discard' === $args->item_spacing ) {
+				$t = '';
+				$n = '';
+			} else {
+				$t = "\t";
+				$n = "\n";
+			}
+			$indent = str_repeat( $t, $depth );
+			// Default class to add to the file.
+			$classes = array( 'dropdown-menu' );
+            /**
+			 * Filters the CSS class(es) applied to a menu list element.
+			 *
+			 * @since WP 4.8.0
+			 *
+			 * @param array    $classes The CSS classes that are applied to the menu `<ul>` element.
+			 * @param stdClass $args    An object of `wp_nav_menu()` arguments.
+			 * @param int      $depth   Depth of menu item. Used for padding.
+			 */
+			$class_names = join( ' ', apply_filters( 'nav_menu_submenu_css_class', $classes, $args, $depth ) );
+			$class_names = $class_names ? ' class="' . esc_attr( $class_names ) . '"' : '';
+            $output .= "{$n}{$indent}<ul$class_names>{$n}";
         }
         /**
          * --Modifies core--
@@ -49,7 +70,54 @@ if ( ! class_exists( 'WonKode_Custom_Nav_Walker' ) ) {
         public function start_el( &$output, $item, $depth = 0, $args = array(), $current_object_id = 0 ) {
 
             // Passed classes.
-            $classes = empty( $item->classes ) ? array() : ( array ) $item->classes;
+            $classes = empty( $item->classes ) ? array() : (array) $item->classes;
+            $class_names = esc_attr( implode( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item ) ) );
+
+            if ( $depth == 0 ) {
+                if ( isset( $args->has_children ) && $args->has_children ) {
+                    $output .= '<li id="nav-menu-item-' . $item->ID . '" class="nav-item dropdown nav-item-depth-' . $depth . ' ' . $class_names  . '" >';
+                } else {
+                    $output .= '<li id="nav-menu-item-' . $item->ID . '" class="nav-item nav-item-depth-' . $depth . ' ' . $class_names  . '" >';
+                }
+            } elseif ( $depth > 0 ) {
+                if ( isset( $args->has_children ) && $args->has_children ) {
+                    $output .= '<li id="nav-menu-item-' . $item->ID . '" class="dropend nav-item-depth-' . $depth . ' ' . $class_names  . '" >';
+                } else {
+                    $output .= '<li id="nav-menu-item-' . $item->ID . '" class="nav-item-depth-' . $depth . ' ' . $class_names  . '" >';
+                }
+            } else {
+                $output .= '<li id="nav-menu-item-' . $item->ID . '" class="nav-item-depth-' . $depth . '" >';
+            }
+
+            // Link attributes.
+            $attributes  = ! empty( $item->attr_title ) ? ' title="' . esc_attr( $item->attr_title ) .'"' : '';
+            $attributes .= ! empty( $item->target ) ? ' target="' . esc_attr( $item->target ) . '"' : '';
+            $attributes .= ! empty( $item->xfn ) ? ' rel="' . esc_attr( $item->xfn ) . '"' : '';
+            $attributes .= ! empty( $item->url ) ? ' href="' . esc_attr( $item->url ) . '"' : '';
+            
+            if ( in_array( 'menu-item-has-children', (array) $item->classes ) ) {
+                $attributes .= ' class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false"';
+            } else {
+                $attributes .= ' class="' . ( ( $depth > 0 ) ? 'dropdown-item' : 'nav-link' ) . '"';
+            }
+
+            // Build HTML output and pass through the proper filter
+            $item_output = sprintf( '%1$s<a%2$s>%3$s%4$s%5$s</a>%6$s',
+                $args->before,
+                $attributes,
+                $args->link_before,
+                apply_filters( 'the_title', $item->title, $item->ID ),
+                $args->link_after,
+                $args->after
+            );
+
+            $output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
+        }
+        /*
+        public function start_el( &$output, $item, $depth = 0, $args = array(), $current_object_id = 0 ) {
+
+            // Passed classes.
+            $classes = empty( $item->classes ) ? array() : (array) $item->classes;
             $class_names = esc_attr( implode( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item ) ) );
 
             if( $depth == 0 && ! ( in_array( 'menu-item-has-children', (array) $item->classes ) ) ) {
@@ -88,6 +156,7 @@ if ( ! class_exists( 'WonKode_Custom_Nav_Walker' ) ) {
 
             $output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
         }
+        */
         /**
          * --Modifies core--
          * Ends the element output, if needed.

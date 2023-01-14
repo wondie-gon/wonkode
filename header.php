@@ -70,7 +70,7 @@
                             'menu_id'           =>  '',
                             'fallback_cb'       =>  false,
                             'depth'             =>  4,
-                            'walker'            =>  new WonKode_Custom_Nav_Walker()
+                            'walker'            =>  new WP_Bootstrap_Navwalker()
                         )
                     );
                 ?>

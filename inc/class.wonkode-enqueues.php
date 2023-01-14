@@ -174,6 +174,7 @@ if ( ! class_exists( 'WonKode_Enqueues' ) ) {
         public static function third_party_js( $prefix ) {
             // registering third party JavaScript libraries
             wp_register_script( $prefix . '-bootstrap-script', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js', array( 'jquery' ), false, true );
+            // wp_register_script( $prefix . '-popperjs', 'https://unpkg.com/@popperjs/core@2/dist/umd/popper.js', array(), false, true );
             wp_register_script( $prefix . '-wow', self::$libs_url . '/wow/wow.min.js', array(), false, true );
             wp_register_script( $prefix . '-easing', self::$libs_url . '/easing/easing.min.js', array(), false, true );
             wp_register_script( $prefix . '-waypoints', self::$libs_url . '/waypoints/waypoints.min.js', array(), false, true );
@@ -182,6 +183,7 @@ if ( ! class_exists( 'WonKode_Enqueues' ) ) {
 
             // enqueueing registered third party scripts
             wp_enqueue_script( $prefix . '-bootstrap-script' );
+            // wp_enqueue_script( $prefix . '-popperjs' );
             wp_enqueue_script( $prefix . '-wow' );
             wp_enqueue_script( $prefix . '-easing' );
             wp_enqueue_script( $prefix . '-waypoints' );
