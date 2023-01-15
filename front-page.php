@@ -12,7 +12,7 @@
 get_header();
 // open outer container
 WonKode_Site_Content_Area::open_outer_container( 'bg-light' );
-    if ( is_active_sidebar( 'wonkode-wide-page-container' ) ) {
+    if ( is_active_sidebar( 'wonkode-fullwidth-page-container' ) ) {
         // Hero widget section
         get_template_part( 'template-parts/page/front/hero' );
     }

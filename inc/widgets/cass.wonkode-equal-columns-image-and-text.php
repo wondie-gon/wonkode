@@ -75,18 +75,12 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
          * @param array $instance The settings for the particular instance of the widget.
          */
         public function widget( $args, $instance ) {
-            echo $args['before_widget'];
-            echo '<div class="row g-5 align-items-center">' . "\n";
-            echo '<div class="col-lg-6">' . "\n";
-            /**
-             * Filters widget title  and echoes 
-             * whole title element
-             * 
-             * @param string $instance['title']     Title field instance value
-             */
-            if ( ! empty( $instance['title'] ) ) {
-                echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
-            }
+            // get title classes
+            $title_classes = ( ! empty( $instance['title_animation'] ) && 'none' !== $instance['title_animation'] ) ? WonKode_Helper::list_classes( $instance['title_animation'], (array) 'widget-title display-4 mb-3 animated' ) : WonKode_Helper::list_classes( 'widget-title display-4 mb-3 animated' );
+            
+            // before_title is empty
+            $args['before_title'] = ! empty( $args['before_title'] ) ? $args['before_title'] : '<h1 class="' . esc_attr( $title_classes ) . '">';
+            $args['after_title'] = ! empty( $args['after_title'] ) ? $args['after_title'] : '</h1>';
 
             // prepare classes
             $text_classes = ( ! empty( $instance['text_animation'] ) && 'none' !== $instance['text_animation'] ) ? WonKode_Helper::list_classes( $instance['text_animation'], (array) 'lead animated' ) : WonKode_Helper::list_classes( 'lead' );
@@ -109,7 +103,19 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                 // add animation duration
                 $style_anim_duration .= $instance['img_anim_duration'] ? ' style="animation-duration: ' . esc_attr( $instance['img_anim_duration'] ) . 's;"' : ' style="animation-duration: 3s;"';
             }
-
+            // start displaying widget
+            echo $args['before_widget'];
+            echo '<div class="col-lg-6">' . "\n";
+            /**
+             * Filters widget title  and echoes 
+             * whole title element
+             * 
+             * @param string $instance['title']     Title field instance value
+             */
+            if ( ! empty( $instance['title'] ) ) {
+                echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
+            }
+            // displaying text paragraph
             echo '<p class="' . esc_attr( $text_classes ) . '">';
             echo esc_html__( $instance['text'], $this->theme_id );
             echo '</p>' . "\n";
@@ -123,8 +129,6 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
             echo '<div class="' . esc_attr( $img_wrapper_classes ) . '">' . "\n";
             echo '<img class="' . esc_attr( $img_classes ) . '"' . $style_anim_duration . ' src="' . esc_url( $instance['img_src'] ) . '" alt="' . esc_html__( $instance['title'], $this->theme_id ) . '">';
             echo '</div>' . "\n";
-            echo '</div>' . "\n";
-
             echo $args['after_widget'];
 
         }
@@ -137,40 +141,29 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
          * @return string Default return is 'noform'.
          */
         public function form( $instance ) {
-            /*
-            $instance = wp_parse_args(
-                $instance,
-                array(
-                    'title'                 =>  esc_html__( 'Equal Columns Widget Title', $this->theme_id ),
-                    'text'                  =>  esc_html__( 'Equal columns with image text', $this->theme_id ),
-                    'display_btn'           =>  false,
-                    'link_to'               =>  '',
-                    'btn_text'              =>  esc_html__( 'Explore More', $this->theme_id ),
-                    'img_src'               =>  '',
-                    'text_animation'        =>  '',
-                    'btn_animation'         =>  '',
-                    'img_wrapper_animation' =>  '',
-                    'img_animation'         =>  '',
-                    'img_anim_iteration'    =>  '',
-                    'img_anim_duration'     =>  2,
-                )
-            );
-            */
 
             $title = ! empty( $instance['title'] ) ? $instance['title'] : esc_html__( 'Equal Columns Widget Title', $this->theme_id );
             $text = ! empty( $instance['text'] ) ? $instance['text'] : esc_html__( 'Equal columns with image text', $this->theme_id );
-            $display_btn = $instance['display_btn'] ? true : false;
+            $display_btn = isset( $instance['display_btn'] ) && $instance['display_btn'] ? true : false;
             $link_to = ! empty( $instance['link_to'] ) ? $instance['link_to'] : '';
             $btn_text = ! empty( $instance['btn_text'] ) ? $instance['btn_text'] : esc_html__( 'Explore More', $this->theme_id );
             $img_src = ! empty( $instance['img_src'] ) ? $instance['img_src'] : '';
 
             // animation settings
-            $text_animation = ! empty( $instance['text_animation'] ) ? $instance['text_animation'] : '';
-            $btn_animation = ! empty( $instance['btn_animation'] ) ? $instance['btn_animation'] : '';
-            $img_wrapper_animation = ! empty( $instance['img_wrapper_animation'] ) ? $instance['img_wrapper_animation'] : '';
+            $title_animation = isset( $instance['title_animation'] ) && $instance['title_animation'] ? $instance['title_animation'] : '';
+
+            $text_animation = isset( $instance['text_animation'] ) && $instance['text_animation'] ? $instance['text_animation'] : '';
+
+            $btn_animation = isset( $instance['btn_animation'] ) && $instance['btn_animation'] ? $instance['btn_animation'] : '';
+            $img_wrapper_animation = isset( $instance['img_wrapper_animation'] ) && $instance['img_wrapper_animation'] ? $instance['img_wrapper_animation'] : '';
             $img_animation = ! empty( $instance['img_animation'] ) ? $instance['img_animation'] : '';
             $img_anim_iteration = ! empty( $instance['img_anim_iteration'] ) ? $instance['img_anim_iteration'] : 'default';
             $img_anim_duration = $instance['img_anim_duration'] ? $instance['img_anim_duration'] : 2;
+
+            // check html5 supported
+            $is_html5 = current_theme_supports( 'html5' );
+            // Define checked attribute in HTML5 or XHTML syntax.
+            $checked_attr  = ( $is_html5 ? ' checked' : ' checked="checked"' );
             ?>
             <div class="widget-content">
                 <p>
@@ -187,12 +180,14 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                 <p>
                     <label for="<?php echo esc_attr( $this->get_field_id( 'text' ) ) ?>"><?php esc_attr_e( 'Text: ', $this->theme_id ); ?></label>
                     <textarea 
-                        name="<?php echo esc_attr( $this->get_field_name( 'text' ) ); ?>" 
                         id="<?php echo esc_attr( $this->get_field_id( 'text' ) ) ?>" 
+                        name="<?php echo esc_attr( $this->get_field_name( 'text' ) ); ?>" 
                         class="widefat" 
-                        placeholder="<?php esc_attr_e( 'Enter text to diplay on text column', $this->theme_id ); ?>">
-                    <?php esc_html( $text ); ?>
-                    </textarea>
+                        cols="20" 
+                        rows="6" 
+                        autocomplete="off" 
+                        maxlength="300" 
+                        placeholder="<?php esc_attr_e( 'Enter text to diplay on text column', $this->theme_id ); ?>"><?php echo wp_strip_all_tags( $text ); ?></textarea>
                 </p>
                 <p>
                     <label for="<?php echo esc_attr( $this->get_field_id( 'display_btn' ) ); ?>">
@@ -201,7 +196,8 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                             type="checkbox" 
                             name="<?php echo esc_attr( $this->get_field_name( 'display_btn' ) ); ?>" 
                             id="<?php echo esc_attr( $this->get_field_id( 'display_btn' ) ); ?>" 
-                            <?php checked( $display_btn, false, false ); ?> 
+                            value="true"  
+                            <?php checked( $display_btn, true, true ); ?> 
                         />
                     </label>
                 </p>
@@ -237,7 +233,35 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                         class="widefat"
                     />
                 </p>
-                <p><?php esc_attr_e( 'Choose text animation:', $this->theme_id ); ?></p>
+
+                <h3><?php esc_attr_e( 'Set animations for different elements of this widget.', $this->theme_id ); ?></h3>
+
+                <p class="description"><?php esc_attr_e( 'When you choose animation for each element, classes will be added to respective elements.', $this->theme_id ); ?></p>
+
+                <p><?php esc_attr_e( 'Title animation:', $this->theme_id ); ?></p>
+                <?php 
+                    $title_animations = array( 'slideInDown', 'slideInLeft', 'slideInRight', 'slideInUp', 'none' );
+                ?>
+                <p>
+                <?php
+                    foreach ( $title_animations as $anim ) {
+                    ?>
+                        <span style="margin-right: 16px;">
+                            <input 
+                                type="radio" 
+                                id="<?php echo esc_attr( $this->get_field_id( $anim ) ); ?>" 
+                                name="<?php echo esc_attr( $this->get_field_name( 'title_animation' ) ); ?>" 
+                                value="<?php echo esc_attr( $anim ); ?>" 
+                                <?php echo ( strtolower( $title_animation ) === strtolower( $anim ) ) ? $checked_attr : ''; ?>
+                            />
+                            <label for="<?php echo esc_attr( $this->get_field_id( $anim ) ); ?>"><?php echo $anim; ?></label>
+                        </span>
+                    <?php
+                    }
+                ?>
+                </p>
+
+                <p><?php esc_attr_e( 'Main Text animation:', $this->theme_id ); ?></p>
                 <?php 
                     $text_animations = array( 'slideInDown', 'slideInLeft', 'slideInRight', 'slideInUp', 'none' );
                 ?>
@@ -251,7 +275,7 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                                 id="<?php echo esc_attr( $this->get_field_id( $anim ) ); ?>" 
                                 name="<?php echo esc_attr( $this->get_field_name( 'text_animation' ) ); ?>" 
                                 value="<?php echo esc_attr( $anim ); ?>" 
-                                <?php echo ( $text_animation == $anim ) ? ' checked="checked"' : ''; ?>
+                                <?php echo ( strtolower( $text_animation ) === strtolower( $anim ) ) ? $checked_attr : ''; ?>
                             />
                             <label for="<?php echo esc_attr( $this->get_field_id( $anim ) ); ?>"><?php echo $anim; ?></label>
                         </span>
@@ -260,7 +284,7 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                 ?>
                 </p>
 
-                <p><?php esc_attr_e( 'Choose button animation:', $this->theme_id ); ?></p>
+                <p><?php esc_attr_e( 'Button animation:', $this->theme_id ); ?></p>
                 <?php 
                     $btn_animations = array( 'slideInDown', 'slideInLeft', 'slideInRight', 'slideInUp', 'none' );
                 ?>
@@ -274,7 +298,7 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                                 id="<?php echo esc_attr( $this->get_field_id( $anim ) ); ?>" 
                                 name="<?php echo esc_attr( $this->get_field_name( 'btn_animation' ) ); ?>" 
                                 value="<?php echo esc_attr( $anim ); ?>" 
-                                <?php echo ( $btn_animation == $anim ) ? ' checked="checked"' : ''; ?>
+                                <?php echo ( strtolower( $btn_animation ) === strtolower( $anim ) ) ? $checked_attr : ''; ?>
                             />
                             <label for="<?php echo esc_attr( $this->get_field_id( $anim ) ); ?>"><?php echo $anim; ?></label>
                         </span>
@@ -283,7 +307,7 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                 ?>
                 </p>
 
-                <p><?php esc_attr_e( 'Choose image wrapper animation:', $this->theme_id ); ?></p>
+                <p><?php esc_attr_e( 'Image wrapper animation:', $this->theme_id ); ?></p>
                 <?php 
                     $img_wrapper_animations = array( 'fadeIn', 'fadeInDown', 'fadeInLeft', 'fadeInRight', 'fadeInUp', 'fadeOut', 'none' );
                 ?>
@@ -297,7 +321,7 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                                 id="<?php echo esc_attr( $this->get_field_id( $anim ) ); ?>" 
                                 name="<?php echo esc_attr( $this->get_field_name( 'img_wrapper_animation' ) ); ?>" 
                                 value="<?php echo esc_attr( $anim ); ?>" 
-                                <?php echo ( $img_wrapper_animation == $anim ) ? ' checked="checked"' : ''; ?>
+                                <?php echo ( strtolower( $img_wrapper_animation ) === strtolower( $anim ) ) ? $checked_attr : ''; ?>
                             />
                             <label for="<?php echo esc_attr( $this->get_field_id( $anim ) ); ?>"><?php echo $anim; ?></label>
                         </span>
@@ -306,7 +330,7 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                 ?>
                 </p>
 
-                <p><?php esc_attr_e( 'Choose image animation:', $this->theme_id ); ?></p>
+                <p><?php esc_attr_e( 'Image animation:', $this->theme_id ); ?></p>
                 <?php 
                     $img_animations = array( 'pulse', 'bounce', 'shake', 'wobble', 'none' );
                 ?>
@@ -320,7 +344,7 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                                 id="<?php echo esc_attr( $this->get_field_id( $anim ) ); ?>" 
                                 name="<?php echo esc_attr( $this->get_field_name( 'img_animation' ) ); ?>" 
                                 value="<?php echo esc_attr( $anim ); ?>" 
-                                <?php echo ( $img_animation == $anim ) ? ' checked="checked"' : ''; ?>
+                                <?php echo ( strtolower( $img_animation ) === strtolower( $anim ) ) ? $checked_attr : ''; ?>
                             />
                             <label for="<?php echo esc_attr( $this->get_field_id( $anim ) ); ?>"><?php echo $anim; ?></label>
                         </span>
@@ -329,7 +353,7 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                 ?>
                 </p>
 
-                <p><?php esc_attr_e( 'Choose image animation iteration:', $this->theme_id ); ?></p>
+                <p><?php esc_attr_e( 'Image animation iteration:', $this->theme_id ); ?></p>
                 <?php 
                     $img_anim_iterations = array( 'infinite', 'default' );
                 ?>
@@ -343,7 +367,7 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                                 id="<?php echo esc_attr( $this->get_field_id( $iteration ) ); ?>" 
                                 name="<?php echo esc_attr( $this->get_field_name( 'img_anim_iteration' ) ); ?>" 
                                 value="<?php echo esc_attr( $iteration ); ?>" 
-                                <?php echo ( $img_anim_iteration == $iteration ) ? ' checked="checked"' : ''; ?>
+                                <?php echo ( strtolower( $img_anim_iteration ) === strtolower( $iteration ) ) ? $checked_attr : ''; ?>
                             />
                             <label for="<?php echo esc_attr( $this->get_field_id( $iteration ) ); ?>"><?php echo $iteration; ?></label>
                         </span>
@@ -384,16 +408,22 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
             $instance = array();
             $instance['title'] = ! empty( $new_instance['title'] ) ? sanitize_text_field( $new_instance['title'] ) : '';
             $instance['text'] = ! empty( $new_instance['text'] ) ? sanitize_textarea_field( $new_instance['text'] ) : '';
-            $instance['display_btn'] = $new_instance['display_btn'] ? $new_instance['display_btn'] : false;
+            $instance['display_btn'] = isset( $new_instance['display_btn'] ) && $new_instance['display_btn'] ? boolval( $new_instance['display_btn'] ) : false;
             $instance['link_to'] = ! empty( $new_instance['link_to'] ) ? esc_url_raw( $new_instance['link_to'] ) : '';
             $instance['btn_text'] = ! empty( $new_instance['btn_text'] ) ? sanitize_text_field( $new_instance['btn_text'] ) : '';
             $instance['img_src'] = ! empty( $new_instance['img_src'] ) ? esc_url_raw( $new_instance['img_src'] ) : '';
 
-            $instance['text_animation'] = ! empty( $new_instance['text_animation'] ) ? sanitize_key( $new_instance['text_animation'] ) : '';
-            $instance['btn_animation'] = ! empty( $new_instance['btn_animation'] ) ? sanitize_key( $new_instance['btn_animation'] ) : '';
-            $instance['img_wrapper_animation'] = ! empty( $new_instance['img_wrapper_animation'] ) ? sanitize_key( $new_instance['img_wrapper_animation'] ) : '';
-            $instance['img_animation'] = ! empty( $new_instance['img_animation'] ) ? sanitize_key( $new_instance['img_animation'] ) : '';
+            $instance['title_animation'] = isset( $new_instance['title_animation'] ) && ! empty( $new_instance['title_animation'] ) ? sanitize_key( $new_instance['title_animation'] ) : false;
+            $instance['text_animation'] = isset( $new_instance['text_animation'] ) && ! empty( $new_instance['text_animation'] ) ? sanitize_key( $new_instance['text_animation'] ) : '';
+
+            $instance['btn_animation'] = isset( $new_instance['btn_animation'] ) && ! empty( $new_instance['btn_animation'] ) ? sanitize_key( $new_instance['btn_animation'] ) : '';
+
+            $instance['img_wrapper_animation'] = isset( $new_instance['img_wrapper_animation'] ) && ! empty( $new_instance['img_wrapper_animation'] ) ? sanitize_key( $new_instance['img_wrapper_animation'] ) : '';
+
+            $instance['img_animation'] = isset( $new_instance['img_animation'] ) && ! empty( $new_instance['img_animation'] ) ? sanitize_key( $new_instance['img_animation'] ) : '';
+
             $instance['img_anim_iteration'] = ! empty( $new_instance['img_anim_iteration'] ) ? sanitize_key( $new_instance['img_anim_iteration'] ) : 'default';
+
             $instance['img_anim_duration'] = $new_instance['img_anim_duration'] ? absint( $new_instance['img_anim_duration'] ) : 2;
 
             return $instance;

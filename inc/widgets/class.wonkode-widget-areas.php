@@ -32,7 +32,7 @@ if ( ! class_exists( 'WonKode_Widget_Areas' ) ) {
             $this->secondary_sidebar();
             $this->primary_footer_widget_area();
             $this->secondary_footer_widget_area();
-            $this->wide_page_block_widget_area();
+            $this->full_width_page_container_widget_area();
         }
         /**
          * Callback for registering primary 
@@ -132,18 +132,18 @@ if ( ! class_exists( 'WonKode_Widget_Areas' ) ) {
          * 
          * @since 1.0
          */
-        public function wide_page_block_widget_area() {
+        public function full_width_page_container_widget_area() {
             register_sidebar( 
                 apply_filters(
-                    'wonkode_wide_page_block_widgetarea',
+                    'wonkode_width_page_container_widgetarea',
                     array(
-                        'name'              =>  __( 'Wide Container Page Widget Area', WK_TXTDOM ),
-                        'id'                =>  'wonkode-wide-page-container',
-                        'description'       =>  __( 'Add Wonkode Equal Image and Text Widget', WK_TXTDOM ),
-                        'before_title'      =>  '<h1 class="display-4 mb-3 animated slideInDown">',
-                        'after_title'       =>  '</h1>',
-                        'before_widget'     =>  '<div class="container py-5">',
+                        'name'              =>  __( 'Full Width Page Container', WK_TXTDOM ),
+                        'id'                =>  'wonkode-fullwidth-page-container',
+                        'description'       =>  __( 'Add widgets to display inside full width page containers', WK_TXTDOM ),
+                        'before_widget'     =>  '<div id="%1$s" class="widget fullwidth-container-widget row g-5 align-items-center %2$s">',
                         'after_widget'      =>  '</div>',
+                        'before_title'      =>  '',
+                        'after_title'       =>  '',
                     )
                 )
             );
