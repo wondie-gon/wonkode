@@ -57,6 +57,7 @@ require WK_INC_PATH . '/class.wonkode-svg-resources.php';
 require WK_INC_PATH . '/customizer/customizer-functions.php';
 // require WK_INC_PATH . '/class.wonkode-custom-nav-walker.php';
 require WK_INC_PATH . '/class.wp-bootstrap-navwalker.php';
+require WK_INC_PATH . '/class.wonkode-retrieve-posts.php';
 
 // widget areas and custom widgets
 require WK_INC_PATH . '/widgets.php';
