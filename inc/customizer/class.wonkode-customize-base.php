@@ -35,9 +35,18 @@ abstract class WonKode_Customize_Base {
      */
     protected $theme_id;
     /**
+     * Unique id for prefix
+     * 
+     * @access protected
+     * 
+     * @since 1.0
+     * @var string
+     */
+    protected $prefix_id;
+    /**
      * Class constructor
      * 
-     * @param null $args
+     * @since 1.0
      */
     public function __construct() {
         // setting theme identity
@@ -47,6 +56,8 @@ abstract class WonKode_Customize_Base {
         } else {
             $this->theme_id = get_stylesheet();
         }
+        // setting unique prefix
+        $this->prefix_id = strtolower( str_replace( '-', '_', $this->theme_id ) );
     }
     /**
      * Abstract method to register customizer
