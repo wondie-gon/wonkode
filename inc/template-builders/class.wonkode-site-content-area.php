@@ -22,6 +22,14 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
          */
         public static $theme_id;
         /**
+         * Unique prefix for naming 
+         * filter and action hooks etc
+         * 
+         * @since 1.0
+         * @var string
+         */
+        private static $unique_prefix;
+        /**
          * Site content tag id
          * 
          * @since 1.0
@@ -77,6 +85,8 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
             } else {
                 self::$theme_id = get_stylesheet();
             }
+            // setting unique prefix
+            self::$unique_prefix = strtolower( str_replace( '-', '_', self::$theme_id ) );
         }
         /**
          * Adds new classes to existing ones
@@ -176,14 +186,14 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
         public static function get_outer_container_opener( $additional_class = '' ) {
             $class_arr = array();
             // container classes from customizer
-            $class_arr[] = get_theme_mod( self::$theme_id . '_outer_container_bs_class', WK_DEFAULTS['_outer_container_bs_class'] );
-            $mt = get_theme_mod( self::$theme_id . '_outer_container_margin_top', WK_DEFAULTS['_outer_container_margin_top'] );
+            $class_arr[] = get_theme_mod( self::$unique_prefix . '_outer_container_bs_class', WK_DEFAULTS['_outer_container_bs_class'] );
+            $mt = get_theme_mod( self::$unique_prefix . '_outer_container_margin_top', WK_DEFAULTS['_outer_container_margin_top'] );
             $mt_class = ! ( '' === $mt || 'unset' === $mt ) ? $mt : '';
             // add margin top class
             if ( ! empty( $mt_class ) ) {
                 $class_arr[] = $mt_class;
             }
-            $mb = get_theme_mod( self::$theme_id . '_outer_container_margin_bottom', WK_DEFAULTS['_outer_container_margin_bottom'] );
+            $mb = get_theme_mod( self::$unique_prefix . '_outer_container_margin_bottom', WK_DEFAULTS['_outer_container_margin_bottom'] );
             $mb_class = ! ( '' === $mb || 'unset' === $mb ) ? $mb : '';
             // add margin bottom class
             if ( ! empty( $mb_class ) ) {
@@ -202,7 +212,7 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
              * @param string $class_list    List of classes for outer container
              * @param array $class_arr      Array of classes to filter class output
              */
-            $class_list = apply_filters( self::$theme_id . '_outer_container_classes', $class_list, $class_arr );
+            $class_list = apply_filters( self::$unique_prefix . '_outer_container_classes', $class_list, $class_arr );
             // return the outer container
             return '<div class="' . esc_attr( $class_list ) . '">';
         }
@@ -217,6 +227,16 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
             echo self::get_outer_container_opener( $additional_class );
         }
         /**
+         * Renders outer container closing tag 
+         * for the main content area
+         * 
+         * @since 1.0
+         * @return void
+         */
+        public static function close_outer_container() {
+            echo '</div>';
+        }
+        /**
          * Returns inner container opening tag
          * 
          * @since 1.0
@@ -226,12 +246,12 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
         public static function get_inner_container_opener( $additional_class = '' ) {
             $class_arr = array();
             // container classes from customizer
-            $class_arr[] = get_theme_mod( self::$theme_id . '_inner_container_bs_class', WK_DEFAULTS['_inner_container_bs_class'] );
+            $class_arr[] = get_theme_mod( self::$unique_prefix . '_inner_container_bs_class', WK_DEFAULTS['_inner_container_bs_class'] );
             // if additional class passed
             if ( ! empty( $additional_class ) ) {
                 self::add_to_classes( $additional_class, $class_arr );
             }
-            // get classes for outer container
+            // get classes for inner container
             $class_list = WonKode_Helper::list_classes( $class_arr );
             /**
              * Filters class list for inner container
@@ -240,7 +260,7 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
              * @param string $class_list    List of classes for inner container
              * @param array $class_arr      Array of classes to filter class output
              */
-            $class_list = apply_filters( self::$theme_id . '_inner_container_classes', $class_list, $class_arr );
+            $class_list = apply_filters( self::$unique_prefix . '_inner_container_classes', $class_list, $class_arr );
             // return the inner container
             return '<div class="' . esc_attr( $class_list ) . '">';
         }
@@ -255,13 +275,70 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
             echo self::get_inner_container_opener( $additional_class );
         }
         /**
+         * Renders inner container closing tag 
+         * for the main content area
+         * 
+         * @since 1.0
+         * @return void
+         */
+        public static function close_inner_container() {
+            echo '</div>';
+        }
+        /**
+         * Returns posts content wrapping row opening tag
+         * 
+         * @since 1.0
+         * @param string/array $additional_class    Additional classes. Defaults ''
+         * @return mixed posts content wrapping row html tag with class attributes
+         */
+        public static function get_content_wrapper_row_opener( $additional_class = '' ) {
+            $row_classes_arr = array( 'row' );
+            // if additional class passed
+            if ( ! empty( $additional_class ) ) {
+                self::add_to_classes( $additional_class, $row_classes_arr );
+            }
+            // get all row classes
+            $row_classes_list = WonKode_Helper::list_classes( $row_classes_arr );
+            /**
+             * Filters class list for posts content wrapper row
+             * 
+             * @since 1.0
+             * @param string $row_classes_list    List of classes for row
+             * @param array $row_classes_arr      Array of classes to filter class output
+             */
+            $row_classes_list = apply_filters( self::$unique_prefix . '_content_wrapper_row_classes', $row_classes_list, $row_classes_arr );
+            // return content wrapping row
+            return '<div class="' . esc_attr( $row_classes_list ) . '">';
+        }
+        /**
+         * Renders post content wrapper's opening tag 
+         * in the main content area
+         * 
+         * @since 1.0
+         * @param string/array $additional_class    Additional classes. Defaults ''
+         * @return void
+         */
+        public static function open_content_wrapper_row( $additional_class = '' ) {
+            echo self::get_content_wrapper_row_opener( $additional_class );
+        }
+        /**
+         * Renders post content wrapper's closing tag 
+         * in the main content area
+         * 
+         * @since 1.0
+         * @return void
+         */
+        public static function close_content_wrapper_row() {
+            echo '</div>';
+        }
+        /**
          * Returns sidebar position set in customizer.
          * 
          * @since 1.0
          * @return string position of sidebar
          */
         public static function get_sidebar_position() {
-            return get_theme_mod( self::$theme_id . '_sidebar_position', WK_DEFAULTS['_sidebar_position'] );
+            return get_theme_mod( self::$unique_prefix . '_sidebar_position', WK_DEFAULTS['_sidebar_position'] );
         }
         /**
          * Checks if 'left' is set for a single sidebar. 
@@ -321,7 +398,7 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
          * @return int Number of cols
          */
         private static function get_sidebar_cols( $mod_id ) {
-            return intval( get_theme_mod( self::$theme_id . $mod_id, WK_DEFAULTS[ $mod_id ] ) );
+            return intval( get_theme_mod( self::$unique_prefix . $mod_id, WK_DEFAULTS[ $mod_id ] ) );
         }
         /**
          * Returns opening tag for single primary sidebar. 
@@ -355,7 +432,7 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
              * @param string $sidebar_class_list      List of classes for sidebar
              * @param array $sidebar_classes_arr      Array of classes to filter class output
              */
-            $sidebar_class_list = apply_filters( self::$theme_id . '_single_sidebar_classes', $sidebar_class_list, $sidebar_classes_arr );
+            $sidebar_class_list = apply_filters( self::$unique_prefix . '_single_sidebar_classes', $sidebar_class_list, $sidebar_classes_arr );
             // return sidebar opening tag
             return '<div class="' . esc_attr( $sidebar_class_list ) . '">';
         }
@@ -502,7 +579,7 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
              * @param string $main_col_classes      List of classes for main col
              * @param array $main_col_classes_arr        Array of classes to filter class output
              */
-            $main_col_classes = apply_filters( self::$theme_id . '_main_col_classes', $main_col_classes, $main_col_classes_arr );
+            $main_col_classes = apply_filters( self::$unique_prefix . '_main_col_classes', $main_col_classes, $main_col_classes_arr );
             // return the content column
             return '<div class="' . esc_attr( $main_col_classes ) . '">';
         }
