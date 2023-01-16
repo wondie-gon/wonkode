@@ -23,5 +23,5 @@ if ( WonKode_Site_Content_Area::sidebar_is_both() ) {
         ?>
     </div><!-- #wk-secondary-sidebar -->
 <?php
-// close sidebar
-WonKode_Site_Content_Area::close_div_tag();
+// close secondary sidebar
+WonKode_Site_Content_Area::close_secondary_sidebar();

@@ -19,7 +19,14 @@ if ( ! class_exists( 'WonKode_Helper' ) ) {
          * @since 1.0
          * @var string
          */
-        public static $txt_dom = WK_TXTDOM;
+        private static $txt_dom;
+        /**
+         * Unique id for prefix
+         * 
+         * @since 1.0
+         * @var string
+         */
+        private static $unique_prefix;
         /**
          * Stores fontawesome icon classes 
          * of social media
@@ -37,6 +44,36 @@ if ( ! class_exists( 'WonKode_Helper' ) ) {
             'instagram'     =>  'fab fa-instagram',
             'youtube'       =>  'fab fa-youtube',
         );
+
+        /**
+         * Returns theme's textdomain name. 
+         * 
+         * 
+         * @since 1.0
+         * @return string Theme's textdomain
+         */
+        public static function get_texdomain() {
+            // set theme name, that is the textdomain
+            $theme_obj = wp_get_theme();
+            if ( $theme_obj->exists() ) {
+                self::$txt_dom = $theme_obj->get( 'TextDomain' );
+            } else {
+                self::$txt_dom = get_stylesheet();
+            }
+            return self::$txt_dom;
+        }
+        /**
+         * Returns theme's unique prefix. 
+         * Used in naming hooks, form fields, 
+         * customize settings, sections etc
+         * 
+         * @since 1.0
+         * @return string Unique prefix of theme
+         */
+        public static function get_unique_prefix() {
+            $theme_txt_domain = self::get_texdomain();
+            return strtolower( str_replace( '-', '_', $theme_txt_domain ) );
+        }
 
         /**
          * Returns fontawesome icon element

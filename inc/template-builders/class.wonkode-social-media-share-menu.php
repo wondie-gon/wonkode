@@ -18,6 +18,13 @@ if ( ! class_exists( 'WonKode_Social_Media_Share_Menu' ) ) {
          */
         public static $txt_dom = null;
         /**
+         * Unique id for prefix
+         * 
+         * @since 1.0
+         * @var string
+         */
+        public static $prefix_id;
+        /**
          * Stores social media nav 
          * attributes 
          * 
@@ -42,9 +49,11 @@ if ( ! class_exists( 'WonKode_Social_Media_Share_Menu' ) ) {
          */
         public function __construct() {
             // set theme name, that is the textdomain
-            self::$txt_dom = get_stylesheet();
+            self::$txt_dom = WonKode_Helper::get_texdomain();
+            // set the unique prefix
+            self::$prefix_id = WonKode_Helper::get_unique_prefix();
             // is feature enabled
-            self::$social_share_enabled = get_theme_mod( 'enable_wonkode_social_media_sharing' );
+            self::$social_share_enabled = get_theme_mod( 'enable_' . self::$prefix_id . '_social_media_sharing' );
         }
 
         /**
@@ -79,11 +88,11 @@ if ( ! class_exists( 'WonKode_Social_Media_Share_Menu' ) ) {
          */
         public static function get_social_share_activations() {
             $enabled_shares = array(
-                'facebook'      =>  get_theme_mod( 'wonkode_enable_facebook_share' ),
-                'twitter'       =>  get_theme_mod( 'wonkode_enable_twitter_share' ),
-                'googleplus'    =>  get_theme_mod( 'wonkode_enable_googleplus_share' ),
-                'pinterest'     =>  get_theme_mod( 'wonkode_enable_pinterest_share' ),
-                'linkedin'      =>  get_theme_mod( 'wonkode_enable_linkedin_share' ),
+                'facebook'      =>  get_theme_mod( self::$prefix_id . '_enable_facebook_share' ),
+                'twitter'       =>  get_theme_mod( self::$prefix_id . '_enable_twitter_share' ),
+                'googleplus'    =>  get_theme_mod( self::$prefix_id . '_enable_googleplus_share' ),
+                'pinterest'     =>  get_theme_mod( self::$prefix_id . '_enable_pinterest_share' ),
+                'linkedin'      =>  get_theme_mod( self::$prefix_id . '_enable_linkedin_share' ),
             );
             return $enabled_shares;
         }
@@ -349,7 +358,7 @@ if ( ! class_exists( 'WonKode_Social_Media_Share_Menu' ) ) {
          */
         public static function get_share_title() {
             // get title from customize
-            $title = ( get_theme_mod( 'wonkode_display_social_media_share_title' ) && ! empty( get_theme_mod( 'wonkode_social_media_share_title' ) ) ) ? esc_html__( get_theme_mod( 'wonkode_social_media_share_title' ) ) : WonKode_Helper::get_fa_icon( 'fa fa-share-alt' );
+            $title = ( get_theme_mod( self::$prefix_id . '_display_social_media_share_title' ) && ! empty( get_theme_mod( self::$prefix_id . '_social_media_share_title' ) ) ) ? esc_html__( get_theme_mod( self::$prefix_id . '_social_media_share_title' ) ) : WonKode_Helper::get_fa_icon( 'fa fa-share-alt' );
 
             // nav item classes
             $item_classes = WonKode_Helper::list_classes( self::$nav_args['item_class'], array( 'title-item' ) );
@@ -369,7 +378,7 @@ if ( ! class_exists( 'WonKode_Social_Media_Share_Menu' ) ) {
              * @param string String for html of social nav title
              * @param string String title 
              */
-            return apply_filters( 'wonkode_social_share_title', $share_title, $title );
+            return apply_filters( self::$prefix_id . '_social_share_title', $share_title, $title );
         }
 
         /**

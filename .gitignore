@@ -1,0 +1,31 @@
+# Numerous always-ignore extensions
+*.bak
+*.cvs
+*.db
+*.diff
+*.err
+*.log
+*.orig
+*.rej
+*.zip
+
+# Ignore all files and directories starting with . or ~ or ._ or ending with ~
+.*
+~*
+*~
+._*
+# but track
+!.gitattributes
+!.github
+!.gitignore
+
+# OS or Editor files and folders
+*.code-workspace
+*.elc
+*.esproj
+*.komodoproject
+*.sublime*
+*.tmproj*
+
+# Development checklist and notes
+dev-checklist.txt

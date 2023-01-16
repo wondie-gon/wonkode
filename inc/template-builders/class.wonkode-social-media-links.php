@@ -17,6 +17,13 @@ if ( ! class_exists( 'WonKode_Social_Media' ) ) {
          * @since 1.0
          */
         public static $txt_dom = null;
+        /**
+         * Unique id for prefix
+         * 
+         * @since 1.0
+         * @var string
+         */
+        public static $prefix_id;
 
         /**
          * Stores urls of social media
@@ -70,9 +77,12 @@ if ( ! class_exists( 'WonKode_Social_Media' ) ) {
         public function __construct() {
             self::$custom_social_media = new WonKode_Customize_Social_Media_Nav();
             // set theme name, that is the textdomain
-            self::$txt_dom = get_stylesheet();
+            self::$txt_dom = WonKode_Helper::get_texdomain();
+            // set the unique prefix
+            self::$prefix_id = WonKode_Helper::get_unique_prefix();
+            
             // determine if social nav enabled
-            self::$nav_enabled = get_theme_mod( 'enable_wonkode_social_media_link_nav' );
+            self::$nav_enabled = get_theme_mod( 'enable_' . self::$prefix_id . '_social_media_link_nav' );
         }
 
         /**
@@ -86,21 +96,21 @@ if ( ! class_exists( 'WonKode_Social_Media' ) ) {
             $usernames = array();
             if ( self::$nav_enabled ) {
                 // facebook
-                $usernames['facebook'] = ! empty( get_theme_mod( 'wonkode_facebook_link_username' ) ) ? esc_attr( get_theme_mod( 'wonkode_facebook_link_username' ) ) : '';
+                $usernames['facebook'] = ! empty( get_theme_mod( self::$prefix_id . '_facebook_link_username' ) ) ? esc_attr( get_theme_mod( self::$prefix_id . '_facebook_link_username' ) ) : '';
                 // twitter
-                $usernames['twitter'] = ! empty( get_theme_mod( 'wonkode_twitter_link_username' ) ) ? esc_attr( get_theme_mod( 'wonkode_twitter_link_username' ) ) : '';
+                $usernames['twitter'] = ! empty( get_theme_mod( self::$prefix_id . '_twitter_link_username' ) ) ? esc_attr( get_theme_mod( self::$prefix_id . '_twitter_link_username' ) ) : '';
                 // googleplus
-                $usernames['googleplus'] = ! empty( get_theme_mod( 'wonkode_googleplus_link_username' ) ) ? esc_attr( get_theme_mod( 'wonkode_googleplus_link_username' ) ) : '';
+                $usernames['googleplus'] = ! empty( get_theme_mod( self::$prefix_id . '_googleplus_link_username' ) ) ? esc_attr( get_theme_mod( self::$prefix_id . '_googleplus_link_username' ) ) : '';
                 // pinterest
-                $usernames['pinterest'] = ! empty( get_theme_mod( 'wonkode_pinterest_link_username' ) ) ? esc_attr( get_theme_mod( 'wonkode_pinterest_link_username' ) ) : '';
+                $usernames['pinterest'] = ! empty( get_theme_mod( self::$prefix_id . '_pinterest_link_username' ) ) ? esc_attr( get_theme_mod( self::$prefix_id . '_pinterest_link_username' ) ) : '';
                 // linkedin
-                $usernames['linkedin'] = ! empty( get_theme_mod( 'wonkode_linkedin_link_username' ) ) ? esc_attr( get_theme_mod( 'wonkode_linkedin_link_username' ) ) : '';
+                $usernames['linkedin'] = ! empty( get_theme_mod( self::$prefix_id . '_linkedin_link_username' ) ) ? esc_attr( get_theme_mod( self::$prefix_id . '_linkedin_link_username' ) ) : '';
                 // github
-                $usernames['github'] = ! empty( get_theme_mod( 'wonkode_github_link_username' ) ) ? esc_attr( get_theme_mod( 'wonkode_github_link_username' ) ) : '';
+                $usernames['github'] = ! empty( get_theme_mod( self::$prefix_id . '_github_link_username' ) ) ? esc_attr( get_theme_mod( self::$prefix_id . '_github_link_username' ) ) : '';
                 // instagram
-                $usernames['instagram'] = ! empty( get_theme_mod( 'wonkode_instagram_link_username' ) ) ? esc_attr( get_theme_mod( 'wonkode_instagram_link_username' ) ) : '';
+                $usernames['instagram'] = ! empty( get_theme_mod( self::$prefix_id . '_instagram_link_username' ) ) ? esc_attr( get_theme_mod( self::$prefix_id . '_instagram_link_username' ) ) : '';
                 // youtube
-                $usernames['youtube'] = ! empty( get_theme_mod( 'wonkode_youtube_link_username' ) ) ? esc_attr( get_theme_mod( 'wonkode_youtube_link_username' ) ) : '';
+                $usernames['youtube'] = ! empty( get_theme_mod( self::$prefix_id . '_youtube_link_username' ) ) ? esc_attr( get_theme_mod( self::$prefix_id . '_youtube_link_username' ) ) : '';
             }
 
             $args = wp_parse_args( $args, $usernames );
@@ -120,7 +130,7 @@ if ( ! class_exists( 'WonKode_Social_Media' ) ) {
              * }
              * @param array $args Array of usernames provided by user
              */
-            return apply_filters( 'wonkode_social_usernames', $args, $usernames );
+            return apply_filters( self::$prefix_id . '_social_usernames', $args, $usernames );
         }
 
         /**
@@ -142,7 +152,7 @@ if ( ! class_exists( 'WonKode_Social_Media' ) ) {
          * @return string/mixed
          */
         public static function get_social_nav() {
-            // TODO -- 'wonkode_social_usernames' filter can be done here
+            // TODO -- self::$prefix_id . '_social_usernames' filter can be done here
             // get social usernames
             $social_usernames = self::get_usernames();
 
@@ -209,7 +219,7 @@ if ( ! class_exists( 'WonKode_Social_Media' ) ) {
          * @return void
          */
         public static function show_social_nav() {
-            if ( get_theme_mod( 'wonkode_display_social_media_nav_title' ) ) {
+            if ( get_theme_mod( self::$prefix_id . '_display_social_media_nav_title' ) ) {
                 echo self::get_nav_title();
             }
             echo self::get_social_nav();
@@ -223,7 +233,7 @@ if ( ! class_exists( 'WonKode_Social_Media' ) ) {
          */
         public static function get_nav_title() {
             // get title from customize
-            $title = get_theme_mod( 'wonkode_social_media_nav_title' );
+            $title = get_theme_mod( self::$prefix_id . '_social_media_nav_title' );
             // prepare title format
             $nav_title = sprintf( 
                 '<h5>' . esc_html__( '%s', self::$txt_dom ) . '</h5>',
@@ -237,7 +247,7 @@ if ( ! class_exists( 'WonKode_Social_Media' ) ) {
              * @param string String for html of social nav title
              * @param string String title 
              */
-            return apply_filters( 'wonkode_social_nav_title', $nav_title, $title );
+            return apply_filters( self::$prefix_id . '_social_nav_title', $nav_title, $title );
         }
 
     } // ENDS -- class

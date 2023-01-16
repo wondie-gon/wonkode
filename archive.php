@@ -17,10 +17,8 @@ WonKode_Site_Content_Area::open_outer_container( 'bg-light' );
         get_template_part( 'template-parts/post/archive-header' );
         // check post loop
         if ( have_posts() ) {
-    ?>
-        <div class="row py-5 archive-posts-wrapper">
-            <!-- posts list column Starts here -->
-            <?php
+        // open wrapping row
+        WonKode_Site_Content_Area::open_content_wrapper_row( 'archive-posts-wrapper py-5' );
             // open post content column
             WonKode_Site_Content_Area::open_main_post_col( 'posts-list-col' );
                 while ( have_posts() ) {
@@ -29,17 +27,17 @@ WonKode_Site_Content_Area::open_outer_container( 'bg-light' );
                     get_template_part( 'template-parts/content/content', 'archive' );
                 }
             // close post content column
-            WonKode_Site_Content_Area::close_div_tag();
-            ?>
-            <!-- posts list column Ends here -->
-            <?php get_sidebar(); ?>
-        </div><!-- .archive-posts-wrapper -->
-    <?php 
+            WonKode_Site_Content_Area::close_main_post_col();
+            // render sidebar
+            get_sidebar();
+            // close wrapping row
+            WonKode_Site_Content_Area::close_content_wrapper_row();
+        
         } else {
             get_template_part( 'template-parts/content/content-none' );
         }
     // closing inner container
-    WonKode_Site_Content_Area::close_div_tag();
+    WonKode_Site_Content_Area::close_inner_container();
 // closing outer container
-WonKode_Site_Content_Area::close_div_tag();
+WonKode_Site_Content_Area::close_outer_container();
 get_footer();

@@ -31,7 +31,7 @@ if ( WonKode_Site_Content_Area::sidebar_is_both() ) {
     </div><!-- #wk-primary-sidebar -->
     
 <?php 
-// close sidebar
-WonKode_Site_Content_Area::close_div_tag();
+// close primary sidebar
+WonKode_Site_Content_Area::close_primary_sidebar();
 ?>
 <!-- sidebar column ends here -->

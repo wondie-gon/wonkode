@@ -519,6 +519,16 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
             }
         }
         /**
+         * Renders div closing tag for 
+         * primary sidebar
+         * 
+         * @since 1.0
+         * @return void
+         */
+        public static function close_primary_sidebar() {
+            echo '</div>';
+        }
+        /**
          * Renders secondary sidebar opening tag, on left   
          * when sidebar position is set 'both' 
          * in customizer.
@@ -535,6 +545,16 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
             } else {
                 echo '';
             }
+        }
+        /**
+         * Renders div closing tag for 
+         * secondary sidebar
+         * 
+         * @since 1.0
+         * @return void
+         */
+        public static function close_secondary_sidebar() {
+            echo '</div>';
         }
         // -------------------------Generic for left and right sidebar---------------------
         /**
@@ -592,6 +612,16 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
          */
         public static function open_main_post_col( $additional_class = '' ) {
             echo self::get_main_post_col_opener( $additional_class );
+        }
+        /**
+         * Renders div closing tag for 
+         * main posts column
+         * 
+         * @since 1.0
+         * @return void
+         */
+        public static function close_main_post_col() {
+            echo '</div>';
         }
         /**
          * Renders div closing tag
