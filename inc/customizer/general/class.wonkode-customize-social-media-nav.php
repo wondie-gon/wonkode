@@ -31,7 +31,7 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
              * Social media link customizer section
              */
             $wp_customize->add_section(
-                'wonkode_social_media_link_section', 
+                $this->prefix_id . '_social_media_link_section', 
                 array(
                     'priority'	    =>	160,
                     'capability'    => 'edit_theme_options',
@@ -43,22 +43,22 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
             * Whether to display social media link nav bar
             */
             $wp_customize->add_setting(
-                'enable_wonkode_social_media_link_nav',
+                'enable_' . $this->prefix_id . '_social_media_link_nav',
                 array(
                     'default'	        => false,
                     'capability'        => 'edit_theme_options', 
                     'type'              => 'theme_mod',  
-                    'sanitize_callback'	=>	array( 'WonKode_Sanitize', 'checkbox' )
+                    'sanitize_callback'	=>	array( $this->prefix_id . '_Sanitize', 'checkbox' )
                 )
             );
             $wp_customize->add_control(
                 new WP_Customize_Control(
                     $wp_customize,
-                    'enable_wonkode_social_media_link_nav',
+                    'enable_' . $this->prefix_id . '_social_media_link_nav',
                     array(
                         'label' 		=> __( 'Enable Social Media links', $this->theme_id ),
-                        'section' 		=> 'wonkode_social_media_link_section',
-                        'settings'		=> 'enable_wonkode_social_media_link_nav',
+                        'section' 		=> $this->prefix_id . '_social_media_link_section',
+                        'settings'		=> 'enable_' . $this->prefix_id . '_social_media_link_nav',
                         'type' 			=> 'checkbox',
                     )
                 )
@@ -69,7 +69,7 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
             */
             // Facebook
             $wp_customize->add_setting(
-                'wonkode_facebook_link_username', 
+                $this->prefix_id . '_facebook_link_username', 
                 array(
                     'default'	        =>	'', 
                     'capability'        => 'edit_theme_options', 
@@ -80,11 +80,11 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
             $wp_customize->add_control( 
                 new WP_Customize_Control(
                     $wp_customize, 
-                    'wonkode_facebook_link_username', 
+                    $this->prefix_id . '_facebook_link_username', 
                     array(
-                        'settings'			=> 'wonkode_facebook_link_username', 
+                        'settings'			=> $this->prefix_id . '_facebook_link_username', 
                         'label'				=>	__( 'Facebook', $this->theme_id ), 
-                        'section'			=>	'wonkode_social_media_link_section', 
+                        'section'			=>	$this->prefix_id . '_social_media_link_section', 
                         'active_callback'	=>	array( $this, 'social_media_link_nav_enabled' ),
                     )
                 )
@@ -92,7 +92,7 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
 
             // Twitter
             $wp_customize->add_setting(
-                'wonkode_twitter_link_username', 
+                $this->prefix_id . '_twitter_link_username', 
                 array(
                     'default'	        =>	'', 
                     'capability'        => 'edit_theme_options', 
@@ -103,11 +103,11 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
             $wp_customize->add_control( 
                 new WP_Customize_Control(
                     $wp_customize, 
-                    'wonkode_twitter_link_username', 
+                    $this->prefix_id . '_twitter_link_username', 
                     array(
-                        'settings'			=>  'wonkode_twitter_link_username', 
+                        'settings'			=>  $this->prefix_id . '_twitter_link_username', 
                         'label'				=>	__( 'Twitter', $this->theme_id ), 
-                        'section'			=>	'wonkode_social_media_link_section', 
+                        'section'			=>	$this->prefix_id . '_social_media_link_section', 
                         'active_callback'	=>	array( $this, 'social_media_link_nav_enabled' ),
                     )
                 )
@@ -115,7 +115,7 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
 
             // googleplus
             $wp_customize->add_setting(
-                'wonkode_googleplus_link_username', 
+                $this->prefix_id . '_googleplus_link_username', 
                 array(
                     'default'	        =>	'', 
                     'capability'        => 'edit_theme_options', 
@@ -126,18 +126,18 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
             $wp_customize->add_control( 
                 new WP_Customize_Control(
                     $wp_customize, 
-                    'wonkode_googleplus_link_username', 
+                    $this->prefix_id . '_googleplus_link_username', 
                     array(
-                        'settings'			=>  'wonkode_googleplus_link_username', 
+                        'settings'			=>  $this->prefix_id . '_googleplus_link_username', 
                         'label'				=>	__( 'Google+', $this->theme_id ), 
-                        'section'			=>	'wonkode_social_media_link_section', 
+                        'section'			=>	$this->prefix_id . '_social_media_link_section', 
                         'active_callback'	=>	array( $this, 'social_media_link_nav_enabled' ),
                     )
                 )
             );
             // pinterest
             $wp_customize->add_setting(
-                'wonkode_pinterest_link_username', 
+                $this->prefix_id . '_pinterest_link_username', 
                 array(
                     'default'	        =>	'', 
                     'capability'        => 'edit_theme_options', 
@@ -148,10 +148,10 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
             $wp_customize->add_control( 
                 new WP_Customize_Control(
                     $wp_customize, 
-                    'wonkode_pinterest_link_username', 
+                    $this->prefix_id . '_pinterest_link_username', 
                     array(
-                        'settings'			=>	'wonkode_pinterest_link_username',
-                        'section'			=>	'wonkode_social_media_link_section',
+                        'settings'			=>	$this->prefix_id . '_pinterest_link_username',
+                        'section'			=>	$this->prefix_id . '_social_media_link_section',
                         'label'				=>	__( 'Pinterest', $this->theme_id ), 
                         'active_callback'	=>	array( $this, 'social_media_link_nav_enabled' ),
                     )
@@ -159,7 +159,7 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
             );
             // linkedin
             $wp_customize->add_setting(
-                'wonkode_linkedin_link_username', 
+                $this->prefix_id . '_linkedin_link_username', 
                 array(
                     'default'	        =>	'', 
                     'capability'        => 'edit_theme_options', 
@@ -170,11 +170,11 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
             $wp_customize->add_control( 
                 new WP_Customize_Control(
                     $wp_customize, 
-                    'wonkode_linkedin_link_username', 
+                    $this->prefix_id . '_linkedin_link_username', 
                     array(
-                        'settings'			=>	'wonkode_linkedin_link_username', 
+                        'settings'			=>	$this->prefix_id . '_linkedin_link_username', 
                         'label'				=>	__( 'Linkedin', $this->theme_id ), 
-                        'section'			=>	'wonkode_social_media_link_section', 
+                        'section'			=>	$this->prefix_id . '_social_media_link_section', 
                         'active_callback'	=>	array( $this, 'social_media_link_nav_enabled' ),
                     )
                 )
@@ -182,7 +182,7 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
 
             // github
             $wp_customize->add_setting(
-                'wonkode_github_link_username', 
+                $this->prefix_id . '_github_link_username', 
                 array(
                     'default'	        =>	'', 
                     'capability'        => 'edit_theme_options', 
@@ -193,18 +193,18 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
             $wp_customize->add_control( 
                 new WP_Customize_Control(
                     $wp_customize, 
-                    'wonkode_github_link_username', 
+                    $this->prefix_id . '_github_link_username', 
                     array(
-                        'settings'			=>	'wonkode_github_link_username', 
+                        'settings'			=>	$this->prefix_id . '_github_link_username', 
                         'label'				=>	__( 'Github', $this->theme_id ), 
-                        'section'			=>	'wonkode_social_media_link_section', 
+                        'section'			=>	$this->prefix_id . '_social_media_link_section', 
                         'active_callback'	=>	array( $this, 'social_media_link_nav_enabled' ),
                     )
                 )
             );
             // instagram
             $wp_customize->add_setting(
-                'wonkode_instagram_link_username', 
+                $this->prefix_id . '_instagram_link_username', 
                 array(
                     'default'	        =>	'', 
                     'capability'        => 'edit_theme_options', 
@@ -215,11 +215,11 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
             $wp_customize->add_control( 
                 new WP_Customize_Control(
                     $wp_customize, 
-                    'wonkode_instagram_link_username', 
+                    $this->prefix_id . '_instagram_link_username', 
                     array(
-                        'settings'			=>	'wonkode_instagram_link_username', 
+                        'settings'			=>	$this->prefix_id . '_instagram_link_username', 
                         'label'				=>	__( 'Instagram', $this->theme_id ),
-                        'section'			=>	'wonkode_social_media_link_section', 
+                        'section'			=>	$this->prefix_id . '_social_media_link_section', 
                         'active_callback'	=>	array( $this, 'social_media_link_nav_enabled' ),
                     )
                 )
@@ -227,7 +227,7 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
 
             // youtube
             $wp_customize->add_setting(
-                'wonkode_youtube_link_username', 
+                $this->prefix_id . '_youtube_link_username', 
                 array(
                     'default'	        =>	'', 
                     'capability'        => 'edit_theme_options', 
@@ -239,10 +239,10 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
             $wp_customize->add_control( 
                 new WP_Customize_Control(
                     $wp_customize, 
-                    'wonkode_youtube_link_username', 
+                    $this->prefix_id . '_youtube_link_username', 
                     array(
-                        'settings'			=>	'wonkode_youtube_link_username',
-                        'section'			=>	'wonkode_social_media_link_section',
+                        'settings'			=>	$this->prefix_id . '_youtube_link_username',
+                        'section'			=>	$this->prefix_id . '_social_media_link_section',
                         'label'				=>	__( 'Youtube', $this->theme_id ), 
                         'active_callback'	=>	array( $this, 'social_media_link_nav_enabled' ),
                     )
@@ -254,21 +254,21 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
              * title
              */
             $wp_customize->add_setting(
-                'wonkode_display_social_media_nav_title',
+                $this->prefix_id . '_display_social_media_nav_title',
                 array(
                     'default'	        => false,
                     'capability'        => 'edit_theme_options', 
                     'type'              => 'theme_mod',  
-                    'sanitize_callback'	=>	array( 'WonKode_Sanitize', 'checkbox' )
+                    'sanitize_callback'	=>	array( $this->prefix_id . '_Sanitize', 'checkbox' )
                 )
             );
             $wp_customize->add_control(
-                'wonkode_display_social_media_nav_title',
+                $this->prefix_id . '_display_social_media_nav_title',
                 array(
-                    'settings'          => 'wonkode_display_social_media_nav_title', 
+                    'settings'          => $this->prefix_id . '_display_social_media_nav_title', 
                     'label'             => __( 'Display title', $this->theme_id ), 
                     'description'	    =>	__( 'Check to display title for navigation list', $this->theme_id ),
-                    'section'           => 'wonkode_social_media_link_section',
+                    'section'           => $this->prefix_id . '_social_media_link_section',
                     'type'              => 'checkbox',
                     'active_callback'	=>	array( $this, 'social_media_link_nav_enabled' ),
                 )
@@ -276,7 +276,7 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
 
             // nav title
             $wp_customize->add_setting(
-                'wonkode_social_media_nav_title', 
+                $this->prefix_id . '_social_media_nav_title', 
                 array(
                     'default'	        =>	__( 'Follow', $this->theme_id ), 
                     'capability'        => 'edit_theme_options', 
@@ -287,10 +287,10 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
             $wp_customize->add_control( 
                 new WP_Customize_Control(
                     $wp_customize, 
-                    'wonkode_social_media_nav_title', 
+                    $this->prefix_id . '_social_media_nav_title', 
                     array(
-                        'settings'			=>	'wonkode_social_media_nav_title',
-                        'section'			=>	'wonkode_social_media_link_section',
+                        'settings'			=>	$this->prefix_id . '_social_media_nav_title',
+                        'section'			=>	$this->prefix_id . '_social_media_link_section',
                         'label'				=>	__( 'Title', $this->theme_id ), 
                         'active_callback'	=>	array( $this, 'social_media_link_nav_enabled' ),
                     )
@@ -306,7 +306,7 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
          * @return bool true if social media nav is activated, false otherwise
          */
         public function social_media_link_nav_enabled( $control ) {
-            return false != $control->manager->get_setting( 'enable_wonkode_social_media_link_nav' )->value();
+            return false != $control->manager->get_setting( 'enable_' . $this->prefix_id . '_social_media_link_nav' )->value();
         }
     }
 }
