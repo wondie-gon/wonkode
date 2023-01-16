@@ -35,7 +35,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
              * Section for site layout
              */
             $wp_customize->add_section(
-                $this->theme_id . '_site_layout_section', 
+                $this->prefix_id . '_site_layout_section', 
                 array(
                     'priority'	    =>	50,
                     'capability'    => 'edit_theme_options',
@@ -49,7 +49,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
              * selection setting
              */
             $wp_customize->add_setting(
-                $this->theme_id . '_outer_container_bs_class',
+                $this->prefix_id . '_outer_container_bs_class',
                 array(
                     'default'           => WK_DEFAULTS['_outer_container_bs_class'],
                     'type'              => 'theme_mod',
@@ -63,11 +63,11 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
             $wp_customize->add_control(
                 new WP_Customize_Control(
                     $wp_customize,
-                    $this->theme_id . '_outer_container_bs_class',
+                    $this->prefix_id . '_outer_container_bs_class',
                     array(
                         'priority'    => 10,
-                        'section'     => $this->theme_id . '_site_layout_section',
-                        'settings'    => $this->theme_id . '_outer_container_bs_class',
+                        'section'     => $this->prefix_id . '_site_layout_section',
+                        'settings'    => $this->prefix_id . '_outer_container_bs_class',
                         'label'       => __( 'Outer container Bootstrap class', $this->theme_id ),
                         'description' => __( 'Set outer container width of your site by choosing which Bootstrap class to use', $this->theme_id ),
                         'type'        => 'radio',
@@ -88,7 +88,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
              * selection setting
              */
             $wp_customize->add_setting(
-                $this->theme_id . '_inner_container_bs_class',
+                $this->prefix_id . '_inner_container_bs_class',
                 array(
                     'default'           => WK_DEFAULTS['_inner_container_bs_class'],
                     'type'              => 'theme_mod',
@@ -103,11 +103,11 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
             $wp_customize->add_control(
                 new WP_Customize_Control(
                     $wp_customize,
-                    $this->theme_id . '_inner_container_bs_class',
+                    $this->prefix_id . '_inner_container_bs_class',
                     array(
                         'priority'    => 20,
-                        'section'     => $this->theme_id . '_site_layout_section',
-                        'settings'    => $this->theme_id . '_inner_container_bs_class',
+                        'section'     => $this->prefix_id . '_site_layout_section',
+                        'settings'    => $this->prefix_id . '_inner_container_bs_class',
                         'label'       => __( 'Inner container Bootstrap class', $this->theme_id ),
                         'description' => __( 'Set inner container width by choosing Bootstrap container class', $this->theme_id ),
                         'type'        => 'radio',
@@ -128,7 +128,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
              * selection setting
              */
             $wp_customize->add_setting(
-                $this->theme_id . '_outer_container_margin_top',
+                $this->prefix_id . '_outer_container_margin_top',
                 array(
                     'default'           => WK_DEFAULTS['_outer_container_margin_top'],
                     'type'              => 'theme_mod',
@@ -142,11 +142,11 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
             $wp_customize->add_control(
                 new WP_Customize_Control(
                     $wp_customize,
-                    $this->theme_id . '_outer_container_margin_top',
+                    $this->prefix_id . '_outer_container_margin_top',
                     array(
                         'priority'    => 10,
-                        'section'     => $this->theme_id . '_site_layout_section',
-                        'settings'    => $this->theme_id . '_outer_container_margin_top',
+                        'section'     => $this->prefix_id . '_site_layout_section',
+                        'settings'    => $this->prefix_id . '_outer_container_margin_top',
                         'label'       => __( 'Outer container margin top', $this->theme_id ),
                         'type'        => 'radio',
                         'choices'     => array(
@@ -165,7 +165,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
              * selection setting
              */
             $wp_customize->add_setting(
-                $this->theme_id . '_outer_container_margin_bottom',
+                $this->prefix_id . '_outer_container_margin_bottom',
                 array(
                     'default'           => WK_DEFAULTS['_outer_container_margin_bottom'],
                     'type'              => 'theme_mod',
@@ -179,11 +179,11 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
             $wp_customize->add_control(
                 new WP_Customize_Control(
                     $wp_customize,
-                    $this->theme_id . '_outer_container_margin_bottom',
+                    $this->prefix_id . '_outer_container_margin_bottom',
                     array(
                         'priority'    => 10,
-                        'section'     => $this->theme_id . '_site_layout_section',
-                        'settings'    => $this->theme_id . '_outer_container_margin_bottom',
+                        'section'     => $this->prefix_id . '_site_layout_section',
+                        'settings'    => $this->prefix_id . '_outer_container_margin_bottom',
                         'label'       => __( 'Outer container margin bottom', $this->theme_id ),
                         'type'        => 'radio',
                         'choices'     => array(
@@ -201,7 +201,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
              * Sidebar position selection setting
              */
             $wp_customize->add_setting(
-                $this->theme_id . '_sidebar_position',
+                $this->prefix_id . '_sidebar_position',
                 array(
                     'default'           => WK_DEFAULTS['_sidebar_position'],
                     'type'              => 'theme_mod',
@@ -215,11 +215,11 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
             $wp_customize->add_control(
                 new WP_Customize_Control(
                     $wp_customize,
-                    $this->theme_id . '_sidebar_position',
+                    $this->prefix_id . '_sidebar_position',
                     array(
                         'priority'    => 30,
-                        'section'     => $this->theme_id . '_site_layout_section',
-                        'settings'    => $this->theme_id . '_sidebar_position',
+                        'section'     => $this->prefix_id . '_site_layout_section',
+                        'settings'    => $this->prefix_id . '_sidebar_position',
                         'label'       => __( 'Sidebar position', $this->theme_id ),
                         'description' => __( 'Set sidebar position of site by checking one option', $this->theme_id ),
                         'type'        => 'radio',
@@ -238,7 +238,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
              * setting for large device width (>=992px)
              */
             $wp_customize->add_setting(
-                $this->theme_id . '_single_sidebar_col_size_lg',
+                $this->prefix_id . '_single_sidebar_col_size_lg',
                 array(
                     'default'           => WK_DEFAULTS['_single_sidebar_col_size_lg'],
                     'type'              => 'theme_mod',
@@ -255,11 +255,11 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
             $wp_customize->add_control(
                 new WP_Customize_Control(
                     $wp_customize,
-                    $this->theme_id . '_single_sidebar_col_size_lg',
+                    $this->prefix_id . '_single_sidebar_col_size_lg',
                     array(
                         'priority'    => 40,
-                        'section'     => $this->theme_id . '_site_layout_section',
-                        'settings'    => $this->theme_id . '_single_sidebar_col_size_lg',
+                        'section'     => $this->prefix_id . '_site_layout_section',
+                        'settings'    => $this->prefix_id . '_single_sidebar_col_size_lg',
                         'label'       => __( 'Sidebar column size (min-width: 992px)', $this->theme_id ),
                         'type'        => 'number',
                         'input_attrs'     => array(
@@ -276,7 +276,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
              * setting for medium device width (>=768px)
              */
             $wp_customize->add_setting(
-                $this->theme_id . '_single_sidebar_col_size_md',
+                $this->prefix_id . '_single_sidebar_col_size_md',
                 array(
                     'default'           => WK_DEFAULTS['_single_sidebar_col_size_md'],
                     'type'              => 'theme_mod',
@@ -293,11 +293,11 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
             $wp_customize->add_control(
                 new WP_Customize_Control(
                     $wp_customize,
-                    $this->theme_id . '_single_sidebar_col_size_md',
+                    $this->prefix_id . '_single_sidebar_col_size_md',
                     array(
                         'priority'    => 50,
-                        'section'     => $this->theme_id . '_site_layout_section',
-                        'settings'    => $this->theme_id . '_single_sidebar_col_size_md',
+                        'section'     => $this->prefix_id . '_site_layout_section',
+                        'settings'    => $this->prefix_id . '_single_sidebar_col_size_md',
                         'label'       => __( 'Sidebar column size (min-width: 768px)', $this->theme_id ),
                         'type'        => 'number',
                         'input_attrs'     => array(
@@ -314,7 +314,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
              * setting for large device width (>=992px)
              */
             $wp_customize->add_setting(
-                $this->theme_id . '_double_sidebar_left_col_size_lg',
+                $this->prefix_id . '_double_sidebar_left_col_size_lg',
                 array(
                     'default'           => WK_DEFAULTS['_double_sidebar_left_col_size_lg'],
                     'type'              => 'theme_mod',
@@ -331,11 +331,11 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
             $wp_customize->add_control(
                 new WP_Customize_Control(
                     $wp_customize,
-                    $this->theme_id . '_double_sidebar_left_col_size_lg',
+                    $this->prefix_id . '_double_sidebar_left_col_size_lg',
                     array(
                         'priority'    => 60,
-                        'section'     => $this->theme_id . '_site_layout_section',
-                        'settings'    => $this->theme_id . '_double_sidebar_left_col_size_lg',
+                        'section'     => $this->prefix_id . '_site_layout_section',
+                        'settings'    => $this->prefix_id . '_double_sidebar_left_col_size_lg',
                         'label'       => __( 'Left columns (min-width: 992px)', $this->theme_id ),
                         'type'        => 'number',
                         'input_attrs'     => array(
@@ -352,7 +352,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
              * setting for large device width (>=768px)
              */
             $wp_customize->add_setting(
-                $this->theme_id . '_double_sidebar_left_col_size_md',
+                $this->prefix_id . '_double_sidebar_left_col_size_md',
                 array(
                     'default'           => WK_DEFAULTS['_double_sidebar_left_col_size_md'],
                     'type'              => 'theme_mod',
@@ -369,11 +369,11 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
             $wp_customize->add_control(
                 new WP_Customize_Control(
                     $wp_customize,
-                    $this->theme_id . '_double_sidebar_left_col_size_md',
+                    $this->prefix_id . '_double_sidebar_left_col_size_md',
                     array(
                         'priority'    => 70,
-                        'section'     => $this->theme_id . '_site_layout_section',
-                        'settings'    => $this->theme_id . '_double_sidebar_left_col_size_md',
+                        'section'     => $this->prefix_id . '_site_layout_section',
+                        'settings'    => $this->prefix_id . '_double_sidebar_left_col_size_md',
                         'label'       => __( 'Left columns (min-width: 768px)', $this->theme_id ),
                         'type'        => 'number',
                         'input_attrs'     => array(
@@ -390,7 +390,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
              * setting for large device width (>=992px)
              */
             $wp_customize->add_setting(
-                $this->theme_id . '_double_sidebar_right_col_size_lg',
+                $this->prefix_id . '_double_sidebar_right_col_size_lg',
                 array(
                     'default'           => WK_DEFAULTS['_double_sidebar_right_col_size_lg'],
                     'type'              => 'theme_mod',
@@ -407,11 +407,11 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
             $wp_customize->add_control(
                 new WP_Customize_Control(
                     $wp_customize,
-                    $this->theme_id . '_double_sidebar_right_col_size_lg',
+                    $this->prefix_id . '_double_sidebar_right_col_size_lg',
                     array(
                         'priority'    => 80,
-                        'section'     => $this->theme_id . '_site_layout_section',
-                        'settings'    => $this->theme_id . '_double_sidebar_right_col_size_lg',
+                        'section'     => $this->prefix_id . '_site_layout_section',
+                        'settings'    => $this->prefix_id . '_double_sidebar_right_col_size_lg',
                         'label'       => __( 'Right columns (min-width: 992px)', $this->theme_id ),
                         'type'        => 'number',
                         'input_attrs'     => array(
@@ -428,7 +428,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
              * setting for large device width (>=768px)
              */
             $wp_customize->add_setting(
-                $this->theme_id . '_double_sidebar_right_col_size_md',
+                $this->prefix_id . '_double_sidebar_right_col_size_md',
                 array(
                     'default'           => WK_DEFAULTS['_double_sidebar_right_col_size_md'],
                     'type'              => 'theme_mod',
@@ -445,11 +445,11 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
             $wp_customize->add_control(
                 new WP_Customize_Control(
                     $wp_customize,
-                    $this->theme_id . '_double_sidebar_right_col_size_md',
+                    $this->prefix_id . '_double_sidebar_right_col_size_md',
                     array(
                         'priority'    => 90,
-                        'section'     => $this->theme_id . '_site_layout_section',
-                        'settings'    => $this->theme_id . '_double_sidebar_right_col_size_md',
+                        'section'     => $this->prefix_id . '_site_layout_section',
+                        'settings'    => $this->prefix_id . '_double_sidebar_right_col_size_md',
                         'label'       => __( 'Right columns (min-width: 768px)', $this->theme_id ),
                         'type'        => 'number',
                         'input_attrs'     => array(
@@ -470,7 +470,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
          * @return bool true if right or left sidebar is set, false otherwise
          */
         public function sidebar_is_single( $control ) {
-            $sidebar_position = $control->manager->get_setting( $this->theme_id . '_sidebar_position' )->value();
+            $sidebar_position = $control->manager->get_setting( $this->prefix_id . '_sidebar_position' )->value();
             return 'right' === $sidebar_position || 'left' === $sidebar_position;
         }
 
@@ -482,7 +482,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_Layout' ) ) {
          * @return bool true if sidebar position is set as 'both', false otherwise
          */
         public function sidebar_is_double( $control ) {
-            $sidebar_position = $control->manager->get_setting( $this->theme_id . '_sidebar_position' )->value();
+            $sidebar_position = $control->manager->get_setting( $this->prefix_id . '_sidebar_position' )->value();
             return 'both' === $sidebar_position;
         }
 
