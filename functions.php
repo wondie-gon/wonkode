@@ -55,9 +55,10 @@ WonKode_Enqueues::init();
 require WK_INC_PATH . '/class.wonkode-helper.php';
 require WK_INC_PATH . '/class.wonkode-svg-resources.php';
 require WK_INC_PATH . '/customizer/customizer-functions.php';
+// load class that retrieves post content
+require WK_INC_PATH . '/class.wonkode-retrieve-post-content.php';
 // require WK_INC_PATH . '/class.wonkode-custom-nav-walker.php';
 require WK_INC_PATH . '/class.wp-bootstrap-navwalker.php';
-require WK_INC_PATH . '/class.wonkode-retrieve-posts.php';
 
 // widget areas and custom widgets
 require WK_INC_PATH . '/widgets.php';
@@ -66,11 +67,21 @@ require WK_INC_PATH . '/widgets.php';
 require WK_INC_PATH . '/template-tags.php';
 
 
-// template builders
+/**
+ * Load template builders
+ */
+// UI components builder base class
+require WK_INC_PATH . '/template-builders/class.wonkode-ui-components.php';
+// Comments feature template class
 require WK_INC_PATH . '/template-builders/class.wonkode-comments-feature.php';
+// Social media links feature template class
 require WK_INC_PATH . '/template-builders/class.wonkode-social-media-links.php';
+// Social media sharing feature template class
 require WK_INC_PATH . '/template-builders/class.wonkode-social-media-share-menu.php';
+// Site content area template builder class
 require WK_INC_PATH . '/template-builders/class.wonkode-site-content-area.php';
+// Various types of cards template class
+require WK_INC_PATH . '/template-builders/class.wonkode-cards.php';
 
 /**
  * --------
