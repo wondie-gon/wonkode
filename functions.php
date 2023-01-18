@@ -71,7 +71,7 @@ require WK_INC_PATH . '/template-tags.php';
  * Load template builders
  */
 // UI components builder base class
-require WK_INC_PATH . '/template-builders/class.wonkode-ui-components.php';
+require WK_INC_PATH . '/template-builders/ui-classes/class.wonkode-ui-components.php';
 // Comments feature template class
 require WK_INC_PATH . '/template-builders/class.wonkode-comments-feature.php';
 // Social media links feature template class
@@ -81,7 +81,7 @@ require WK_INC_PATH . '/template-builders/class.wonkode-social-media-share-menu.
 // Site content area template builder class
 require WK_INC_PATH . '/template-builders/class.wonkode-site-content-area.php';
 // Various types of cards template class
-require WK_INC_PATH . '/template-builders/class.wonkode-cards.php';
+require WK_INC_PATH . '/template-builders/ui-classes/class.wonkode-cards.php';
 
 /**
  * --------
