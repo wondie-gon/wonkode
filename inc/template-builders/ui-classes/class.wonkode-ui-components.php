@@ -124,6 +124,7 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
                     $old_classes[] = $cls;
                 }
             }
+            
         }
         /**
          * Returns an opening tag for a div element.
@@ -147,6 +148,8 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
             }
             // get list of classes string
             $class_list = WonKode_Helper::list_classes( $old_classes );
+            // clear $tagname from special chars
+            $tagname = WonKode_Helper::tags_to_str( $tagname );
             // start html output
             $html .= ! empty( $tagname ) ? '<' . esc_attr( $tagname ) : '<div';
             $html .= ! empty( $id ) ? ' id="' . esc_attr( $id ) . '"' : '';
@@ -264,19 +267,16 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
          * @return mixed A div opening tag with passed attributes.
          */
         public static function get_div_open( $new_classes = '', &$old_classes = array(), $id = '' ) {
-            // add to existing classes
-            if ( ! empty( $new_classes ) ) {
-                self::add_to_classes( $new_classes, $old_classes );
-            }
-            // get list of classes string
-            $class_list = WonKode_Helper::list_classes( $old_classes );
-            // start html output
-            $html = '<div';
-            $html .= ! empty( $id ) ? ' id="' . esc_attr( $id ) . '"' : '';
-            $html .= ! empty( $class_list ) ? ' class="' . esc_attr( $class_list ) . '"' : '';
-            $html .= '>';
+            /**
+             * Get an html element opening tag using 
+             * existing method, that returns a div opening tag
+             * by default. 
+             * @see self::get_html_elem_open( $new_classes, $old_classes, $id, '' ) 
+             * for details.
+             */
+            $open_div = self::get_html_elem_open( $new_classes, $old_classes, $id );
             // return the tag
-            return $html;
+            return $open_div;
         }
         /**
          * Returns an opening tag for a div element with 
@@ -329,8 +329,132 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
             }
             // adding inline style
             $html_out .= $inline_style;
+            $html_out .= '>';
             // return html
             return $html_out;
+        }
+        /**
+         * Returns link anchor element <a></a> with 
+         * all passed arguments.
+         * 
+         * @since 1.0
+         * @param array $args = [
+         *  Arguments for link anchor element. Defaults: []
+         *      @type string 'id'	        Element id attribute. Defaults: '',
+         *      @type string 'class'        Element class attribute. Defaults: '',
+         *      @type string 'href'	        Element href attribute. Defaults: '',
+         *      @type string 'target'	    Element target attribute. Defaults: '',
+         *      @type string 'hreflang'	    Element hreflang attribute. Defaults: '',
+         *      @type string 'title'	    Element title attribute. Defaults: '',
+         *      @type string 'role'	        Element role attribute. Defaults: '',
+         *      @type array  'data_attrs'	Array of data set attribute names 
+         *                                  with value. Defaults:	[],
+         *      @type array  'aria_attrs'	Array of aria attribute names with value. 
+         *                                  Defaults:	[],
+         *      @type bool   'downloadable'	Whether link is downloadable. 
+         *                                  Defaults: false,
+         *      @type string 'link_fa_icon'	Fontawesome icon class. Defaults: '',
+         *      @type string 'link_text'    Link text. Defaults: '',
+         * ]
+         * @return html|string  Link with attributes, fontawesome icon, and text
+         */
+        public static function get_link_element( $args = array() ) {
+            $defaults = array(
+                'id'	        =>	'',
+                'class'	        =>	'',
+                'href'	        =>	'',
+                'target'	    =>	'',
+                'hreflang'	    =>	'',
+                'title'	        =>	'',
+                'role'	        =>	'',
+                'data_attrs'	=>	array(),
+                'aria_attrs'	=>	array(),
+                'downloadable'	=>	false,
+                'link_fa_icon'	=>	'',
+                'link_text'	    =>	'',
+            );
+            // merging
+            $args = wp_parse_args( $args, $defaults );
+
+            // open link
+            $a_html = '<a';
+            // id attribute
+            $a_html .= ! empty( $args['id'] ) ? ' id="' . esc_attr( $args['id'] ) . '"' : '';
+            // class attribute
+            $a_html .= ! empty( $args['class'] ) ? ' class="' . WonKode_Helper::list_classes( $args['class'] ) . '"' : '';
+            // href attribute
+            $a_html .= ! empty( $args['href'] ) ? ' href="' . esc_url( $args['href'] ) . '"' : ' href="#"';
+            // target attribute
+            if ( ! empty( $args['target'] ) && in_array( $args['target'], array( '_self', '_parent', '_top', '_blank' ) ) ) {
+                $a_html .= ' target="' . esc_attr( $args['target'] ) . '"';
+            }
+            // hreflang attribute
+            $a_html .= ! empty( $args['hreflang'] ) ? ' hreflang="' . esc_attr( $args['hreflang'] ) . '"' : '';
+            // role attribute
+            $a_html .= ! empty( $args['role'] ) ? ' role="' . esc_attr( $args['role'] ) . '"' : '';
+            // data_attrs attribute
+            if ( ! empty( $args['data_attrs'] ) && is_array( $args['data_attrs'] ) ) {
+                foreach ( $args['data_attrs'] as $data_key => $data_value ) {
+                    $a_html .= ' data-' . $data_key . '="' . esc_attr( $data_value ) . '"';
+                }
+            }
+            // aria_attrs attribute
+            if ( ! empty( $args['aria_attrs'] ) && is_array( $args['aria_attrs'] ) ) {
+                foreach ( $args['aria_attrs'] as $aria_key => $aria_value ) {
+                    $a_html .= ' aria-' . $aria_key . '="' . esc_attr( $aria_value ) . '"';
+                }
+            }
+            // download attribute
+            $a_html .= $args['downloadable'] ? ' download' : '';
+            $a_html .= '>';
+            // get fontawesome icon
+            $a_html .= ! empty( $args['link_fa_icon'] ) ? WonKode_Helper::get_fa_icon( $args['link_fa_icon'] ) : '';
+
+            // text
+            if ( ! empty( $args['link_text'] ) ) {
+                $a_html .= sprintf(
+                    // Translators: %s: link text
+                    esc_html__( '%s', self::$txt_dom ),
+                    $args['link_text']
+                );
+            }
+            $a_html .= '</a>';
+            // return html
+            return $a_html;
+        }
+        /**
+         * Returns img element. 
+         * Nothing if src not passed.
+         * 
+         * @since 1.0
+         * @param array $args [
+         *      Arguments array. Defaults: []
+         *          @type string        'src'      Image src. Defaults: ''
+         *          @type string|array  'class'    Class for img. Defaults: ''
+         *          @type string        'alt'      Image alt. Defaults: ''
+         * ]
+         * @return mixed image element.
+         */
+        public static function get_img_element( $args = array() ) {
+            $defaults = array(
+                'src'	=>	'',
+                'class'	=>	'',
+                'alt'	=>	'',
+            );
+            // merging
+            $args = wp_parse_args( $args, $defaults );
+            // if no image src
+            if ( empty( $args['src'] ) ) {
+                return;
+            }
+            $img = '<img src"' . esc_url( $args['src'] ) . '"';
+            // class for image
+            $img .= ! empty( $args['class'] ) ? ' class="' . WonKode_Helper::list_classes( $args['class'] ) . '"' : '';
+            // alt attribute
+            $img .= ! empty( $args['alt'] ) ? ' alt="' . esc_attr( $args['alt'] ) . '"' : '';
+            $img .= '>';
+            // return img element
+            return $img;
         }
         /**
          * Returns closing tag of html element
@@ -341,6 +465,8 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
          */
         public static function get_html_tag_close( $tagname = '' ) {
             if ( ! empty( $tagname ) ) {
+                // clear $tagname
+                $tagname = WonKode_Helper::tags_to_str( $tagname );
                 return '</' . esc_attr( $tagname ) . '>';
             }
             return '</div>';

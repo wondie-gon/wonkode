@@ -74,7 +74,27 @@ if ( ! class_exists( 'WonKode_Helper' ) ) {
             $theme_txt_domain = self::get_texdomain();
             return strtolower( str_replace( '-', '_', $theme_txt_domain ) );
         }
-
+        /**
+         * Filters tag name to only the string name, 
+         * removing all special characters.
+         * 
+         * @since 1.0
+         * @param string $tagname   string for html tag name
+         * @return string
+         */
+        public static function tags_to_str( $tagname ) {
+            if ( ! is_string( $tagname ) || empty( $tagname ) ) {
+                return;
+            }
+            // characters to remove
+            $chars_arr = array( '<', '&lt;', '>', '&gt;', '/', '-', '_' );
+            // first trim white spaces
+            $tagname = trim( $tagname );
+            // if special chars given, remove them
+            $tagname = str_replace( $chars_arr, '', $tagname );
+            // output result
+            return $tagname;
+        }
         /**
          * Returns fontawesome icon element
          * 
@@ -141,38 +161,35 @@ if ( ! class_exists( 'WonKode_Helper' ) ) {
             // prepare $classes as array
             $classes = is_array( $classes ) ? $classes : (array) $classes;
             $classes_arr = array();
-            for ( $i=0; $i < count( $classes ); $i++ ) { 
+            for ( $i = 0; $i < count( $classes ); $i++ ) { 
                 $new_list = explode( ' ', $classes[ $i ] );
-                for ( $j=0; $j < count( $new_list ); $j++ ) { 
+                for ( $j = 0; $j < count( $new_list ); $j++ ) { 
                     $classes_arr[] = $new_list[ $j ];
                 }
-            } 
-            // merging if additionals is passed
-            if ( ! empty( $additionals ) ) {
-                $classes_arr = array_merge( $classes_arr, $additionals );
-                $class_list .= implode( ' ', (array) implode( ' ', $classes_arr ) );
-            } else {
-                $class_list .= implode( ' ', $classes_arr );
             }
+            // make sure $additionals is array
+            $additionals = is_array( $additionals ) ? $additionals : (array) $additionals;
+            // further refining of $additionals
+            $temp_additionals = array();
+            for ( $m = 0; $m < count( $additionals ); $m++ ) { 
+                $new_temp_list = explode( ' ', $additionals[ $m ] );
+                for ( $l = 0; $l < count( $new_temp_list ); $l++ ) {
+                    $temp_additionals[] = $new_temp_list[ $l ];
+                }
+            }
+            // sanitize both
+            $classes_arr = array_map( 'esc_attr', $classes_arr );
+            $temp_additionals = array_map( 'esc_attr', $temp_additionals );
+            /**
+             * Merges as unique
+             * Removes duplicate values from array
+             */
+            $classes_arr = array_unique( array_merge( $classes_arr, $temp_additionals ), SORT_REGULAR );
+            // listing classes for output
+            $class_list .= implode( ' ', $classes_arr );
+            // outputting class list
             return $class_list;
         }
-
-        /*
-        ===============Previous function=====================================
-        public static function list_classes( $classes, $additionals = array() ) {
-            $class_list = '';
-            // prepare $classes as array
-            $classes = ( ! is_array( $classes ) && is_string( $classes ) ) ? (array) $classes : $classes;
-            // parsing
-            if ( ! empty( $additionals ) ) {
-                $classes = wp_parse_args( $classes, $additionals );
-                $class_list .= implode( ' ', (array) implode( ' ', $classes ) );
-            } else {
-                $class_list .= implode( ' ', $classes );
-            }
-            return $class_list;
-        }
-        */
 
     } // ENDS -- class
 }

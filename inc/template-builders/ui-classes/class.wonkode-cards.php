@@ -1,6 +1,10 @@
 <?php
 /**
- * Class for templating cards UI component
+ * Class for templating cards UI component. Since card 
+ * is a flexible and extensible content container, that 
+ * includes options for headers and footers, a wide variety 
+ * of content, contextual background colors, and powerful 
+ * display options, it deserves its own class.
  * 
  * @package WonKode
  * @since 1.0
@@ -193,6 +197,130 @@ if ( ! class_exists( 'WonKode_Cards' ) ) {
          */
         public static function close_card_title( $h_tag = 'h4' ) {
             echo self::get_card_title_close( $h_tag );
+        }
+        /**
+         * Returns card text element opening. 
+         * 
+         * @since 1.0
+         * @param string|array $new_classes List of new classes to add.
+         *                                  Defaults: ''
+         * @return mixed Card text element opening tag.
+         */
+        public static function get_card_text_open( $new_classes = '' ) {
+            // default card text classes
+            $card_text_classes = array( 'card-text' );
+            // get element tag
+            $card_text_elem = self::get_html_elem_open( $new_classes, $card_text_classes, '', 'p' );
+            // return opening tag
+            return $card_text_elem;
+        }
+        /**
+         * Renders card text element opening. 
+         * 
+         * @since 1.0
+         * @param string|array $new_classes List of new classes to add.
+         *                                  Defaults: ''
+         * @return void
+         */
+        public static function open_card_text( $new_classes = '' ) {
+            echo self::get_card_text_open( $new_classes );
+        }
+        /**
+         * Returns card link anchor element <a></a> with 
+         * all passed arguments.
+         * 
+         * @since 1.0
+         * @param array $args = [
+         *  Arguments for link anchor element. Defaults: []
+         *      @type string 'id'	        Element id attribute. Defaults: '',
+         *      @type string 'class'        Element class attribute. Defaults: '',
+         *      @type string 'href'	        Element href attribute. Defaults: '',
+         *      @type string 'target'	    Element target attribute. Defaults: '',
+         *      @type string 'hreflang'	    Element hreflang attribute. Defaults: '',
+         *      @type string 'title'	    Element title attribute. Defaults: '',
+         *      @type string 'role'	        Element role attribute. Defaults: '',
+         *      @type array  'data_attrs'	Array of data set attribute names 
+         *                                  with value. Defaults:	[],
+         *      @type array  'aria_attrs'	Array of aria attribute names with value. 
+         *                                  Defaults:	[],
+         *      @type bool   'downloadable'	Whether link is downloadable. 
+         *                                  Defaults: false,
+         *      @type string 'link_fa_icon'	Fontawesome icon class. Defaults: '',
+         *      @type string 'link_text'    Link text. Defaults: '',
+         * ]
+         * @return html|string  Link with attributes, fontawesome icon, and text
+         */
+        public static function get_card_link( $args = array() ) {
+            // setting card link if not passed
+            $args['class'] = ! empty( $args['class'] ) ? $args['class'] : 'card-link';
+            return self::get_link_element( $args );
+        }
+        /**
+         * Renders card link anchor element <a></a> with 
+         * all passed arguments.
+         * 
+         * @since 1.0
+         * @param array $args   Arguments for link anchor element. 
+         *                      Defaults: [].
+         *                      See details about arguments in 
+         *                      WonKode_Cards::get_card_link( $args )
+         * @return void
+         */
+        public static function card_link( $args = array() ) {
+            echo self::get_card_link( $args );
+        }
+        /**
+         * Returns card img element. 
+         * Nothing if src not passed.
+         * 
+         * @since 1.0
+         * @param array $args [
+         *      Arguments array. Defaults: []
+         *          @type string        'src'      Image src. Defaults: ''
+         *          @type string|array  'class'    Class for img. Defaults: ''
+         *          @type string        'alt'      Image alt. Defaults: ''
+         * ]
+         * @return mixed Card image.
+         */
+        public static function get_card_image( $args = array() ) {
+            // set card image
+            $args['class'] = ! empty( $args['class'] ) ? $args['class'] : 'card-img-top';
+            // return img
+            return self::get_img_element( $args );
+        }
+        /**
+         * Renders card img element. 
+         * Nothing displays if src not passed.
+         * 
+         * @since 1.0
+         * @param array $args [
+         *      Arguments array. Defaults: []
+         *          @type string        'src'      Image src. Defaults: ''
+         *          @type string|array  'class'    Class for img. Defaults: ''
+         *          @type string        'alt'      Image alt. Defaults: ''
+         * ]
+         * @return void
+         */
+        public static function card_image( $args = array() ) {
+            echo self::get_card_image( $args );
+        }
+        /**
+         * Returns closing of card text element.
+         * 
+         * @since 1.0
+         * @return mixed Closing html tag for card text
+         */
+        public static function get_card_text_close() {
+            return self::get_html_tag_close( 'p' );
+        }
+        /**
+         * Renders closing of card text element.
+         * 
+         * @since 1.0
+         * @return void
+         */
+        public static function close_card_text() {
+            echo self::get_card_text_close();
         }
         /**
          * Returns closing div of card element
