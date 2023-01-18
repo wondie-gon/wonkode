@@ -38,6 +38,25 @@ get_header();
                         );
                     ?>
                     </div>
+
+                    <!-- will be deleted - only for test -->
+                    <div class="col-12 py-3">
+                    <?php
+                        $styles = array( 'width' => '18rem', 'background_color' => '#ff0000', 'color' => '#ffffff', 'padding' => '1rem' );
+                        $cardui = new WonKode_Cards;
+                        // $cardui::open_default_card( 'wonkode-card', 'card-test' );
+                        $cardui::open_inline_styled_card( 'wonkode-card card-test', $styles );
+                        $cardui::open_card_body( 'card-inner' );
+                        $cardui::open_card_title();
+                        echo 'Card Title';
+                        $cardui::close_card_title();
+                        echo '<p>Test Card Block.</p>';
+                        $cardui::close_card_body();
+                        $cardui::close_card_div();
+                    ?>
+                    </div>
+                    <!-- will be deleted - only for test -->
+
                 </div>
             </div>
             <!-- single post column Ends -->

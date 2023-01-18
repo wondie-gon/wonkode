@@ -62,6 +62,8 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
          * Class constructor.
          * Sets text domain and unique prefix 
          * properties.
+         * 
+         * @since 1.0
          */
         public function __construct() {
             // set text domain
@@ -122,6 +124,36 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
                     $old_classes[] = $cls;
                 }
             }
+        }
+        /**
+         * Returns an opening tag for a div element.
+         * 
+         * @since 1.0
+         * @param string/array $new_classes List of class to add.
+         * @param array $old_classes        Existing classes array. 
+         *                                  Used to append additional 
+         *                                  classes (passed by reference).
+         * @param string $id                Value for id attribute for card.
+         *                                  Defaults: ''
+         * @param string $tagname           Name for html tag. Defaults: ''
+         * @return mixed A div opening tag with passed attributes.
+         */
+        public static function get_html_elem_open( $new_classes = '', &$old_classes = array(), $id = '', $tagname = '' ) {
+            // init element
+            $html = '';
+            // add to existing classes
+            if ( ! empty( $new_classes ) ) {
+                self::add_to_classes( $new_classes, $old_classes );
+            }
+            // get list of classes string
+            $class_list = WonKode_Helper::list_classes( $old_classes );
+            // start html output
+            $html .= ! empty( $tagname ) ? '<' . esc_attr( $tagname ) : '<div';
+            $html .= ! empty( $id ) ? ' id="' . esc_attr( $id ) . '"' : '';
+            $html .= ! empty( $class_list ) ? ' class="' . esc_attr( $class_list ) . '"' : '';
+            $html .= '>';
+            // return the tag
+            return $html;
         }
         /**
          * Returns column html opening tag 
@@ -227,6 +259,9 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
          * @param array $old_classes        Existing classes array. 
          *                                  Used to append additional 
          *                                  classes (passed by reference).
+         * @param string $id                Value for id attribute for card.
+         *                                  Defaults: ''
+         * @return mixed A div opening tag with passed attributes.
          */
         public static function get_div_open( $new_classes = '', &$old_classes = array(), $id = '' ) {
             // add to existing classes
@@ -242,6 +277,60 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
             $html .= '>';
             // return the tag
             return $html;
+        }
+        /**
+         * Returns an opening tag for a div element with 
+         * class attribute and inline styles if passed.
+         * 
+         * @since 1.0
+         * @param string/array $new_classes List of class to add.
+         * @param array $old_classes        Existing classes array. 
+         *                                  Used to append additional 
+         *                                  classes (passed by reference).
+         * @param array $styles             Array of css properties.
+         *                                  CSS properties with '-', such as 
+         *                                  'background-color', their key 
+         *                                  should be given with '_' like 
+         *                                  'background_color' => '#fcfcfc'
+         * @return mixed div opening tag with class and inline style.
+         */
+        public static function get_inline_styled_div_open( $new_classes = '', &$old_classes = array(), $styles = array() ) {
+            // start html output
+            $html_out = '<div';
+            // add to existing classes
+            if ( ! empty( $new_classes ) ) {
+                self::add_to_classes( $new_classes, $old_classes );
+            }
+            // get list of classes string
+            $class_list = WonKode_Helper::list_classes( $old_classes );
+            // add class attribute
+            $html_out .= ! empty( $class_list ) ? ' class="' . esc_attr( $class_list ) . '"' : '';
+            // get styles ready
+            $styles = array_filter( $styles, function( $v ) {
+                return $v !== '';
+            } );
+            // start style attribute
+            $inline_style = '';
+            // go through styles
+            if ( count( $styles ) >= 1 ) {
+                $inline_style .= ' style="';
+                $css_list = '';
+                foreach ( $styles as $prop => $value ) {
+                    // $property = str_replace( '_', '-', $prop );
+                    /**
+                     * keys with '_' are css properties with '-'
+                     * For example: key name for css property 'background-color' 
+                     * is passed with key 'background_color'
+                     */
+                    $css_list .= str_replace( '_', '-', $prop ) . ': ' . $value . '; ';
+                }
+                $inline_style .= rtrim( $css_list, ' ' );
+                $inline_style .= '"';
+            }
+            // adding inline style
+            $html_out .= $inline_style;
+            // return html
+            return $html_out;
         }
         /**
          * Returns closing tag of html element
