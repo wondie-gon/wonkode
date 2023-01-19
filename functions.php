@@ -80,7 +80,7 @@ require WK_INC_PATH . '/template-builders/class.wonkode-social-media-links.php';
 require WK_INC_PATH . '/template-builders/class.wonkode-social-media-share-menu.php';
 // Site content area template builder class
 require WK_INC_PATH . '/template-builders/class.wonkode-site-content-area.php';
-// Various types of cards template class
+// Cards template class
 require WK_INC_PATH . '/template-builders/ui-classes/class.wonkode-cards.php';
 
 /**
