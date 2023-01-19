@@ -102,6 +102,21 @@ if ( ! class_exists( 'WonKode_Retrieve_Post_Content' ) ) {
             return is_admin() || ! ( $this->post_is_private( $_post ) || $this->post_is_protected( $_post ) );
         }
         /**
+         * Returns post data array with filter 'raw'
+         * 
+         * @since 1.0
+         * @param int|WP_Post $post Optional.   Post ID or WP_Post object. 
+         *                                      Default is global `$post`.
+         * @param array $post_data              Reference of existing post data 
+         *                                      which will be merged to new post data.
+         * @return array post data array
+         */
+        public static function get_post_data_raw( $post = null, &$post_data = array() ) {
+            $data = get_post( $post, ARRAY_A, 'raw' );
+            $post_data = array_merge( $post_data, $data );
+            return $post_data;
+        }
+        /**
          * Returns post title
          * 
          * @since 1.0
