@@ -16,6 +16,49 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WonKode_Cards' ) ) {
     class WonKode_Cards extends WonKode_UI_Components {
         /**
+         * Configuration arguments of a post 
+         * card.
+         * 
+         * @access private
+         * 
+         * @since 1.0
+         * @var array
+         */
+        private static $card_config = array(
+            'card_class'    =>	'',
+            'inline_styles' =>	array(),
+            'header_class'	=>	'',
+            'has_image'	    =>	true,
+            'img_size'      =>  '',
+            'img_attrs'	    =>	array(
+                'class'	=>	'card-img-top',
+                'src'	=>	'',
+                'alt'	=>	'',
+            ),
+            'horizontal'	=>	false,
+            'body_class'	=>	'',
+            'title_tag'	    =>	'',
+            'title_class'	=>	'',
+            'text_class'	=>	'',
+            'link_class'	=>	'',
+
+            // coud be in 'post_data'
+            'title'	        =>	'',
+            'inner_content'	=>	'',
+            'linked_to'	    =>	'',
+            // coud be in 'post_data'
+
+            'link_text'	    =>	'Read More',
+            'footer_class'	=>	'',
+            'post_data'     =>  array(
+                'id'    =>  '',
+                'title'    =>  '',
+                'permalink'    =>  '',
+                'excerpt'    =>  '',
+                'content'    =>  '',
+            ),
+        );
+        /**
          * Class constructor.
          * Sets text domain and unique prefix 
          * properties via parent constructor.
@@ -25,6 +68,241 @@ if ( ! class_exists( 'WonKode_Cards' ) ) {
         public function __construct() {
             parent::__construct();
         }
+        /**
+         * Returns card block with post data filled.
+         * 
+         * @since 1.0
+         * @param array $args       Array of arguments for card 
+         *                          block configuration. Defaults: []
+         * @return mixed Card filled with post content.
+         */
+        public static function get_card_post( $args = array() ) {
+            // post retrieve object
+            $post_fetch = new WonKode_Retrieve_Post_Content();
+
+            // get parsed $args
+            $args = self::parse_card_config( $args );
+            // start card html
+            $card_html = '';
+            // get card opening
+            $card_html .= self::get_inline_styled_card_open( $args['card_class'], $args['inline_styles'] );
+            // Card post image
+            $card_html .= self::get_card_post_image( $args );
+            // card body opening
+            $card_html .= self::get_card_body_open( $args['body_class'] );
+            // title
+            $card_html .= self::get_card_post_title( $post_fetch->get_title_anchor(), $args );
+            // post excerpt
+            $card_html .= self::get_card_post_excerpt( $post_fetch->get_excerpt(), $args );
+            // post link
+            $card_html .= self::get_card_post_link( $args );        
+            
+            // card body closing
+            $card_html .= self::get_card_body_close();
+            
+            // get card closing
+            $card_html .= self::get_card_div_close();
+            // return card post
+            return $card_html;
+        }
+        /**
+         * Returns card post thumbnail.
+         * 
+         * @since 1.0
+         * @param array $args       Array of arguments for card 
+         *                          block configuration. Defaults: []
+         * @return mixed card post image
+         */
+        public static function get_card_post_image( $args = array() ) {
+            // start html
+            $img_html = '';
+            $args['img_size'] = ! empty( $args['img_size'] ) ? $args['img_size'] : 'medium';
+            $args['img_attrs']['class'] = ! empty( $args['img_attrs']['class'] ) ? $args['img_attrs']['class'] : 'card-img-top';
+            if ( ! empty( $args['img_attrs']['src'] ) ) {
+                if ( ! has_post_thumbnail() ) {
+                    $img_html .= '';
+                } else {
+                    // set image alt
+                    $args['img_attrs']['alt'] = the_title_attribute( array( 'echo'  =>  false ) );
+                    // get post thumbnail
+                    $img_html .= get_the_post_thumbnail( get_the_ID(), $args['img_size'], $args['img_attrs'] );
+                }
+            } else {
+                $img_html .= self::get_card_image( $args['img_attrs'] );
+            }
+            // return image block
+            return $img_html;
+        }
+        /**
+         * Returns card post title block.
+         * 
+         * @since 1.0
+         * @param string $title     Post title.
+         * @param array $args       Array of arguments for card 
+         *                          block configuration. Defaults: []
+         * @return mixed Post title block.
+         */
+        public static function get_card_post_title( $title, $args = array() ) {
+            // start html
+            $html_out = '';
+            // title tag
+            $args['title_tag'] = ! empty( $args['title_tag'] ) ? $args['title_tag'] : 'h4';
+            // title class
+            $args['title_class'] = ! empty( $args['title_class'] ) ? $args['title_class'] : 'entry-title';
+            $html_out .= self::get_card_title_open( $args['title_tag'], $args['title_class'] );
+            $html_out .= $title;
+            $html_out .= self::get_card_title_close( $args['title_tag'] );
+            // return post title block
+            return $html_out;
+        }
+        /**
+         * Returns card post excerpt block.
+         * 
+         * @since 1.0
+         * @param string $excerpt Post excerpt.
+         * @param array $args       Array of arguments for card 
+         *                          block configuration. Defaults: []
+         * @return mixed Post excerpt block.
+         */
+        public static function get_card_post_excerpt( $excerpt, $args = array() ) {
+            // start html
+            $html = '';
+            $html .= self::get_div_open( 'entry-content' );
+            // open card text p
+            $args['text_class'] = ! empty( $args['text_class'] ) ? $args['text_class'] : '';
+            $html .= self::get_card_text_open( $args['text_class'] );
+            // post excerpt
+            $html .= $excerpt;
+            // close card text p
+            $html .= self::get_card_text_close();
+            // close entry content
+            $html .= self::get_html_tag_close();
+            // return excerpt block
+            return $html;
+        }
+        /**
+         * Returns card post link
+         * 
+         * @since 1.0
+         * 
+         * @param array $args       Array of arguments for card 
+         *                          block configuration. Defaults: []
+         * @param int|WP_Post $post Optional. Post ID or WP_Post object. 
+         *                          Default is global `$post`.
+         * @return mixed post link
+         */
+        public static function get_card_post_link( $args = array(), $post = null ) {
+            $link_args = array(
+                'class'     =>  ! empty( $args['link_class'] ) ? $args['link_class'] : 'btn btn-primary',
+                'href'      =>  get_permalink( $post ),
+                'link_text' => ! empty( $args['link_text'] ) ? $args['link_text'] : 'Read More',
+            );
+            // return link
+            return self::get_card_link( $link_args );
+        }
+        /**
+         * Returns card block with header, footer 
+         * and post content filled.
+         * 
+         * @since 1.0
+         * @param array $args       Array of arguments for card 
+         *                          block configuration. Defaults: []
+         * @param bool $has_header  Whether card header is needed.
+         *                          Defaults: false.
+         * @param bool $has_footer  Whether card footer is needed.
+         *                          Defaults: false.
+         * @return mixed Card filled with post content.
+         */
+        public static function get_header_footer_card_post( $args = array(), $has_header = false, $has_footer = false ) {
+            // get parsed $args
+            $args = self::parse_card_config( $args );
+            // start card html
+            $card_html = '';
+            // get card opening
+            $card_html .= self::get_inline_styled_card_open( $args['card_class'], $args['inline_styles'] );
+            // header
+            if ( $has_header ) {
+                // open header
+                $card_html .= self::get_div_open( $args['header_class'], array( 'card-header' ) );
+                // -----Header content here
+                // close header
+                $card_html .= self::get_html_tag_close();
+            }
+            // card body opening
+            $card_html .= self::get_card_body_open( $args['body_class'] );
+
+            /**
+             * Title
+             */
+            // title tag
+            $args['title_tag'] = ! empty( $args['title_tag'] ) ? $args['title_tag'] : 'h4';
+            // title class
+            $args['title_class'] = ! empty( $args['title_class'] ) ? $args['title_class'] : 'entry-title';
+            $card_html .= self::get_card_title_open( $args['title_tag'], $args['title_class'] );
+            $card_html .= 'Card Title One';
+            $card_html .= self::get_card_title_close( $args['title_tag'] );
+
+            /**
+             * Card text content
+             */
+            // open entry content
+            $card_html .= self::get_div_open( 'entry-content' );
+            // open card text p
+            $card_html .= self::get_card_text_open( $args['text_class'] );
+            $card_html .= 'Post excerpt content here without paragraph tag';
+            // close card text p
+            $card_html .= self::get_card_text_close();
+            // close entry content
+            $card_html .= self::get_html_tag_close();
+
+            /**
+             * Link
+             */
+            $link_args = array(
+                'class'     =>  'btn btn-primary',
+                'href'      =>  '',
+                'link_text' => ! empty( $args['link_text'] ) ? $args['link_text'] : 'Read More',
+            );
+            $card_html .= self::get_card_link( $link_args );           
+            
+            // card body closing
+            $card_html .= self::get_card_body_close();
+            // footer
+            if ( $has_footer ) {
+                // open footer
+                $card_html .= self::get_div_open( $args['footer_class'], array( 'card-footer' ) );
+                
+                // -----footer content here
+
+                // close footer
+                $card_html .= self::get_html_tag_close();
+            }
+            // get card closing
+            $card_html .= self::get_card_div_close();
+            // return card post
+            return $card_html;
+        }
+        /**
+         * Returns configuration arguments 
+         * parsed with defaults, ready for 
+         * use to render post in card block.
+         * 
+         * @since 1.0
+         * @param array $args   Array of card's configuration 
+         *                      arguments. Defaults: []
+         * @return array Parsed configuration arguments.
+         */
+        protected static function parse_card_config( $args = array() ) {
+            $args = wp_parse_args( $args, self::$card_config );
+            return $args;
+        }
+        
+        /**
+         * Returns post card by post id.
+         */
+        public static function get_post_card_by_id( $post = null, $args = array() ) {}
+
+
         /**
          * Returns opening tag for default card element.
          * 
