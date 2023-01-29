@@ -232,8 +232,15 @@ button.floaticon-input-addon {
 .page-header .breadcrumb-item+.breadcrumb-item::before {
     color: var(--secondary);
 }
-
-
+.page-header .page-title {
+    color: var(--primary);
+}
+.single-header .single-title {
+    color: var(--primary);
+}
+.archive-header .archive-title {
+    color: var(--primary);
+}
 /*** Service ***/
 .service-item {
     position: relative;
@@ -383,6 +390,13 @@ button.floaticon-input-addon {
 
 .accordion .accordion-body {
     padding: 15px 0 0 0;
+}
+
+/* single post styles 
+------------------------------------------ */
+.image-entry img {
+    max-width: 100%;
+    height: auto;
 }
 
 
