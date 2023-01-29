@@ -8,6 +8,10 @@
  * @package WonKode
  * @since 1.0
  */
+// restricting direct access
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 // header
 get_header();
 // open outer container
