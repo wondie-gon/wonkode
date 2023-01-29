@@ -148,6 +148,37 @@ if ( ! class_exists( 'WonKode_Helper' ) ) {
             );
         }
         /**
+         * Adds new classes to existing ones for 
+         * an html element.
+         * 
+         * @since 1.0
+         * @param string/array $new_classes List of class to add.
+         * @param array &$old_classes       Existing classes array. 
+         *                                  Used to append additional 
+         *                                  classes (passed by reference).
+         * @return void
+         */
+        public static function add_to_classes( $new_classes, &$old_classes = array() ) {
+            // empty class
+            if ( empty( $new_classes ) ) {
+                $class_list = '';
+            } else {
+                /**
+                 * outputs space separated string 
+                 * whether $new_classes is string or array
+                 */
+                $class_list = self::list_classes( $new_classes );
+                // string to array
+                $class_list = explode( ' ', $class_list );
+            }
+            if ( ! empty( $class_list ) ) {
+                foreach ( $class_list as $cls ) {
+                    $old_classes[] = $cls;
+                }
+            }
+            
+        }
+        /**
          * Helper to get parsed classes ready to be used 
          * in class attribute of html elements
          * 
