@@ -35,28 +35,13 @@ if ( ! class_exists( 'WonKode_Cards' ) ) {
                 'src'	=>	'',
                 'alt'	=>	'',
             ),
-            'horizontal'	=>	false,
             'body_class'	=>	'',
             'title_tag'	    =>	'',
             'title_class'	=>	'',
             'text_class'	=>	'',
             'link_class'	=>	'',
-
-            // coud be in 'post_data'
-            'title'	        =>	'',
-            'inner_content'	=>	'',
-            'linked_to'	    =>	'',
-            // coud be in 'post_data'
-
             'link_text'	    =>	'Read More',
             'footer_class'	=>	'',
-            'post_data'     =>  array(
-                'id'    =>  '',
-                'title'    =>  '',
-                'permalink'    =>  '',
-                'excerpt'    =>  '',
-                'content'    =>  '',
-            ),
         );
         /**
          * Class constructor.
@@ -118,7 +103,7 @@ if ( ! class_exists( 'WonKode_Cards' ) ) {
             $img_html = '';
             $args['img_size'] = ! empty( $args['img_size'] ) ? $args['img_size'] : 'medium';
             $args['img_attrs']['class'] = ! empty( $args['img_attrs']['class'] ) ? $args['img_attrs']['class'] : 'card-img-top';
-            if ( ! empty( $args['img_attrs']['src'] ) ) {
+            if ( empty( $args['img_attrs']['src'] ) ) {
                 if ( ! has_post_thumbnail() ) {
                     $img_html .= '';
                 } else {
@@ -292,7 +277,7 @@ if ( ! class_exists( 'WonKode_Cards' ) ) {
          *                      arguments. Defaults: []
          * @return array Parsed configuration arguments.
          */
-        protected static function parse_card_config( $args = array() ) {
+        public static function parse_card_config( $args = array() ) {
             $args = wp_parse_args( $args, self::$card_config );
             return $args;
         }
