@@ -55,7 +55,6 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             'img_wrapper'           =>  array( 'image-entry' ),
             'edit_screen_reader'    =>  array( 'screen-reader-block' ),
             'social_media'          =>  array( 'social-block' ),
-            'comments_wrapper'      =>  array( 'comments-wrapper' ),
         );
 
         /**
@@ -374,16 +373,9 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                         if ( get_theme_mod( 'enable_wonkode_social_media_sharing' ) ) {
                             self::social_media_shares_block( 'co-12 p-3' );
                         }
-                        /**
-                        * Displays comments area with comment form if comments are open, 
-                        * or there is some number of comments, and password is not required
-                        */
-                        if ( ( comments_open() || get_comments_number() ) && ! post_password_required() ) {
-                            self::comments_block( 'col-12 p-4' );
-                        }
                     ?>
                 </div>
-            </article><!-- #post-<?php the_ID(); ?>.card -->
+            </article><!-- #post-<?php the_ID(); ?> -->
             <?php
         }
         /**
@@ -427,16 +419,9 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                         if ( get_theme_mod( 'enable_wonkode_social_media_sharing' ) ) {
                             self::social_media_shares_block( 'co-12 p-3' );
                         }
-                        /**
-                        * Displays comments area with comment form if comments are open, 
-                        * or there is some number of comments, and password is not required
-                        */
-                        if ( ( comments_open() || get_comments_number() ) && ! post_password_required() ) {
-                            self::comments_block( 'col-12 p-4' );
-                        }
                     ?>
                 </div>
-            </article><!-- #page-<?php the_ID(); ?>.card -->
+            </article><!-- #page-<?php the_ID(); ?> -->
             <?php
         }
         /**
@@ -571,26 +556,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             <?php
         }
         /**
-         * Renders comment template block.
-         * 
-         * @access private
-         * 
-         * @since 1.0
-         * @param string $class_additions String list of classes to add 
-         *                                  to block. Defaults: ''
-         * @return void
-         */
-        private static function comments_block( $class_additions = '' ) {
-            // get class list for block
-            $block_cls_list = self::get_all_block_class_list( $class_additions, self::$block_classes_assoc['comments_wrapper'] );
-            ?>
-            <div class="<?php echo esc_attr( $block_cls_list ); ?>">
-                <?php comments_template(); ?>
-            </div>
-            <?php
-        }
-        /**
-         * Renders post thumbnail with wrapping block. 
+         * Renders post thumbnail with wrapping block.
          * 
          * @since 1.0
          * @param array $args {
