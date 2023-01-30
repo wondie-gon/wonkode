@@ -38,6 +38,15 @@ get_header();
                         );
                     ?>
                     </div>
+                    <?php 
+                        /**
+                        * Displays comments area with comment form if comments are open, 
+                        * or there is some number of comments, and password is not required
+                        */
+                        if ( ( comments_open() || get_comments_number() ) && ! post_password_required() ) {
+                            WonKode_Comments_Feature::show_comments_block( 'col-12 p-4' );
+                        }
+                    ?>
                 </div>
             </div>
             <!-- single post column Ends -->
