@@ -13,9 +13,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! class_exists( 'WonKode_Comments_Feature' ) ) {
     class WonKode_Comments_Feature {
         /**
-         * Assigning text domain
+         * Theme identifier, text domain
+         * 
+         * @since 1.0
+         * @var string
          */
-        public static $txt_domain = WK_TXTDOM;
+        public static $txt_dom = WK_TXTDOM;
 
         /**
          * Initializes comment feature by adding filter 
@@ -96,7 +99,7 @@ if ( ! class_exists( 'WonKode_Comments_Feature' ) ) {
                 if ( 1 === (int) $comments_number ) {
                     printf(
                         /* translators: %s: post title */
-                        esc_html_x( 'One thought on &ldquo;%s&rdquo;', 'comments title', self::$txt_domain ),
+                        esc_html_x( 'One thought on &ldquo;%s&rdquo;', 'comments title', self::$txt_dom ),
                         '<span>' . get_the_title() . '</span>'
                     );
                 } else {
@@ -108,7 +111,7 @@ if ( ! class_exists( 'WonKode_Comments_Feature' ) ) {
                                 '%1$s thoughts on &ldquo;%2$s&rdquo;',
                                 $comments_number,
                                 'comments title',
-                                self::$txt_domain
+                                self::$txt_dom
                             )
                         ),
                         number_format_i18n( $comments_number ), // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
@@ -142,6 +145,28 @@ if ( ! class_exists( 'WonKode_Comments_Feature' ) ) {
             </ol><!-- .comment-list -->
             <?php
         }
+        /**
+         * Renders comment template block.
+         * 
+         * @since 1.0
+         * @param string $class_additions String list of classes to add 
+         *                                  to block. Defaults: ''
+         * @return void
+         */
+        public static function show_comments_block( $class_additions = '' ) {
+            // default class for comments block
+            $def_classes = array( 'comments-wrapper' );
+            // if additonal classes passed
+            if ( ! empty( $class_additions ) ) {
+                WonKode_Helper::add_to_classes( $class_additions, $def_classes );
+            }
+            $block_cls_list = WonKode_Helper::list_classes( $def_classes );
+            ?>
+            <div class="<?php echo esc_attr( $block_cls_list ); ?>">
+                <?php comments_template(); ?>
+            </div>
+            <?php
+        }
 
         /**
          * Displays comment feature form block
@@ -173,16 +198,16 @@ if ( ! class_exists( 'WonKode_Comments_Feature' ) ) {
             ?>
             <nav class="comment-navigation" id="<?php echo esc_attr( $nav_id ); ?>">
                 <h1 class="screen-reader-text">
-                    <?php esc_html_e( 'Comment navigation', self::$txt_domain ); ?>
+                    <?php esc_html_e( 'Comment navigation', self::$txt_dom ); ?>
                 </h1>
                 <?php if ( get_previous_comments_link() ) { ?>
                 <div class="nav-previous">
-                    <?php previous_comments_link( __( '&larr; Older Comments', self::$txt_domain ) ); ?>
+                    <?php previous_comments_link( __( '&larr; Older Comments', self::$txt_dom ) ); ?>
                 </div>
                 <?php } ?>
                 <?php if ( get_next_comments_link() ) { ?>
                 <div class="nav-next">
-                    <?php next_comments_link( __( 'Newer Comments &rarr;', self::$txt_domain ) ); ?>
+                    <?php next_comments_link( __( 'Newer Comments &rarr;', self::$txt_dom ) ); ?>
                 </div>
                 <?php } ?>
             </nav><!-- #<?php echo esc_attr( $nav_id ); ?> -->
@@ -220,11 +245,11 @@ if ( ! class_exists( 'WonKode_Comments_Feature' ) ) {
                                             '<div class="comment-form-comment form-floating mb-3">%s %s</div>', 
                                             sprintf(
                                                 '<textarea class="form-control" placeholder="%s" id="comment" name="comment" aria-required="true" style="height: 150px;"></textarea>', 
-                                                __( 'Leave your comment here', self::$txt_domain )
+                                                __( 'Leave your comment here', self::$txt_dom )
                                             ), 
                                             sprintf(
                                                 '<label for="comment">%s%s</label>', 
-                                                _x( 'Comment', 'noun', self::$txt_domain ), 
+                                                _x( 'Comment', 'noun', self::$txt_dom ), 
                                                 $required_indicator
                                             )
                                         ), 
@@ -234,12 +259,12 @@ if ( ! class_exists( 'WonKode_Comments_Feature' ) ) {
                                         sprintf(
                                             '<input type="text" class="form-control" id="author" name="author" value="%s" placeholder="%s"%s />', 
                                             esc_attr( $commenter['comment_author'] ), 
-                                            __( 'Name', self::$txt_domain ), 
+                                            __( 'Name', self::$txt_dom ), 
                                             ( $req ? $required_attribute : '' )
                                         ), 
                                         sprintf(
                                             '<label for="author">%s%s</label>', 
-                                            __( 'Your Name', self::$txt_domain ), 
+                                            __( 'Your Name', self::$txt_dom ), 
                                             ( $req ? $required_indicator : '' )
                                         )
                                     ),
@@ -255,7 +280,7 @@ if ( ! class_exists( 'WonKode_Comments_Feature' ) ) {
                                         ), 
                                         sprintf(
                                             '<label for="email">%s%s</label>', 
-                                            __( 'Email address', self::$txt_domain ), 
+                                            __( 'Email address', self::$txt_dom ), 
                                             ( $req ? $required_indicator : '' )
                                         )
                                     ),
@@ -270,13 +295,13 @@ if ( ! class_exists( 'WonKode_Comments_Feature' ) ) {
                                         ), 
                                         sprintf(
                                             '<label for="url">%s</label>', 
-                                            __( 'Website', self::$txt_domain )
+                                            __( 'Website', self::$txt_dom )
                                         )
                                     ), 
                 ),
                 'class_submit'	=>	'btn btn-primary',
-                'label_submit'	=>	__( 'Submit Comment', self::$txt_domain ),
-                'title_reply'	=>	__( 'Leave a <span>Comment</span>', self::$txt_domain ),
+                'label_submit'	=>	__( 'Submit Comment', self::$txt_dom ),
+                'title_reply'	=>	__( 'Leave a <span>Comment</span>', self::$txt_dom ),
             );
 
             // modifying cookies consent checkbox field
@@ -284,7 +309,7 @@ if ( ! class_exists( 'WonKode_Comments_Feature' ) ) {
                 $consent = empty( $commenter['comment_author_email'] ) ? '' : $checked_attribute;
                 
                 // consent checkbox label text
-                $consent_text = __( 'Save my name, email, and website in this browser for the next time I comment.', self::$txt_domain );
+                $consent_text = __( 'Save my name, email, and website in this browser for the next time I comment.', self::$txt_dom );
 
                 // setting cookies consent
                 $args['fields']['cookies'] = sprintf(
@@ -347,7 +372,7 @@ if ( ! class_exists( 'WonKode_Comments_Feature' ) ) {
             if ( get_comments_number() && post_type_supports( get_post_type(), 'comments' ) ) {
                 $closed_note .= sprintf( 
                     '<p class="no-comments">%s</p>',
-                    esc_html__( 'Comments are closed.', self::$txt_domain ) 
+                    esc_html__( 'Comments are closed.', self::$txt_dom ) 
                 );
             }
 
