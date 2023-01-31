@@ -9,17 +9,17 @@
  */
 // header
 get_header();
-?>
-<div class="container-xxl mb-5">
-    <div class="container-fluid">
-        <?php
-            // get single post header
-            get_template_part( 'template-parts/post/single-header' );
-        ?>
-        <div class="row py-5 single-post-wrapper">
-            <!-- single post column Starts -->
-            <div class="col-md-8 col-lg-9 posts-list-col">
-            <?php
+// open outer container
+WonKode_Site_Content_Area::open_outer_container( 'bg-light' );
+    // open inner container
+    WonKode_Site_Content_Area::open_inner_container();
+        // get single post header
+        get_template_part( 'template-parts/post/single-header' );
+        // open wrapping row
+        WonKode_Site_Content_Area::open_content_wrapper_row( 'single-post-wrapper py-5' );
+            // open post content column
+            WonKode_Site_Content_Area::open_main_post_col( 'post-col' );
+
                 while ( have_posts() ) {
                     the_post();
                     // get template part
@@ -29,13 +29,8 @@ get_header();
                 <div class="row">
                     <div class="col-12 py-3">
                     <?php
-                        // post navigation
-                        echo get_the_post_navigation( 
-                            array( 
-                                'prev_text' => '<i class="fa fa-arrow-left"></i> %title',
-                                'next_text' => '%title <i class="fa fa-arrow-right"></i>',
-                            ) 
-                        );
+                        // wonkode_show_post_navigation();
+                        the_post_navigation();
                     ?>
                     </div>
                     <?php 
@@ -48,11 +43,15 @@ get_header();
                         }
                     ?>
                 </div>
-            </div>
-            <!-- single post column Ends -->
-            <?php get_sidebar(); ?>
-        </div><!-- .single-post-wrapper -->
-    </div>
-</div>
-<?php
+            <?php            
+            // close post content column
+            WonKode_Site_Content_Area::close_main_post_col();
+            // render sidebar
+            get_sidebar();
+        // close wrapping row
+        WonKode_Site_Content_Area::close_content_wrapper_row();
+    // closing inner container
+    WonKode_Site_Content_Area::close_inner_container();
+// closing outer container
+WonKode_Site_Content_Area::close_outer_container();
 get_footer();
