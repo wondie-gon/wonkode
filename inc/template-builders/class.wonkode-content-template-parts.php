@@ -70,6 +70,9 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 self::$txt_dom = WonKode_Helper::get_texdomain();
                 // set unique prefix
                 self::$unique_prefix = WonKode_Helper::get_unique_prefix();
+
+                // hook to custom action
+                add_action( self::$unique_prefix . '_post_navigation', array( 'WonKode_Content_Template_Parts', 'get_post_links_nav' ) );
             }
             return self::$instance;
         }
@@ -553,6 +556,53 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             <div class="<?php echo esc_attr( $block_cls_list ); ?>">
                 <?php WonKode_Social_Media_Share_Menu::show_nav(); ?>
             </div>
+            <?php
+        }
+        /**
+         * Action function to display post navigation. 
+         * 
+         * Hooked to: self::$unique_prefix . '_post_navigation' 
+         * action hook.
+         * 
+         * @see https://developer.wordpress.org/reference/functions/get_the_post_navigation/
+         * 
+         * @since 1.0
+         * @param array $args 	Arguments for post navigation
+         * @return void
+         */
+        public static function get_post_links_nav( $args = array() ) {
+            $args = wp_parse_args(
+                $args, 
+                array(
+                    'format'            => '%link',
+                    'prev_icon'         => '<i class="fas fa-arrow-left"></i>',
+                    'next_icon'         => '<i class="fas fa-arrow-right"></i>',
+                    'link'              => '%title',
+                    'in_same_term'      => false,
+                    'excluded_terms'    => '',
+                    'taxonomy'          => 'category',
+                    'aria_label'        => __( 'Posts', self::$txt_dom ),
+                    'class'             => 'navigation post-navigation',
+                )
+            );
+
+            // include icons
+            $prev_link = $args['prev_icon'] . ' ' . $args['link'];
+	        $next_link = $args['link'] . ' ' . $args['next_icon'];
+
+            // class list for nav
+            $nav_class_list = WonKode_Helper::list_classes( $args['class'] );
+            ?>
+            <nav class="<?php echo esc_attr( $nav_class_list ); ?>" aria-label="<?php echo esc_html( $args['aria_label'] ); ?>">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <?php previous_post_link( $args['format'], $prev_link, $args['in_same_term'], $args['excluded_terms'], $args['taxonomy'] ); ?>
+                    </li>
+                    <li class="page-item">
+                        <?php next_post_link( $args['format'], $next_link, $args['in_same_term'], $args['excluded_terms'], $args['taxonomy'] ); ?>
+                    </li>
+                </ul>
+            </nav>
             <?php
         }
         /**
