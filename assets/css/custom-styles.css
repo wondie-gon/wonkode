@@ -4,6 +4,8 @@
     --secondary: #999999;
     --light: #F2F8FE;
     --dark: #111111;
+    --badge-radius: 4px;
+    --badge-padding: 0.35rem 0.75rem;
 }
 
 .back-to-top {
@@ -227,6 +229,36 @@ button.floaticon-input-addon {
     stroke-width: 1.5;
 }
 
+/* Badges, buttons, tags etc styles
+-------------------------------------------------------- */
+.badge {
+    display: inline-block;
+    padding: var(--badge-padding);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--light);
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: var(--secondary);
+    margin-right: 1rem;
+    -webkit-border-radius: var(--badge-radius);
+    -moz-border-radius: var(--badge-radius);
+    border-radius: var(--badge-radius);
+}
+.badge.text-bg-primary {
+    background-color: var(--primary);
+}
+.badge.text-bg-secondary {
+    background-color: var(--secondary);
+}
+.badge.text-bg-primary a {
+    color: var(--light);
+}
+.badge.text-bg-secondary a {
+    color: var(--light);
+}
 
 /*** Header ***/
 .page-header .breadcrumb-item+.breadcrumb-item::before {
