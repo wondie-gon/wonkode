@@ -105,7 +105,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             $defaults = array(
                 'card_class'    =>	'',
                 'inline_styles' =>	array(),
-                'img_size'      =>  '',
+                'img_size'      =>  'medium',
                 'img_attrs'	    =>	array(
                     'class'	=>	'',
                     'src'	=>	'',
@@ -121,9 +121,6 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             // get parsed $args
             $args = wp_parse_args( $args, $defaults );
 
-            // post retrieve object
-            $post_fetch = new WonKode_Retrieve_Post_Content();
-
             // card component object
             $card = new WonKode_Cards;
             // start card html
@@ -134,10 +131,20 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             $card_html .= $card::get_card_post_image( $args );
             // card body opening
             $card_html .= $card::get_card_body_open( $args['body_class'] );
-            // title
-            $card_html .= $card::get_card_post_title( $post_fetch->get_title_anchor(), $args );
+
+            // title tag
+            $args['title_tag'] = ! empty( $args['title_tag'] ) ? $args['title_tag'] : 'h5';
+            // title class
+            $args['title_class'] = ! empty( $args['title_class'] ) ? $args['title_class'] : 'card-title entry-title';
+
+            $card_html .= $card::get_card_title_open( $args['title_tag'], $args['title_class'] );
+            $card_html .= '<a href="' . esc_url( get_the_permalink() ) . '">';
+            $card_html .= get_the_title();
+            $card_html .= '</a>';
+            $card_html .= $card::get_card_title_close( $args['title_tag'] );
+
             // post excerpt
-            $card_html .= $card::get_card_post_excerpt( $post_fetch->get_excerpt(), $args );
+            $card_html .= $card::get_card_post_excerpt( get_the_excerpt(), $args );
             // post link
             $card_html .= $card::get_card_post_link( $args );      
             
@@ -154,6 +161,8 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
          * and post content filled.
          * 
          * @since 1.0
+         * @param int|WP_Post $post Optional. Post ID or WP_Post object. 
+         *                          Default is global `$post`.
          * @param array $args       Array of arguments for card 
          *                          block configuration. Defaults: []
          * @param bool $has_header  Whether card header is needed.
@@ -162,14 +171,16 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
          *                          Defaults: true.
          * @return void
          */
-        public static function header_footer_post_card( $args = array(), $has_header = true, $has_footer = true ) {
-            echo self::get_header_footer_post_card( $args, $has_header, $has_footer );
+        public static function header_footer_post_card( $post = null, $args = array(), $has_header = true, $has_footer = true ) {
+            echo self::get_header_footer_post_card( $post, $args, $has_header, $has_footer );
         }
         /**
          * Returns card block with header, footer 
          * and post content filled.
          * 
          * @since 1.0
+         * @param int|WP_Post $post Optional. Post ID or WP_Post object. 
+         *                          Default is global `$post`.
          * @param array $args       Array of arguments for card 
          *                          block configuration. Defaults: []
          * @param bool $has_header  Whether card header is needed.
@@ -178,41 +189,75 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
          *                          Defaults: true.
          * @return mixed Card filled with post content.
          */
-        public static function get_header_footer_post_card( $args = array(), $has_header = true, $has_footer = true ) {
+        public static function get_header_footer_post_card( $post = null, $args = array(), $has_header = true, $has_footer = true ) {
+
+            $_post = get_post( $post );
 
             // card component object
-            $card = new WonKode_Cards;
+            $card = new WonKode_Cards();
+
+            $defaults = array(
+                'card_class'    =>	'',
+                'inline_styles' =>	array(),
+                'header_class'	=>	'',
+                'img_size'      =>  'medium',
+                'img_attrs'	    =>	array(
+                    'class'	=>	'',
+                    'src'	=>	'',
+                    'alt'	=>	'',
+                ),
+                'body_class'	=>	'',
+                'title_tag'	    =>	'',
+                'title_class'	=>	'',
+                'text_class'	=>	'',
+                'link_class'	=>	'',
+                'link_text'	    =>	'',
+                'footer_class'	=>	'',
+            );
 
             // get parsed $args
-            $args = $card::parse_card_config( $args );
+            $args = wp_parse_args( $args, $defaults );
+            // test args
+            // print_r( $args );
             
             // start card html
             $card_html = '';
+
+            // addition to card class
+            $args['card_class'] = ! empty( $args['card_class'] ) ? $args['card_class'] : '';
+
             // get card opening
             $card_html .= $card::get_inline_styled_card_open( $args['card_class'], $args['inline_styles'] );
-            // header
+            /**
+             * Card header
+             */
             if ( $has_header ) {
                 // open header
-                $card_html .= $card::get_div_open( $args['header_class'], array( 'card-header' ) );
-
-                // ---------------------Header content here --- post meta
+                $card_hdr_classes = array( 'card-header' );
+                $card_html .= $card::get_div_open( $args['header_class'], $card_hdr_classes );
+                /**
+                 * Title as header content
+                 */
+                // title tag
+                $args['title_tag'] = ! empty( $args['title_tag'] ) ? $args['title_tag'] : 'h5';
+                // title class
+                $args['title_class'] = ! empty( $args['title_class'] ) ? $args['title_class'] : 'card-header-title entry-title';
+                $card_html .= $card::get_card_title_open( $args['title_tag'], $args['title_class'] );
+                $card_html .= get_the_title( $_post->ID );
+                $card_html .= $card::get_card_title_close( $args['title_tag'] );
+                /**
+                 * get tag links
+                 */
+                $card_html .= $card::get_div_open( 'tag-links' );
+                $card_html .= get_the_term_list( $_post->ID, 'post_tag', '<span class="tag-link-badge badge">', '</span><span class="tag-link-badge badge">', '</span>' );
+                $card_html .= $card::get_div_close();
 
                 // close header
-                $card_html .= $card::get_html_tag_close();
+                $card_html .= $card::get_div_close();
             }
+
             // card body opening
             $card_html .= $card::get_card_body_open( $args['body_class'] );
-
-            /**
-             * Title
-             */
-            // title tag
-            $args['title_tag'] = ! empty( $args['title_tag'] ) ? $args['title_tag'] : 'h4';
-            // title class
-            $args['title_class'] = ! empty( $args['title_class'] ) ? $args['title_class'] : 'entry-title';
-            $card_html .= $card::get_card_title_open( $args['title_tag'], $args['title_class'] );
-            $card_html .= get_the_title();
-            $card_html .= $card::get_card_title_close( $args['title_tag'] );
 
             /**
              * Card text content
@@ -221,33 +266,54 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             $card_html .= $card::get_div_open( 'entry-content' );
             // open card text p
             $card_html .= $card::get_card_text_open( $args['text_class'] );
-            $card_html .= get_the_excerpt();
+            $card_html .= get_the_excerpt( $_post->ID );
             // close card text p
             $card_html .= $card::get_card_text_close();
             // close entry content
-            $card_html .= $card::get_html_tag_close();
-
-            /**
-             * Link
-             */
-            $link_args = array(
-                'class'     =>  'btn btn-primary',
-                'href'      =>  get_the_permalink(),
-                'link_text' => ! empty( $args['link_text'] ) ? $args['link_text'] : 'Read More',
-            );
-            $card_html .= $card::get_card_link( $link_args );           
+            $card_html .= $card::get_div_close();         
             
             // card body closing
             $card_html .= $card::get_card_body_close();
-            // footer
+
+            /**
+             * Card footer
+             */
             if ( $has_footer ) {
                 // open footer
-                $card_html .= $card::get_div_open( $args['footer_class'], array( 'card-footer' ) );
-                
-                // --------------------------------footer content here
+                $card_ftr_classes = array( 'card-footer' );
+                $card_html .= $card::get_div_open( $args['footer_class'], $card_ftr_classes );
+
+                // post meta area
+                $card_html .= $card::get_div_open( 'post-meta-block' );
+                // posted on meta
+                $card_html .= wonkode_get_minimal_posted_on();
+                // posted by meta
+                $card_html .= wonkode_get_minimal_posted_by();
+                // close block
+                $card_html .= $card::get_div_close();
+
+                // post links area
+                $card_html .= $card::get_div_open( 'post-links-block' );
+
+                // get post link
+                $card_html .= $card::get_link_element(
+                    array(
+                        'class'         =>  ! empty( $args['link_class'] ) ? $args['link_class'] : 'btn btn-primary btn-sm',
+                        'href'	        =>	get_the_permalink( $_post->ID ),
+                        'link_text'	    =>	! empty( $args['link_text'] ) ? $args['link_text'] : 'View Full',
+                    )
+                );
+
+                // get category links
+                $card_html .= $card::get_div_open( 'cat-links' );
+                $card_html .= get_the_term_list( $_post->ID, 'category', '<span class="cat-link-badge badge">', '</span><span class="cat-link-badge badge">', '</span>' );
+                $card_html .= $card::get_div_close();
+
+                // close block
+                $card_html .= $card::get_div_close();
 
                 // close footer
-                $card_html .= $card::get_html_tag_close();
+                $card_html .= $card::get_div_close();
             }
             // get card closing
             $card_html .= $card::get_card_div_close();
@@ -382,6 +448,80 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             <?php
         }
         /**
+         * Renders related posts by the built in taxonomy 
+         * passed as parameter which you want the posts 
+         * to be related to the current post.
+         * 
+         * @since 1.0
+         * @param int/string $num_posts Number of posts to display.
+         *                              Defaults: 3
+         * @param string $taxonomy      Name of taxonomy to use to 
+         *                              query posts with which the 
+         *                              posts will be related with 
+         *                              currently displayed post.
+         *                              Defaults to: 'category'.
+         *                              Other value: 'post_tag'
+         * @return mixed List of related posts.
+         */
+        public static function related_posts_by_tax( $num_posts = 3, $taxonomy = 'category' ) {
+            // global $post;
+            $_post = get_post();
+            // print_r($_post);
+            // query args
+            $args = array(
+                'posts_per_page'    =>  absint( $num_posts ),
+                'post__not_in'      =>  array( $_post->ID ),
+            );
+
+            // taxonomy parameter
+            if ( 'post_tag' === $taxonomy ) {
+                $tag_ids = array();
+                // get tags of current post
+                $post_tags = get_the_tags( $_post->ID );
+                if ( $post_tags ) {
+                    foreach ( $post_tags as $tag ) {
+                        $tag_ids[] = $tag->term_id;
+                    }
+                    // add tag ids to query args
+                    $args['tag__in'] = $tag_ids;
+                }
+            } else {
+                $categories = get_the_category( $_post->ID );
+                $args['cat'] = ( ! empty( $categories ) ) ? $categories[0]->term_id : null;
+            }
+
+            // query posts
+            $query = new WP_Query( $args );
+            if ( $query->have_posts() ) {
+                // get row class to add
+                $row_class = 'row row-cols-1 row-cols-md-3 g-4';
+                if ( $num_posts <= 6 ) {
+                    $row_class = 'row row-cols-1 row-cols-md-' . $num_posts . ' g-4';
+                }
+                $row_class = WonKode_Helper::list_classes( $row_class );
+                ?>
+                <div class="<?php echo esc_attr( $row_class ); ?>">
+                <?php
+                    while ( $query->have_posts() ) {
+                        $query->the_post();
+                        ?>
+                        <div class="col">
+                        <?php
+                            // display related posts
+                            // self::image_on_top_post_card( array( 'card_class' => 'h-100' ) );
+                            self::header_footer_post_card( get_the_ID(), array( 'card_class' => 'h-100 related-post' ) );
+                        ?>
+                        </div>
+                        <?php
+                    } // end while
+                ?>
+                </div>
+                <?php
+                // reset post data
+                wp_reset_postdata();
+            }
+        }
+        /**
          * Template renders page content.
          * 
          * @since 1.0
@@ -496,10 +636,10 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             <div class="<?php echo esc_attr( $block_cls_list ); ?>">
                 <?php 
                     // get category list
-                    echo get_the_term_list( get_the_ID(), 'category', '<span class="badge text-bg-primary">', '</span><span class="badge text-bg-primary">', '</span>' );
+                    echo get_the_term_list( get_the_ID(), 'category', '<span class="cat-link-badge badge">', '</span><span class="cat-link-badge badge">', '</span>' );
 
                     // get tags list
-                    echo get_the_term_list( get_the_ID(), 'post_tag', '<span class="badge text-bg-secondary">', '</span><span class="badge text-bg-secondary">', '</span>' );
+                    echo get_the_term_list( get_the_ID(), 'post_tag', '<span class="tag-link-badge badge">', '</span><span class="tag-link-badge badge">', '</span>' );
                 ?>
             </div>
             <?php
@@ -686,7 +826,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             <div class="<?php echo esc_attr( $excerpt_block_cls_list ); ?>">
                 <?php 
                     // get category list
-                    echo get_the_term_list( get_the_ID(), 'category', '<span class="badge text-bg-primary">', '</span><span class="badge text-bg-primary">', '</span>' );
+                    echo get_the_term_list( get_the_ID(), 'category', '<span class="cat-link-badge badge">', '</span><span class="cat-link-badge badge">', '</span>' );
                 ?>
                 <div class="entry-title">
                     <?php 
