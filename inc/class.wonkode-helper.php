@@ -148,6 +148,32 @@ if ( ! class_exists( 'WonKode_Helper' ) ) {
             );
         }
         /**
+         * Returns Bootstrap column class 
+         * for medium width device
+         * by passed number of posts.
+         * 
+         * @since 1.0
+         * @param int/string $num_posts     Number of posts to display.
+         * @return string Column class for medium width device.
+         */
+        public static function get_bs_col_class_by_posts_num( $num_posts ) {
+            $col_class = '';
+            $num_posts = absint( $num_posts );
+            if ( ! is_int( $num_posts ) ) {
+                return;
+            }
+            if ( 12 % $num_posts === 0 ) {
+                $col_class = 'col-md-' . 12/$num_posts;
+            } else if ( 12 % $num_posts !== 0 && $num_posts < 6 && 12 % ( $num_posts + 1 ) === 0 ) {
+                $col_class = 'col-md-' . 12/( $num_posts + 1 );
+            } else if ( 12 % $num_posts !== 0 && $num_posts > 6 && 12 % ( $num_posts - 1 ) === 0 ) {
+                $col_class = 'col-md-' . 12/( $num_posts - 1 );
+            } else {
+                $col_class = 'col';
+            }
+            return $col_class;
+        }
+        /**
          * Adds new classes to existing ones for 
          * an html element.
          * 
