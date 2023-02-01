@@ -72,19 +72,35 @@ if ( ! function_exists( 'wonkode_minimal_posted_on' ) ) {
 	 * @return void
 	 */
 	function wonkode_minimal_posted_on() {
+		echo wonkode_get_minimal_posted_on();
+	}
+}
+
+if ( ! function_exists( 'wonkode_get_minimal_posted_on' ) ) {
+	/**
+	 * Returns a minimal posted on date meta 
+	 * without date of updates.
+	 * 
+	 * @since 1.0
+	 * @return mixed Post date meta.
+	 */
+	function wonkode_get_minimal_posted_on() {
 		$posted_on_time = sprintf(
 			'<time class="entry-date published updated small fst-italic" datetime="%1$s">%2$s</time>',
 			esc_attr( get_the_date( 'c' ) ),
 			esc_html( get_the_date() )
 		);
 
-		echo '<span class="posted-on">';
-		printf( 
+		$html = '<span class="posted-on">';
+		$html .= sprintf( 
 			/* translators: %s: Post published date */
-			esc_html__( 'Posted: %s', 'wonkode' ), 
+			esc_html__( '%s', 'wonkode' ), 
 			$posted_on_time // phpcs:ignore WordPress.Security.EscapeOutput
 		);
-		echo '</span>';
+		
+		$html .= '</span>';
+
+		return $html;
 	}
 }
 
@@ -97,15 +113,109 @@ if ( ! function_exists( 'wonkode_minimal_posted_by' ) ) {
 	 * @return void
 	 */
 	function wonkode_minimal_posted_by() {
+		echo wonkode_get_minimal_posted_by();
+	}
+}
+
+if ( ! function_exists( 'wonkode_get_minimal_posted_by' ) ) {
+	/**
+	 * Returns a minimal posted by author meta 
+	 * only.
+	 * 
+	 * @since 1.0
+	 * @return mixed Post author meta.
+	 */
+	function wonkode_get_minimal_posted_by() {
+		$html = '';
 		if ( ! get_the_author_meta( 'description' ) && post_type_supports( get_post_type(), 'author' ) ) {
-			echo '<span class="posted-by byline">';
-			printf(
+			$html .= '<span class="posted-by byline">';
+			$html .= sprintf(
 				/* translators: %s: Author name. */
 				esc_html__( 'By %s', 'wonkode' ),
 				'<a href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '" class="small fst-italic" rel="author">' . esc_html( get_the_author() ) . '</a>'
 			);
-			echo '</span>';
+			$html .= '</span>';
 		}
+		return $html;
+	}
+}
+
+/**
+ * Template function to display category 
+ * link list.
+ */
+if ( ! function_exists( 'wonkode_the_category_list' ) ) {
+	/**
+	 * Prints HTML of list of categories.
+	 * 
+	 * @since 1.0
+	 * @param string $block_class	List/s of classes to add to 
+	 * 								category links block.
+	 * 								Defaults: empty
+	 * @return void
+	 */
+	function wonkode_the_category_list( $block_class = '' ) {
+		// if not post or has no category, exit mission
+		if ( 'post' !== get_post_type() || ! has_category() ) {
+			return;
+		}
+		// default categories list block classes
+		$cat_block_classes = array( 'post-categories' );
+		// sanitize class
+		$block_class = sanitize_html_class( $block_class );
+		// add to defaults
+		if ( ! empty( $block_class ) ) {
+			WonKode_Helper::add_to_classes( $block_class, $cat_block_classes );
+		}
+		// prepare class list
+		$cat_block_cls_list = WonKode_Helper::list_classes( $cat_block_classes );
+
+		// print category links block
+		echo '<div class="' . $cat_block_cls_list . '">';
+
+		echo get_the_term_list( get_the_ID(), "category", "<span class=\"cat-link-badge badge\">", "</span>\n\t<span class=\"cat-link-badge badge\">", "</span>" );
+
+		echo '</div>';
+	}
+}
+
+/**
+ * Template function to display tag 
+ * links list.
+ */
+if ( ! function_exists( 'wonkode_the_tag_list' ) ) {
+	/**
+	 * Prints HTML of list of tag links
+	 * as badges.
+	 * 
+	 * @since 1.0
+	 * @param string $block_class	List/s of classes to add to 
+	 * 								tags links block.
+	 * 								Defaults: empty
+	 * @return void
+	 */
+	function wonkode_the_tag_list( $block_class = '' ) {
+		// if not post or has no tags, exit mission
+		if ( 'post' !== get_post_type() || ! has_tag() ) {
+			return;
+		}
+		// default tags list block classes
+		$tag_block_classes = array( 'post-tags' );
+		// sanitize class
+		$block_class = sanitize_html_class( $block_class );
+		// add to defaults
+		if ( ! empty( $block_class ) ) {
+			WonKode_Helper::add_to_classes( $block_class, $tag_block_classes );
+		}
+		// prepare class list
+		$tag_block_cls_list = WonKode_Helper::list_classes( $tag_block_classes );
+
+		// print tags links block
+		echo '<div class="' . $tag_block_cls_list . '">';
+
+		echo get_the_term_list( get_the_ID(), "post_tag", "<span class=\"tag-link-badge badge\">", "</span>\n\t<span class=\"tag-link-badge badge\">", "</span>" );
+
+		echo '</div>';
 	}
 }
 
