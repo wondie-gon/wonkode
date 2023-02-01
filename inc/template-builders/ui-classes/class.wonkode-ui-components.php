@@ -279,6 +279,15 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
             return $open_div;
         }
         /**
+         * Returns closing tag of div. 
+         * 
+         * @since 1.0
+         * @return mixed HTML div closing.
+         */
+        public static function get_div_close() {
+            return self::get_html_tag_close( 'div' );
+        }
+        /**
          * Returns an opening tag for a div element with 
          * class attribute and inline styles if passed.
          * 
