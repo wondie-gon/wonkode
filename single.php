@@ -7,6 +7,8 @@
  * @package WonKode
  * @since 1.0
  */
+// global object variable for content template
+global $wonkode_content_template_parts;
 // header
 get_header();
 // open outer container
@@ -43,6 +45,10 @@ WonKode_Site_Content_Area::open_outer_container( 'bg-light' );
                         }
                     ?>
                 </div>
+                <!-- related posts -->
+                <?php
+                    $wonkode_content_template_parts::related_posts_by_tax();
+                ?>
             <?php            
             // close post content column
             WonKode_Site_Content_Area::close_main_post_col();
