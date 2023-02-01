@@ -247,17 +247,34 @@ button.floaticon-input-addon {
     -moz-border-radius: var(--badge-radius);
     border-radius: var(--badge-radius);
 }
-.badge.text-bg-primary {
+.cat-link-badge.badge {
     background-color: var(--primary);
 }
-.badge.text-bg-secondary {
+.tag-link-badge.badge {
     background-color: var(--secondary);
 }
-.badge.text-bg-primary a {
+.cat-link-badge.badge a {
     color: var(--light);
 }
-.badge.text-bg-secondary a {
+.tag-link-badge.badge a {
     color: var(--light);
+}
+
+/* Cards custom styles
+------------------------------------------- */
+.related-post .card-footer {
+    display: flex;
+    flex-direction: column;
+}
+.card-footer .post-meta-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.card-footer .post-links-block {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 /*** Header ***/
