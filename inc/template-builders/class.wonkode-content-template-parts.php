@@ -72,6 +72,8 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 self::$unique_prefix = WonKode_Helper::get_unique_prefix();
 
                 // hook to custom action
+                add_action( self::$unique_prefix . '_append_ui_icons_symbols', array( 'WonKode_Content_Template_Parts', 'taxonomy_ui_icons_svg_symbols' ), 10 );
+
                 add_action( self::$unique_prefix . '_post_navigation', array( 'WonKode_Content_Template_Parts', 'get_post_links_nav' ) );
             }
             return self::$instance;
@@ -84,11 +86,17 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
          *                          block configuration. You can 
          *                          refer arguments in WonKode_Cards::$card_config. 
          *                          Defaults: []
+         * @param array $show_taxos Array of built in taxonomies to show in the post block. 
+         *                          Defaults to: array( 'post_tag' ). 
+         * 
+         *                          If you want to show both category and tags: 
+         *                          pass array( 'category', 'post_tag' ) as param.
+         * @param bool $tax_icon    Whether to display taxonomy icon. Defaults: false.
          * 
          * @return void
          */
-        public static function image_on_top_post_card( $args = array() ) {
-            echo self::get_image_on_top_post_card( $args );
+        public static function image_on_top_post_card( $args = array(), $show_taxos = array( 'post_tag' ), $tax_icon = false ) {
+            echo self::get_image_on_top_post_card( $args, $show_taxos, $tax_icon );
         }
         /**
          * Returns card block with post data filled.
@@ -98,10 +106,15 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
          *                          block configuration. You can 
          *                          refer arguments in WonKode_Cards::$card_config. 
          *                          Defaults: []
+         * @param array $show_taxos  Array of built in taxonomies to show in the post block. 
+         *                          Defaults to: array( 'post_tag' ). 
+         *                          If you want to show both category and tags: 
+         *                          pass array( 'category', 'post_tag' ) as param.
+         * @param bool $tax_icon    Whether to display taxonomy icon. Defaults: false
          * 
          * @return mixed Card filled with post content.
          */
-        public static function get_image_on_top_post_card( $args = array() ) {
+        public static function get_image_on_top_post_card( $args = array(), $show_taxos = array( 'post_tag' ), $tax_icon = false ) {
             $defaults = array(
                 'card_class'    =>	'',
                 'inline_styles' =>	array(),
@@ -143,8 +156,22 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             $card_html .= '</a>';
             $card_html .= $card::get_card_title_close( $args['title_tag'] );
 
+            // get taxonomy link badges
+            $card_html .= self::get_post_taxonomy_badges_block( $show_taxos, $tax_icon );
+
             // post excerpt
             $card_html .= $card::get_card_post_excerpt( get_the_excerpt(), $args );
+
+            // post meta area
+            $card_html .= $card::get_div_open( 'card-post-meta' );
+            // posted on meta
+            $card_html .= wonkode_get_minimal_posted_on();
+            // posted by meta
+            $card_html .= wonkode_get_minimal_posted_by();
+            // close block
+            $card_html .= $card::get_div_close();
+
+
             // post link
             $card_html .= $card::get_card_post_link( $args );      
             
@@ -161,8 +188,6 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
          * and post content filled.
          * 
          * @since 1.0
-         * @param int|WP_Post $post Optional. Post ID or WP_Post object. 
-         *                          Default is global `$post`.
          * @param array $args       Array of arguments for card 
          *                          block configuration. Defaults: []
          * @param bool $has_header  Whether card header is needed.
@@ -171,16 +196,14 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
          *                          Defaults: true.
          * @return void
          */
-        public static function header_footer_post_card( $post = null, $args = array(), $has_header = true, $has_footer = true ) {
-            echo self::get_header_footer_post_card( $post, $args, $has_header, $has_footer );
+        public static function header_footer_post_card( $args = array(), $has_header = true, $has_footer = true ) {
+            echo self::get_header_footer_post_card( $args, $has_header, $has_footer );
         }
         /**
          * Returns card block with header, footer 
          * and post content filled.
          * 
          * @since 1.0
-         * @param int|WP_Post $post Optional. Post ID or WP_Post object. 
-         *                          Default is global `$post`.
          * @param array $args       Array of arguments for card 
          *                          block configuration. Defaults: []
          * @param bool $has_header  Whether card header is needed.
@@ -189,10 +212,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
          *                          Defaults: true.
          * @return mixed Card filled with post content.
          */
-        public static function get_header_footer_post_card( $post = null, $args = array(), $has_header = true, $has_footer = true ) {
-
-            $_post = get_post( $post );
-
+        public static function get_header_footer_post_card( $args = array(), $has_header = true, $has_footer = true ) {
             // card component object
             $card = new WonKode_Cards();
 
@@ -243,13 +263,13 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 // title class
                 $args['title_class'] = ! empty( $args['title_class'] ) ? $args['title_class'] : 'card-header-title entry-title';
                 $card_html .= $card::get_card_title_open( $args['title_tag'], $args['title_class'] );
-                $card_html .= get_the_title( $_post->ID );
+                $card_html .= get_the_title();
                 $card_html .= $card::get_card_title_close( $args['title_tag'] );
                 /**
                  * get tag links
                  */
                 $card_html .= $card::get_div_open( 'tag-links' );
-                $card_html .= get_the_term_list( $_post->ID, 'post_tag', '<span class="tag-link-badge badge">', '</span><span class="tag-link-badge badge">', '</span>' );
+                $card_html .= get_the_term_list( get_the_ID(), 'post_tag', '<span class="tag-link-badge badge">', '</span><span class="tag-link-badge badge">', '</span>' );
                 $card_html .= $card::get_div_close();
 
                 // close header
@@ -266,7 +286,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             $card_html .= $card::get_div_open( 'entry-content' );
             // open card text p
             $card_html .= $card::get_card_text_open( $args['text_class'] );
-            $card_html .= get_the_excerpt( $_post->ID );
+            $card_html .= get_the_excerpt();
             // close card text p
             $card_html .= $card::get_card_text_close();
             // close entry content
@@ -284,7 +304,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 $card_html .= $card::get_div_open( $args['footer_class'], $card_ftr_classes );
 
                 // post meta area
-                $card_html .= $card::get_div_open( 'post-meta-block' );
+                $card_html .= $card::get_div_open( 'card-post-meta' );
                 // posted on meta
                 $card_html .= wonkode_get_minimal_posted_on();
                 // posted by meta
@@ -293,20 +313,20 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 $card_html .= $card::get_div_close();
 
                 // post links area
-                $card_html .= $card::get_div_open( 'post-links-block' );
+                $card_html .= $card::get_div_open( 'card-post-links' );
 
                 // get post link
                 $card_html .= $card::get_link_element(
                     array(
                         'class'         =>  ! empty( $args['link_class'] ) ? $args['link_class'] : 'btn btn-primary btn-sm',
-                        'href'	        =>	get_the_permalink( $_post->ID ),
+                        'href'	        =>	get_the_permalink(),
                         'link_text'	    =>	! empty( $args['link_text'] ) ? $args['link_text'] : 'View Full',
                     )
                 );
 
                 // get category links
                 $card_html .= $card::get_div_open( 'cat-links' );
-                $card_html .= get_the_term_list( $_post->ID, 'category', '<span class="cat-link-badge badge">', '</span><span class="cat-link-badge badge">', '</span>' );
+                $card_html .= get_the_term_list( get_the_ID(), 'category', '<span class="cat-link-badge badge">', '</span><span class="cat-link-badge badge">', '</span>' );
                 $card_html .= $card::get_div_close();
 
                 // close block
@@ -473,8 +493,12 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 'post__not_in'      =>  array( $_post->ID ),
             );
 
+            // taxonomies to show
+            $show_taxos = array();
+
             // taxonomy parameter
-            if ( 'post_tag' === $taxonomy ) {
+            if ( 'post_tag' === $taxonomy ) {               
+                // array to collect tag ids
                 $tag_ids = array();
                 // get tags of current post
                 $post_tags = get_the_tags( $_post->ID );
@@ -485,9 +509,16 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                     // add tag ids to query args
                     $args['tag__in'] = $tag_ids;
                 }
+
+                // tax links to show
+                $show_taxos = array( 'category' );
+
             } else {
                 $categories = get_the_category( $_post->ID );
                 $args['cat'] = ( ! empty( $categories ) ) ? $categories[0]->term_id : null;
+
+                // tax links to show
+                $show_taxos = array( 'post_tag' );
             }
 
             // query posts
@@ -508,8 +539,8 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                         <div class="col">
                         <?php
                             // display related posts
-                            // self::image_on_top_post_card( array( 'card_class' => 'h-100' ) );
-                            self::header_footer_post_card( get_the_ID(), array( 'card_class' => 'h-100 related-post' ) );
+                            self::image_on_top_post_card( array( 'card_class' => 'h-100 related-post' ), $show_taxos, true );
+                            // self::header_footer_post_card( array( 'card_class' => 'h-100 related-post' ) );
                         ?>
                         </div>
                         <?php
@@ -643,6 +674,62 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 ?>
             </div>
             <?php
+        }
+        /**
+         * Return HTML block with taxonomy link badges of the current post.
+         * 
+         * @since 1.0
+         * @param array $show_taxos Array of built in taxonomies to show in the post block. 
+         *                          Defaults to: array( 'post_tag' ). 
+         *                          If you want to show both category and tags: 
+         *                          pass array( 'category', 'post_tag' ) as param.
+         * @param bool $with_icon   Whether to display taxonomy icon. Defaults: false
+         * @return mixed HTML block with taxonomy link badges.
+         */
+        public static function get_post_taxonomy_badges_block( $show_taxos = array( 'post_tag' ), $with_icon = false ) {
+            
+            // initialialize UI Component
+            $ui = new WonKode_UI_Components();
+
+            // init html output
+            $ui_html = '';
+
+            if ( in_array( 'post_tag', $show_taxos ) || in_array( 'category', $show_taxos ) ) {
+                // wrapping both taxonomy links
+                $ui_html .= $ui::get_div_open( 'post-taxos-wrapper' );
+
+                if ( in_array( 'post_tag', $show_taxos ) && in_array( 'category', $show_taxos ) ) {
+                    // category links
+                    if ( has_category() ) {
+                        $ui_html .= $ui::get_div_open( 'cat-links' );
+                        // $ui_html .= get_the_term_list( get_the_ID(), 'category', '<span class="cat-link-badge badge">', '</span><span class="cat-link-badge badge">', '</span>' );
+                        $ui_html .= self::get_categories_list( '', $with_icon );
+                        $ui_html .= $ui::get_div_close();
+                    }
+                    // tag links
+                    if ( has_tag() ) {
+                        $ui_html .= $ui::get_div_open( 'tag-links' );
+                        $ui_html .= self::get_post_tags_list( '', $with_icon );
+                        $ui_html .= $ui::get_div_close();
+                    }
+    
+                } elseif ( in_array( 'post_tag', $show_taxos ) && has_tag() && ! in_array( 'category', $show_taxos ) ) {
+                    $ui_html .= $ui::get_div_open( 'tag-links' );
+                    $ui_html .= self::get_post_tags_list( '', $with_icon );
+                    $ui_html .= $ui::get_div_close();
+                } elseif ( in_array( 'category', $show_taxos ) && has_category() && ! in_array( 'post_tag', $show_taxos ) ) {
+                    $ui_html .= $ui::get_div_open( 'cat-links' );
+                    $ui_html .= self::get_categories_list( '', $with_icon );
+                    $ui_html .= $ui::get_div_close();
+                } else {
+                    $ui_html .= '';
+                }
+
+                // closing taxonomy wrapper
+                $ui_html .= $ui::get_div_close();
+            }
+            // return html
+            return $ui_html;
         }
         /**
          * Renders edit post link screen reader block.
@@ -843,6 +930,97 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 </div>
             </div>
             <?php
+        }
+        /**
+         * Action hook to add taxonomy svg symbols. 
+         * 
+         * Used by custom action hook: 'wonkode_add_to_svg_symbols'
+         * 
+         * @since 1.0
+         * @param array $args 		{
+         * 		Array of arguments you want to modify in the <symbol> tag
+         * 		while retrieving svg resources. Default is empty.
+         * 			@type string 'view_box'		Value for 'viewBox' attribute.
+         * 			@type int    'size'			Value for 'size' attribute.
+         * 			@type int    'stroke_w'		Value for 'stroke-width' attribute.
+         * 			@type string 'stroke'		Value for 'stroke' (color) attribute.
+         * 			@type string 'fill'			Value for 'fill' (color) attribute.
+         * }
+         * @return void
+         */
+        public static function taxonomy_ui_icons_svg_symbols( $args = array() ) {
+            $names = array( 'category', 'tags' );
+            $symbols = WonKode_SVG_Resources::get_icon_symbols( 'ui-icons', $names, $args );
+            if ( ! empty( $symbols ) ) {
+                echo $symbols;
+            }
+        }
+
+        /**
+         * Returns category links list.
+         * 
+         * @since 1.0
+         * @param string $class_additions   List of clases to add to link badges. 
+         *                                  Defaults to: empty
+         * @param bool $with_icon           Whether to add icon in front of each badge. 
+         *                                  Defaults to: false
+         * @return mixed HTML list of cat link badges.
+         */
+        public static function get_categories_list( $class_additions = '', $with_icon = false ) {
+            // default classes
+            $cat_classes = array( 'cat-link-badge', 'badge' );
+
+            // get all classes
+            $cat_cls_list = self::get_all_block_class_list( $class_additions, $cat_classes );
+
+            $before = '';
+            $sep = '</span>';
+
+            if ( $with_icon ) {
+                $before .= WonKode_SVG_Resources::get_svg_use_block( 'category', 'icon', array( 'class' => 'cat-icon me-2', 'width' => 16, 'height' => 16 ) );
+
+                $sep .= WonKode_SVG_Resources::get_svg_use_block( 'category', 'icon', array( 'class' => 'cat-icon me-2', 'width' => 16, 'height' => 16 ) );
+            }
+
+            $before .= '<span class="' . esc_attr( $cat_cls_list ) . '">';
+            $sep .= '<span class="' . esc_attr( $cat_cls_list ) . '">';
+            $after = '</span>';
+
+            // return link badges
+            return get_the_term_list( get_the_ID(), 'category', $before, $sep, $after );
+        }
+        /**
+         * Returns tags links list.
+         * 
+         * @since 1.0
+         * @param string $class_additions   List of clases to add to link badges. 
+         *                                  Defaults to: empty
+         * @param bool $with_icon           Whether to add icon in front of each badge. 
+         *                                  Defaults to: false
+         * @return mixed HTML list of tag link badges.
+         */
+        public static function get_post_tags_list( $class_additions = '', $with_icon = false ) {
+            // default classes
+            $tag_classes = array( 'tag-link-badge', 'badge' );
+
+            // get all classes
+            $tag_cls_list = self::get_all_block_class_list( $class_additions, $tag_classes );
+
+            $before = '';
+            $sep = '</span>';
+
+            if ( $with_icon ) {
+                $before .= WonKode_SVG_Resources::get_svg_use_block( 'tags', 'icon', array( 'class' => 'tag-icon me-2', 'width' => 16, 'height' => 16 ) );
+
+                $sep .= WonKode_SVG_Resources::get_svg_use_block( 'tags', 'icon', array( 'class' => 'tag-icon me-2', 'width' => 16, 'height' => 16 ) );
+            }
+
+            $before .= '<span class="' . esc_attr( $tag_cls_list ) . '">';
+            $sep .= '<span class="' . esc_attr( $tag_cls_list ) . '">';
+            $after = '</span>';
+
+            // return link badges
+            return get_the_term_list( get_the_ID(), 'post_tag', $before, $sep, $after );
         }
         /**
          * Returns class list ready for use 
