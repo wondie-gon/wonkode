@@ -73,6 +73,93 @@ if ( ! function_exists( 'init_wonkode_social_share_hooks' ) ) {
     }
 }
 
+if ( ! function_exists( 'wonkode_ui_icons_svg_symbols' ) ) {
+	/**
+	 * Prints SVG symbols for use in different parts of 
+	 * content area. Implements action hook which appends 
+	 * ui icons.
+	 * 
+	 * @since 1.0
+	 * @param array $args 		{
+	 * 		Array of arguments you want to modify in the <symbol> tag
+	 * 		while retrieving svg resources. Default is empty.
+	 * 			Default values are for icon svg resources
+	 * 			@type string 	'view_box'		Value for 'viewBox' attribute. Default "0 0 24 24"
+	 * 			@type int 		'size'			Value for 'size' attribute. Default 24
+	 * 			@type int 		'stroke_w'		Value for 'stroke-width' attribute. Default 2
+	 * 			@type string 	'stroke'		Value for 'stroke' (color) attribute. 
+	 * 											Default 'currentColor'
+	 * 			@type string 	'fill'			Value for 'fill' (color) attribute. Default 'none'
+	 * }
+	 * @return void
+	 */
+	function wonkode_ui_icons_svg_symbols( $args = array() ) {
+		?>
+		<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+		<?php
+			do_action( 'wonkode_append_ui_icons_symbols', $args );
+		?>
+		</svg>
+		<?php
+	}
+}
+
+add_action( 'wonkode_append_ui_icons_symbols', 'wonkode_append_ui_icons_svg_symbols', 11 );
+if ( ! function_exists( 'wonkode_append_ui_icons_svg_symbols' ) ) {
+	/**
+	 * Callback function to append SVG symbols of ui icons 
+	 * using action hook 'wonkode_append_ui_icons_symbols'.
+	 * 
+	 * @since 1.0
+	 * @param array $args 		{
+	 * 		Array of arguments you want to modify in the <symbol> tag
+	 * 		while retrieving svg resources. Default is empty.
+	 * 			Default values are for icon svg resources
+	 * 			@type string 	'view_box'		Value for 'viewBox' attribute. Default "0 0 24 24"
+	 * 			@type int 		'size'			Value for 'size' attribute. Default 24
+	 * 			@type int 		'stroke_w'		Value for 'stroke-width' attribute. Default 2
+	 * 			@type string 	'stroke'		Value for 'stroke' (color) attribute. 
+	 * 											Default 'currentColor'
+	 * 			@type string 	'fill'			Value for 'fill' (color) attribute. Default 'none'
+	 * }
+	 * @return void
+	 */
+	function wonkode_append_ui_icons_svg_symbols( $args ) {
+		$names = array( 'rocket', 'arrow_big_up', 'arrow_big_down', 'arrow_big_left', 'arrow_big_right' );
+		$symbols = WonKode_SVG_Resources::get_icon_symbols( 'ui-icons', $names, $args );
+		if ( ! empty( $symbols ) ) {
+			echo $symbols;
+		}
+	}
+}
+
+add_action( 'wonkode_append_ui_icons_symbols', 'wonkode_append_social_icons_svg_symbols', 12 );
+/**
+ * Callback function to action hook 'wonkode_append_ui_icons_symbols' 
+ * to print SVG symbols of social icons.
+ * 
+ * @since 1.0
+ * @param array $args 		{
+	 * 		Array of arguments you want to modify in the <symbol> tag
+	 * 		while retrieving svg resources. Default is empty.
+	 * 			Default values are for icon svg resources
+	 * 			@type string 	'view_box'		Value for 'viewBox' attribute. Default "0 0 24 24"
+	 * 			@type int 		'size'			Value for 'size' attribute. Default 24
+	 * 			@type int 		'stroke_w'		Value for 'stroke-width' attribute. Default 2
+	 * 			@type string 	'stroke'		Value for 'stroke' (color) attribute. 
+	 * 											Default 'currentColor'
+	 * 			@type string 	'fill'			Value for 'fill' (color) attribute. Default 'none'
+	 * }
+	 * @return void
+ */
+function wonkode_append_social_icons_svg_symbols( $args ) {
+	$names = array( 'facebook', 'twitter', 'instagram', 'linkedin' );
+	$symbols = WonKode_SVG_Resources::get_icon_symbols( 'social-icons', $names, $args );
+	if ( ! empty( $symbols ) ) {
+		echo $symbols;
+	}
+}
+
 /**
  * Action function to display post navigation. 
  * 
