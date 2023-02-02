@@ -28,13 +28,9 @@
     <!-- svg resources starts here -->
     <?php
         // dump svg symbols here
-        echo wonkode_get_svg_icon_symbols_bundle( 'social-icons', array( 'facebook', 'twitter', 'instagram', 'linkedin' ) );
-        echo wonkode_get_svg_icon_symbols_bundle( 'ui-icons', array( 'rocket', 'arrow_big_up', 'arrow_big_down', 'arrow_big_left', 'arrow_big_right' ) );
-        // svg illustrations
-        // echo wonkode_get_illustration_svgs( true, 'working' );
+        wonkode_ui_icons_svg_symbols();
     ?>
     <!-- svg resources ends here -->
-
     <div id="page" class="site">
         <!-- Spinner Start -->
         <div id="spinner"
