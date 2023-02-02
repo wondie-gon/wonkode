@@ -231,6 +231,19 @@ button.floaticon-input-addon {
 
 /* Badges, buttons, tags etc styles
 -------------------------------------------------------- */
+/*
+
+*/
+.post-taxos-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.cat-links, .tag-links {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
 .badge {
     display: inline-block;
     padding: var(--badge-padding);
@@ -266,12 +279,10 @@ button.floaticon-input-addon {
     display: flex;
     flex-direction: column;
 }
-.card-footer .post-meta-block {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+.related-post .tag-links {
+    justify-content: space-evenly;
 }
-.card-footer .post-links-block {
+.card-post-meta, .card-post-links {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
