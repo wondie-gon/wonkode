@@ -54,4 +54,12 @@ WonKode_Site_Content_Area::open_outer_container( 'bg-light' );
     WonKode_Site_Content_Area::close_div_tag();
 // closing outer container
 WonKode_Site_Content_Area::close_div_tag();
+
+// locations custom map
+if ( is_active_widget( false, false, WK_TXTDOM . '-leaflet-map-widget', true ) && is_active_sidebar( WK_TXTDOM . '-leaflet-openstreetmap' ) ) {
+    // Location map widget section
+    get_template_part( 'template-parts/page/front/locations-map' );
+}
+
+// load footer
 get_footer();
