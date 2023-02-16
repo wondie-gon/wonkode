@@ -48,7 +48,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
          * @var array
          */
         public static $block_classes_assoc = array(
-            'tax_links'             =>  array( 'tax-links-block' ),
+            'tax_links'             =>  array( 'post-taxos-wrapper' ),
             'post_meta'             =>  array( 'post-meta-block' ),
             'single_main'           =>  array( 'content-block' ),
             'excerpt_main'          =>  array( 'excerpt-block' ),
@@ -58,7 +58,8 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
         );
 
         /**
-         * Instantiates class. 
+         * Instantiates class. And adds callbacks 
+         * to defined hooks.
          * 
          * @since 1.0
          * @return object New instance of class.
@@ -71,15 +72,21 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 // set unique prefix
                 self::$unique_prefix = WonKode_Helper::get_unique_prefix();
 
-                // hook to custom action
+                /**
+                 * Add action callbacks to 
+                 * hooks.
+                 */
+                // action callback that appends icon symbols
                 add_action( self::$unique_prefix . '_append_ui_icons_symbols', array( 'WonKode_Content_Template_Parts', 'taxonomy_ui_icons_svg_symbols' ), 10 );
-
+                
+                // callback to get modified pot liks nav
                 add_action( self::$unique_prefix . '_post_navigation', array( 'WonKode_Content_Template_Parts', 'get_post_links_nav' ) );
             }
             return self::$instance;
         }
         /**
-         * Renders card block with post data filled.
+         * Renders card block with post data filled and 
+         * image on top.
          * 
          * @since 1.0
          * @param array $args       Array of arguments for card 
@@ -99,7 +106,8 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             echo self::get_image_on_top_post_card( $args, $show_taxos, $tax_icon );
         }
         /**
-         * Returns card block with post data filled.
+         * Returns card block with post data filled and 
+         * image on top.
          * 
          * @since 1.0
          * @param array $args       Array of arguments for card 
@@ -157,7 +165,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             $card_html .= $card::get_card_title_close( $args['title_tag'] );
 
             // get taxonomy link badges
-            $card_html .= self::get_post_taxonomy_badges_block( $show_taxos, $tax_icon );
+            $card_html .= self::get_post_tax_link_badges_block( $show_taxos, $tax_icon );
 
             // post excerpt
             $card_html .= $card::get_card_post_excerpt( get_the_excerpt(), $args );
@@ -165,9 +173,9 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             // post meta area
             $card_html .= $card::get_div_open( 'card-post-meta' );
             // posted on meta
-            $card_html .= wonkode_get_minimal_posted_on();
+            $card_html .= self::get_minimal_posted_on();
             // posted by meta
-            $card_html .= wonkode_get_minimal_posted_by();
+            $card_html .= self::get_minimal_posted_by();
             // close block
             $card_html .= $card::get_div_close();
 
@@ -269,7 +277,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                  * get tag links
                  */
                 $card_html .= $card::get_div_open( 'tag-links' );
-                $card_html .= get_the_term_list( get_the_ID(), 'post_tag', '<span class="tag-link-badge badge">', '</span><span class="tag-link-badge badge">', '</span>' );
+                $card_html .= self::get_post_tags_list( true );
                 $card_html .= $card::get_div_close();
 
                 // close header
@@ -306,9 +314,9 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 // post meta area
                 $card_html .= $card::get_div_open( 'card-post-meta' );
                 // posted on meta
-                $card_html .= wonkode_get_minimal_posted_on();
+                $card_html .= self::get_minimal_posted_on();
                 // posted by meta
-                $card_html .= wonkode_get_minimal_posted_by();
+                $card_html .= self::get_minimal_posted_by();
                 // close block
                 $card_html .= $card::get_div_close();
 
@@ -326,7 +334,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
 
                 // get category links
                 $card_html .= $card::get_div_open( 'cat-links' );
-                $card_html .= get_the_term_list( get_the_ID(), 'category', '<span class="cat-link-badge badge">', '</span><span class="cat-link-badge badge">', '</span>' );
+                $card_html .= self::get_categories_list( true );
                 $card_html .= $card::get_div_close();
 
                 // close block
@@ -453,7 +461,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                         </div>
                         <?php
                         // display taxonomy links block
-                        self::taxonomy_links_block( 'col-12 p-3' );
+                        self::post_tax_link_badges_block( array( 'category', 'post_tag' ), true, 'col-12 p-3' );
                         // visible only in admin mode 
                         if ( get_edit_post_link() ) {
                             self::edit_post_screen_reader_block( 'col-12 p-3' );
@@ -531,6 +539,11 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 }
                 $row_class = WonKode_Helper::list_classes( $row_class );
                 ?>
+                <div class="row my-4">
+                    <div class="col-12">
+                        <h1><?php _e( 'Other Related Posts', 'wonkode' ); ?></h1>
+                    </div>
+                </div>
                 <div class="<?php echo esc_attr( $row_class ); ?>">
                 <?php
                     while ( $query->have_posts() ) {
@@ -645,49 +658,49 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             ?>
             <div class="<?php echo esc_attr( $block_cls_list ); ?>">
                 <div class="entry-meta">
-                    <?php wonkode_posted_on_by_meta(); ?>
+                    <?php self::post_date_and_author_meta_nav(); ?>
                 </div>
             </div>
             <?php
         }
         /**
-         * Renders taxonomy links block.
-         * 
-         * @access private
+         * Renders HTML block with taxonomy link badges 
+         * of the current post.
          * 
          * @since 1.0
-         * @param string $class_additions String list of classes to add 
-         *                                  to block. Defaults: ''
+         * @param array $show_taxos             Array of built in taxonomies 
+         *                                      to show in the post block. 
+         *                                      Defaults to: array( 'post_tag' ). 
+         *                                      If you want to show both 
+         *                                      category and tags: pass 
+         *                                      array( 'category', 'post_tag' ) 
+         *                                      as param.
+         * @param bool $with_icon               Whether to display taxonomy icon. 
+         *                                      Defaults: false.
+         * @param string $class_additions       String list of classes to add 
+         *                                      to block. Defaults: ''
          * @return void
          */
-        private static function taxonomy_links_block( $class_additions = '' ) {
-            // get class list for block
-            $block_cls_list = self::get_all_block_class_list( $class_additions, self::$block_classes_assoc['tax_links'] );
-            ?>
-            <div class="<?php echo esc_attr( $block_cls_list ); ?>">
-                <?php 
-                    // get category list
-                    echo get_the_term_list( get_the_ID(), 'category', '<span class="cat-link-badge badge">', '</span><span class="cat-link-badge badge">', '</span>' );
-
-                    // get tags list
-                    echo get_the_term_list( get_the_ID(), 'post_tag', '<span class="tag-link-badge badge">', '</span><span class="tag-link-badge badge">', '</span>' );
-                ?>
-            </div>
-            <?php
+        public static function post_tax_link_badges_block( $show_taxos = array( 'post_tag' ), $with_icon = false, $class_additions = '' ) {
+            echo self::get_post_tax_link_badges_block( $show_taxos, $with_icon, $class_additions );
         }
         /**
          * Return HTML block with taxonomy link badges of the current post.
          * 
          * @since 1.0
-         * @param array $show_taxos Array of built in taxonomies to show in the post block. 
-         *                          Defaults to: array( 'post_tag' ). 
-         *                          If you want to show both category and tags: 
-         *                          pass array( 'category', 'post_tag' ) as param.
-         * @param bool $with_icon   Whether to display taxonomy icon. Defaults: false
+         * @param array $show_taxos             Array of built in taxonomies 
+         *                                      to show in the post block. 
+         *                                      Defaults to: array( 'post_tag' ). 
+         *                                      If you want to show both category and tags: 
+         *                                      pass array( 'category', 'post_tag' ) 
+         *                                      as param.
+         * @param bool $with_icon               Whether to display taxonomy icon. 
+         *                                      Defaults: false.
+         * @param string $block_cls_additions   Classes to add to the taxonomy wrapper. 
+         *                                      Defaults to: empty
          * @return mixed HTML block with taxonomy link badges.
          */
-        public static function get_post_taxonomy_badges_block( $show_taxos = array( 'post_tag' ), $with_icon = false ) {
-            
+        public static function get_post_tax_link_badges_block( $show_taxos = array( 'post_tag' ), $with_icon = false, $block_cls_additions = '' ) {
             // initialialize UI Component
             $ui = new WonKode_UI_Components();
 
@@ -696,30 +709,29 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
 
             if ( in_array( 'post_tag', $show_taxos ) || in_array( 'category', $show_taxos ) ) {
                 // wrapping both taxonomy links
-                $ui_html .= $ui::get_div_open( 'post-taxos-wrapper' );
+                $ui_html .= $ui::get_div_open( $block_cls_additions, self::$block_classes_assoc['tax_links'] );
 
                 if ( in_array( 'post_tag', $show_taxos ) && in_array( 'category', $show_taxos ) ) {
                     // category links
                     if ( has_category() ) {
                         $ui_html .= $ui::get_div_open( 'cat-links' );
-                        // $ui_html .= get_the_term_list( get_the_ID(), 'category', '<span class="cat-link-badge badge">', '</span><span class="cat-link-badge badge">', '</span>' );
-                        $ui_html .= self::get_categories_list( '', $with_icon );
+                        $ui_html .= self::get_categories_list( $with_icon );
                         $ui_html .= $ui::get_div_close();
                     }
                     // tag links
                     if ( has_tag() ) {
                         $ui_html .= $ui::get_div_open( 'tag-links' );
-                        $ui_html .= self::get_post_tags_list( '', $with_icon );
+                        $ui_html .= self::get_post_tags_list( $with_icon );
                         $ui_html .= $ui::get_div_close();
                     }
     
                 } elseif ( in_array( 'post_tag', $show_taxos ) && has_tag() && ! in_array( 'category', $show_taxos ) ) {
                     $ui_html .= $ui::get_div_open( 'tag-links' );
-                    $ui_html .= self::get_post_tags_list( '', $with_icon );
+                    $ui_html .= self::get_post_tags_list( $with_icon );
                     $ui_html .= $ui::get_div_close();
                 } elseif ( in_array( 'category', $show_taxos ) && has_category() && ! in_array( 'post_tag', $show_taxos ) ) {
                     $ui_html .= $ui::get_div_open( 'cat-links' );
-                    $ui_html .= self::get_categories_list( '', $with_icon );
+                    $ui_html .= self::get_categories_list( $with_icon );
                     $ui_html .= $ui::get_div_close();
                 } else {
                     $ui_html .= '';
@@ -911,9 +923,9 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             $excerpt_block_cls_list = self::get_all_block_class_list( $class_additions, self::$block_classes_assoc['excerpt_main'] );
             ?>
             <div class="<?php echo esc_attr( $excerpt_block_cls_list ); ?>">
-                <?php 
-                    // get category list
-                    echo get_the_term_list( get_the_ID(), 'category', '<span class="cat-link-badge badge">', '</span><span class="cat-link-badge badge">', '</span>' );
+                <?php
+                    // taxonomy links block
+                    self::post_tax_link_badges_block( array( 'category', 'post_tag' ), true );
                 ?>
                 <div class="entry-title">
                     <?php 
@@ -926,11 +938,121 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                     </p>
                 </div>
                 <div class="entry-meta">
-                    <?php wonkode_posted_on_by_meta(); ?>
+                    <?php self::post_date_and_author_meta_nav(); ?>
                 </div>
             </div>
             <?php
         }
+
+        /**
+         * Prints HTML with both post date/time and author 
+         * meta information in a nav menu list horizontally.
+         * 
+         * @since 1.0
+         * @return void
+         */
+        public static function post_date_and_author_meta_nav() {
+            $time_string = '<time class="entry-date published updated" datetime="%1$s">%2$s</time>';
+            if ( get_the_time( 'U' ) !== get_the_modified_time( 'U' ) ) {
+                $time_string = '<time class="entry-date published" datetime="%1$s">%2$s</time><time class="updated" datetime="%3$s"> (%4$s) </time>';
+            }
+            $time_string = sprintf(
+                $time_string,
+                esc_attr( get_the_date( 'c' ) ),
+                esc_html( get_the_date() ),
+                esc_attr( get_the_modified_date( 'c' ) ),
+                sprintf(
+                    '<em class="small">%s</em> %s',
+                    esc_html__( 'Updated on', 'wonkode' ), 
+                    esc_html( get_the_modified_date() )
+                )
+            );
+            $posted_on = apply_filters(
+                self::$unique_prefix . '_posted_on',
+                sprintf(
+                    '<li class="nav-item posted-on"><a class="nav-link" href="%1$s" rel="bookmark"><i class="fa fa-calendar me-2"></i>%2$s</a></li>',
+                    esc_url( get_permalink() ),
+                    apply_filters( self::$unique_prefix . '_posted_on_time', $time_string )
+                )
+            );
+            $byline = apply_filters(
+                self::$unique_prefix . '_posted_by',
+                sprintf(
+                    '<li class="nav-item byline"><a class="nav-link" href="%1$s"><i class="fa fa-user me-2"></i>%2$s</a></li>',
+                    esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
+                    esc_html( get_the_author() )
+                )
+            );
+            echo '<ul class="nav">' . $posted_on . $byline . '</ul>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        }
+
+        /**
+         * Renders a minimal posted on date meta 
+         * without date of updates.
+         * 
+         * @since 1.0
+         * @return void
+         */
+        public static function minimal_posted_on() {
+            echo self::get_minimal_posted_on();
+        }
+        /**
+         * Returns a minimal posted on date meta 
+         * without date of updates.
+         * 
+         * @since 1.0
+         * @return mixed Post date meta.
+         */
+        public static function get_minimal_posted_on() {
+            $posted_on_time = sprintf(
+                '<time class="entry-date published updated small fst-italic" datetime="%1$s">%2$s</time>',
+                esc_attr( get_the_date( 'c' ) ),
+                esc_html( get_the_date() )
+            );
+
+            $html = '<span class="posted-on">';
+            $html .= sprintf( 
+                /* translators: %s: Post published date */
+                esc_html__( '%s', 'wonkode' ), 
+                $posted_on_time // phpcs:ignore WordPress.Security.EscapeOutput
+            );
+            
+            $html .= '</span>';
+
+            return $html;
+        }
+        /**
+         * Renders a minimal posted by author meta 
+         * only.
+         * 
+         * @since 1.0
+         * @return void
+         */
+        public static function minimal_posted_by() {
+            echo self::get_minimal_posted_by();
+        }
+        /**
+         * Returns a minimal posted by author meta 
+         * only.
+         * 
+         * @since 1.0
+         * @return mixed Post author meta.
+         */
+        public static function get_minimal_posted_by() {
+            $html = '';
+            if ( ! get_the_author_meta( 'description' ) && post_type_supports( get_post_type(), 'author' ) ) {
+                $html .= '<span class="posted-by byline">';
+                $html .= sprintf(
+                    /* translators: %s: Author name. */
+                    esc_html__( 'By %s', 'wonkode' ),
+                    '<a href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '" class="small fst-italic" rel="author">' . esc_html( get_the_author() ) . '</a>'
+                );
+                $html .= '</span>';
+            }
+            return $html;
+        }
+
+
         /**
          * Action hook to add taxonomy svg symbols. 
          * 
@@ -960,13 +1082,13 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
          * Returns category links list.
          * 
          * @since 1.0
-         * @param string $class_additions   List of clases to add to link badges. 
-         *                                  Defaults to: empty
          * @param bool $with_icon           Whether to add icon in front of each badge. 
          *                                  Defaults to: false
+         * @param string $class_additions   List of clases to add to link badges. 
+         *                                  Defaults to: empty
          * @return mixed HTML list of cat link badges.
          */
-        public static function get_categories_list( $class_additions = '', $with_icon = false ) {
+        public static function get_categories_list( $with_icon = false, $class_additions = '' ) {
             // default classes
             $cat_classes = array( 'cat-link-badge', 'badge' );
 
@@ -993,13 +1115,13 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
          * Returns tags links list.
          * 
          * @since 1.0
-         * @param string $class_additions   List of clases to add to link badges. 
-         *                                  Defaults to: empty
          * @param bool $with_icon           Whether to add icon in front of each badge. 
          *                                  Defaults to: false
+         * @param string $class_additions   List of clases to add to link badges. 
+         *                                  Defaults to: empty
          * @return mixed HTML list of tag link badges.
          */
-        public static function get_post_tags_list( $class_additions = '', $with_icon = false ) {
+        public static function get_post_tags_list( $with_icon = false, $class_additions = '' ) {
             // default classes
             $tag_classes = array( 'tag-link-badge', 'badge' );
 

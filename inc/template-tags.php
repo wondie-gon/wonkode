@@ -26,38 +26,8 @@ if ( ! function_exists( 'wonkode_posted_on_by_meta' ) ) {
 	 * @return void
 	 */
 	function wonkode_posted_on_by_meta() {
-		$time_string = '<time class="entry-date published updated" datetime="%1$s">%2$s</time>';
-		if ( get_the_time( 'U' ) !== get_the_modified_time( 'U' ) ) {
-			$time_string = '<time class="entry-date published" datetime="%1$s">%2$s</time><time class="updated" datetime="%3$s"> (%4$s) </time>';
-		}
-		$time_string = sprintf(
-			$time_string,
-			esc_attr( get_the_date( 'c' ) ),
-			esc_html( get_the_date() ),
-			esc_attr( get_the_modified_date( 'c' ) ),
-			sprintf(
-				'<em class="small">%s</em> %s',
-				esc_html__( 'Updated on', 'wonkode' ), 
-				esc_html( get_the_modified_date() )
-			)
-		);
-		$posted_on = apply_filters(
-			'wonkode_posted_on',
-			sprintf(
-				'<li class="nav-item posted-on"><a class="nav-link" href="%1$s" rel="bookmark"><i class="fa fa-calendar me-2"></i>%2$s</a></li>',
-				esc_url( get_permalink() ),
-				apply_filters( 'wonkode_posted_on_time', $time_string )
-			)
-		);
-		$byline = apply_filters(
-			'wonkode_posted_by',
-			sprintf(
-				'<li class="nav-item byline"><a class="nav-link" href="%1$s"><i class="fa fa-user me-2"></i>%2$s</a></li>',
-				esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ),
-				esc_html( get_the_author() )
-			)
-		);
-		echo '<ul class="nav">' . $posted_on . $byline . '</ul>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		global $wonkode_content_template_parts;
+		$wonkode_content_template_parts::post_date_and_author_meta_nav();
 	}
 }
 /**
@@ -72,7 +42,8 @@ if ( ! function_exists( 'wonkode_minimal_posted_on' ) ) {
 	 * @return void
 	 */
 	function wonkode_minimal_posted_on() {
-		echo wonkode_get_minimal_posted_on();
+		global $wonkode_content_template_parts;
+		$wonkode_content_template_parts::minimal_posted_on();
 	}
 }
 
@@ -85,22 +56,8 @@ if ( ! function_exists( 'wonkode_get_minimal_posted_on' ) ) {
 	 * @return mixed Post date meta.
 	 */
 	function wonkode_get_minimal_posted_on() {
-		$posted_on_time = sprintf(
-			'<time class="entry-date published updated small fst-italic" datetime="%1$s">%2$s</time>',
-			esc_attr( get_the_date( 'c' ) ),
-			esc_html( get_the_date() )
-		);
-
-		$html = '<span class="posted-on">';
-		$html .= sprintf( 
-			/* translators: %s: Post published date */
-			esc_html__( '%s', 'wonkode' ), 
-			$posted_on_time // phpcs:ignore WordPress.Security.EscapeOutput
-		);
-		
-		$html .= '</span>';
-
-		return $html;
+		global $wonkode_content_template_parts;
+		return $wonkode_content_template_parts::get_minimal_posted_on();
 	}
 }
 
@@ -113,7 +70,8 @@ if ( ! function_exists( 'wonkode_minimal_posted_by' ) ) {
 	 * @return void
 	 */
 	function wonkode_minimal_posted_by() {
-		echo wonkode_get_minimal_posted_by();
+		global $wonkode_content_template_parts;
+		$wonkode_content_template_parts::minimal_posted_by();
 	}
 }
 
@@ -126,17 +84,8 @@ if ( ! function_exists( 'wonkode_get_minimal_posted_by' ) ) {
 	 * @return mixed Post author meta.
 	 */
 	function wonkode_get_minimal_posted_by() {
-		$html = '';
-		if ( ! get_the_author_meta( 'description' ) && post_type_supports( get_post_type(), 'author' ) ) {
-			$html .= '<span class="posted-by byline">';
-			$html .= sprintf(
-				/* translators: %s: Author name. */
-				esc_html__( 'By %s', 'wonkode' ),
-				'<a href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '" class="small fst-italic" rel="author">' . esc_html( get_the_author() ) . '</a>'
-			);
-			$html .= '</span>';
-		}
-		return $html;
+		global $wonkode_content_template_parts;
+		return $wonkode_content_template_parts::get_minimal_posted_by();
 	}
 }
 
@@ -144,23 +93,28 @@ if ( ! function_exists( 'wonkode_get_minimal_posted_by' ) ) {
  * Template function to display category 
  * link list.
  */
-if ( ! function_exists( 'wonkode_the_category_list' ) ) {
+if ( ! function_exists( 'wonkode_the_category_list_block' ) ) {
 	/**
 	 * Prints HTML of list of categories.
 	 * 
 	 * @since 1.0
+	 * @param bool $with_icon 		Whether to display category 
+	 * 								link badges with icons on start 
+	 * 								of badges. Defaults: false.
 	 * @param string $block_class	List/s of classes to add to 
 	 * 								category links block.
 	 * 								Defaults: empty
 	 * @return void
 	 */
-	function wonkode_the_category_list( $block_class = '' ) {
+	function wonkode_the_category_list_block( $with_icon = false, $block_class = '' ) {
+		// global variable for template builder class
+		global $wonkode_content_template_parts;
 		// if not post or has no category, exit mission
 		if ( 'post' !== get_post_type() || ! has_category() ) {
 			return;
 		}
 		// default categories list block classes
-		$cat_block_classes = array( 'post-categories' );
+		$cat_block_classes = array( 'cat-links' );
 		// sanitize class
 		$block_class = sanitize_html_class( $block_class );
 		// add to defaults
@@ -172,9 +126,7 @@ if ( ! function_exists( 'wonkode_the_category_list' ) ) {
 
 		// print category links block
 		echo '<div class="' . $cat_block_cls_list . '">';
-
-		echo get_the_term_list( get_the_ID(), "category", "<span class=\"cat-link-badge badge\">", "</span>\n\t<span class=\"cat-link-badge badge\">", "</span>" );
-
+		echo $wonkode_content_template_parts::get_categories_list( $with_icon );
 		echo '</div>';
 	}
 }
@@ -183,24 +135,30 @@ if ( ! function_exists( 'wonkode_the_category_list' ) ) {
  * Template function to display tag 
  * links list.
  */
-if ( ! function_exists( 'wonkode_the_tag_list' ) ) {
+if ( ! function_exists( 'wonkode_the_tag_list_block' ) ) {
 	/**
 	 * Prints HTML of list of tag links
 	 * as badges.
 	 * 
 	 * @since 1.0
+	 * @param bool $with_icon 		Whether to display category 
+	 * 								link badges with icons on start 
+	 * 								of badges. Defaults: false.
 	 * @param string $block_class	List/s of classes to add to 
 	 * 								tags links block.
 	 * 								Defaults: empty
 	 * @return void
 	 */
-	function wonkode_the_tag_list( $block_class = '' ) {
+	function wonkode_the_tag_list_block( $with_icon = false, $block_class = '' ) {
+		// global variable for template builder class
+		global $wonkode_content_template_parts;
+
 		// if not post or has no tags, exit mission
 		if ( 'post' !== get_post_type() || ! has_tag() ) {
 			return;
 		}
 		// default tags list block classes
-		$tag_block_classes = array( 'post-tags' );
+		$tag_block_classes = array( 'tag-links' );
 		// sanitize class
 		$block_class = sanitize_html_class( $block_class );
 		// add to defaults
@@ -213,7 +171,7 @@ if ( ! function_exists( 'wonkode_the_tag_list' ) ) {
 		// print tags links block
 		echo '<div class="' . $tag_block_cls_list . '">';
 
-		echo get_the_term_list( get_the_ID(), "post_tag", "<span class=\"tag-link-badge badge\">", "</span>\n\t<span class=\"tag-link-badge badge\">", "</span>" );
+		echo $wonkode_content_template_parts::get_post_tags_list( $with_icon );
 
 		echo '</div>';
 	}

@@ -280,3 +280,5 @@ if ( ! function_exists( 'wonkode_post_nav_link_filter' ) ) {
 		return $html;
 	}
 }
+
+

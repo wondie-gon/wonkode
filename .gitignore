@@ -29,3 +29,6 @@
 
 # Development checklist and notes
 dev-checklist.txt
+
+# Ignore for now
+assets/css/scss
