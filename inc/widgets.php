@@ -14,3 +14,5 @@ require WK_INC_PATH . '/widgets/class.wonkode-widget-areas.php';
 
 // 'WonKode_Equal_Columns_Image_And_Text' widget
 require WK_INC_PATH . '/widgets/cass.wonkode-equal-columns-image-and-text.php';
+// 'Leaflet_Custom_Map_Widget'
+require WK_INC_PATH . '/widgets/class.leaflet-custom-map-widget.php';
