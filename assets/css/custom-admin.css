@@ -1,0 +1,58 @@
+/* Custom admin styles
+------------------------------------------ */
+
+/* Custom widget areas styles
+------------------------------------------ */
+.widget-sub-title {
+    color: #1e1668;
+    font-size: 13px;
+    font-weight: 600;
+    font-style: italic;
+    margin: 0 0 12px;
+}
+.fields-group-description {
+    color: #1e1668;
+    font-size: 12px;
+    font-weight: 500;
+    font-style: italic;
+}
+.repeater-fields-block {
+    display: block;
+    width: 100%;
+    margin: 0 1rem;
+    background-color: #fdfdfd;
+}
+.repeating-fields-appender {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0 1rem;
+    background-color: #fdfdfd;
+}
+.grid-container {
+    display: -moz-grid;
+    display: -ms-grid;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    column-gap: 0.25rem;
+}
+.grid-item {
+    padding: 0.5rem;
+}
+.grid-item input[type="text"] {
+    padding: 1px 2px;
+}
+.btn-custom-widget {
+    padding: 0.5rem;
+    -webkit-border-radius: 0.5rem;
+    -moz-border-radius: 0.5rem;
+    border-radius: 0.5rem;
+    color: #ffffff !important;
+    background-color: #1e1668;
+    border: 1px solid #1e1668;
+    cursor: pointer;
+    text-align: center;
+}
+.btn-custom-widget:hover, .btn-custom-widget:focus, .btn-custom-widget:active {
+    background-color: #322986;
+}
