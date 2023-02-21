@@ -7,7 +7,6 @@
     --badge-radius: 4px;
     --badge-padding: 0.35rem 0.75rem;
 }
-
 .back-to-top {
     position: fixed;
     display: none;
@@ -15,7 +14,6 @@
     bottom: 60px;
     z-index: 99;
 }
-
 h4,
 h5,
 h6,
@@ -24,8 +22,6 @@ h6,
 .h6 {
     font-weight: 500 !important;
 }
-
-
 /*** Spinner ***/
 #spinner {
     opacity: 0;
@@ -80,7 +76,12 @@ h6,
 /*** Navbar ***/
 .navbar.sticky-top {
     top: -100px;
-    transition: .5s;
+    z-index: 10000;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    -ms-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
 }
 
 .navbar .navbar-brand {
@@ -231,9 +232,6 @@ button.floaticon-input-addon {
 
 /* Badges, buttons, tags etc styles
 -------------------------------------------------------- */
-/*
-
-*/
 .post-taxos-wrapper {
     display: flex;
     flex-direction: row;
@@ -331,127 +329,6 @@ button.floaticon-input-addon {
 .service-item:hover::after {
     opacity: 0;
 }
-
-
-/*** Roadmap ***/
-.roadmap-carousel {
-    position: relative;
-}
-
-.roadmap-carousel::before {
-    position: absolute;
-    content: "";
-    height: 0;
-    width: 100%;
-    top: 20px;
-    left: 0;
-    border-top: 2px dashed var(--secondary);
-}
-
-.roadmap-carousel .roadmap-item .roadmap-point {
-    position: absolute;
-    width: 30px;
-    height: 30px;
-    top: 6px;
-    left: 50%;
-    margin-left: -15px;
-    background: #FFFFFF;
-    border: 2px solid var(--primary);
-    transform: rotate(45deg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.roadmap-carousel .roadmap-item .roadmap-point span {
-    display: block;
-    width: 18px;
-    height: 18px;
-    background: var(--primary);
-}
-
-.roadmap-carousel .roadmap-item {
-    position: relative;
-    padding-top: 150px;
-    text-align: center;
-}
-
-.roadmap-carousel .roadmap-item::before {
-    position: absolute;
-    content: "";
-    width: 0;
-    height: 115px;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    border-right: 2px dashed var(--secondary);
-}
-
-.roadmap-carousel .roadmap-item::after {
-    position: absolute;
-    content: "";
-    width: 14px;
-    height: 14px;
-    top: 111px;
-    left: 50%;
-    margin-left: -7px;
-    transform: rotate(45deg);
-    background: var(--primary);
-}
-
-.roadmap-carousel .owl-nav {
-    margin-top: 40px;
-    display: flex;
-    justify-content: center;
-}
-
-.roadmap-carousel .owl-nav .owl-prev,
-.roadmap-carousel .owl-nav .owl-next {
-    margin: 0 12px;
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50px;
-    font-size: 22px;
-    color: var(--light);
-    background: var(--primary);
-    transition: .5s;
-}
-
-.roadmap-carousel .owl-nav .owl-prev:hover,
-.roadmap-carousel .owl-nav .owl-next:hover {
-    color: var(--primary);
-    background: var(--dark);
-}
-
-
-/*** FAQs ***/
-.accordion .accordion-item {
-    border: none;
-    margin-bottom: 15px;
-}
-
-.accordion .accordion-button {
-    background: var(--light);
-    border-radius: 2px;
-}
-
-.accordion .accordion-button:not(.collapsed) {
-    color: #FFFFFF;
-    background: var(--primary);
-    box-shadow: none;
-}
-
-.accordion .accordion-button:not(.collapsed)::after {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23fff'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
-}
-
-.accordion .accordion-body {
-    padding: 15px 0 0 0;
-}
-
 /* single post styles 
 ------------------------------------------ */
 .image-entry img {
