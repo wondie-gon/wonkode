@@ -71,6 +71,8 @@ if ( ! class_exists( 'WonKode_Enqueues' ) ) {
                 // assign object instance
 				self::$instance = new WonKode_Enqueues;
 
+                // admin style
+                add_action( 'admin_enqueue_scripts', array( self::$instance, 'enqueue_admin_styles' ) );
                 /**
                  * Hook styles' and scripts' enqueue callback to 
                  * 'wp_enqueue_scripts' WordPress action
@@ -129,6 +131,10 @@ if ( ! class_exists( 'WonKode_Enqueues' ) ) {
 
         /**
          * Enqueues Fontawesome icons' css file
+         * 
+         * @since 1.0
+         * @param string $prefix    Unique prefix name for handle names, 
+         *                          usually text-domain of theme.
          */
         public static function fontawesome_icons( $prefix ) {
             wp_register_style( $prefix . '-fontawesome-icons', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css', array(), false, 'all' );
@@ -139,6 +145,12 @@ if ( ! class_exists( 'WonKode_Enqueues' ) ) {
         /**
          * Enqueues all styles, including 
          * custom and bootstrap styles
+         * 
+         * @since 1.0
+         * @param string $prefix    Unique prefix name for handle names, 
+         *                          usually text-domain of theme.
+         * @param string $ver       Version for file to be enqueued
+         * @return void
          */
         public static function enqueue_basic_styles( $prefix, $ver ) {
             wp_register_style( $prefix . '-bootstrap', self::$css_url . '/bootstrap.min.css', array(), $ver, 'all' );
@@ -151,8 +163,28 @@ if ( ! class_exists( 'WonKode_Enqueues' ) ) {
         }
 
         /**
+         * Enqueues custom admin styles
+         * 
+         * @return void
+         */
+        public static function enqueue_admin_styles() {
+            // prefix for handle names
+            $prefix = self::$handles_prefix;
+            // get version
+            $ver = self::$in_dev_mode ? time() : wp_get_theme()->get( 'Version' );
+
+            wp_register_style( $prefix . '-custom-admin', self::$css_url . '/custom-admin.css', array(), $ver, 'all' );
+
+            wp_enqueue_style( $prefix . '-custom-admin' );
+        }
+
+        /**
          * Enqueues third party stylesheet files 
          * that are essential for theme
+         * 
+         * @since 1.0
+         * @param string $prefix    Unique prefix name for handle names, 
+         *                          usually text-domain of theme.
          */
         public static function third_party_css( $prefix ) {
             wp_register_style( $prefix . '-bootstrap-icons', 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css', array(), '1.4.1', 'all' );
@@ -170,6 +202,10 @@ if ( ! class_exists( 'WonKode_Enqueues' ) ) {
         /**
          * Enqueues third party JavaScript files 
          * that are essential for theme
+         * 
+         * @since 1.0
+         * @param string $prefix    Unique prefix name for handle names, 
+         *                          usually text-domain of theme.
          */
         public static function third_party_js( $prefix ) {
             // registering third party JavaScript libraries
@@ -192,6 +228,11 @@ if ( ! class_exists( 'WonKode_Enqueues' ) ) {
 
         /**
          * Enqueues custom scripts of theme
+         * 
+         * @since 1.0
+         * @param string $prefix    Unique prefix name for handle names, 
+         *                          usually text-domain of theme.
+         * @param string $ver       Version for file to be enqueued
          */
         public static function enqueue_custom_scripts( $prefix, $ver ) {
             // registering custom scripts
