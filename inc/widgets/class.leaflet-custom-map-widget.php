@@ -133,6 +133,12 @@ if ( ! class_exists( 'Leaflet_Custom_Map_Widget' ) ) {
             $loc_long = ! empty( $instance['loc_long'] ) ? (float) $instance['loc_long'] : '';
             $zoom_level = ! empty( $instance['zoom_level'] ) ? $instance['zoom_level'] : '12';
             $tile_max_zoom = ! empty( $instance['tile_max_zoom'] ) ? $instance['tile_max_zoom'] : '18';
+
+            $specific_name = ! empty( $instance['specific_name'] ) ? $instance['specific_name'] : esc_html__( 'Location Name', $this->theme_id );
+
+            $full_address = ! empty( $instance['full_address'] ) ? $instance['full_address'] : '';
+
+            $phone_num = ! empty( $instance['phone_num'] ) ? $instance['phone_num'] : '';
             ?>
             <div class="widget-content">
                 <p>
@@ -207,7 +213,42 @@ if ( ! class_exists( 'Leaflet_Custom_Map_Widget' ) ) {
                     />
                     <span class="description"><?php _e( 'The maximum zoom level up to which tile layer will be displayed', $this->theme_id ); ?></span>
                 </p>
-                
+
+                <!-- Additional widget customization fields with repeater -->
+                <h4 class="widget-sub-title"><?php esc_html_e( 'Add markers and popup contents', $this->theme_id ); ?></h4>
+                <p>
+                    <label for="<?php echo esc_attr( $this->get_field_id( 'specific_name' ) ); ?>"><?php esc_html_e( 'Location Specific Name: ', $this->theme_id ); ?></label>
+                    <input 
+                        type="text" 
+                        name="<?php echo esc_attr( $this->get_field_name( 'specific_name' ) ); ?>" 
+                        id="<?php echo esc_attr( $this->get_field_id( 'specific_name' ) ); ?>" 
+                        class="widefat" 
+                        value="<?php echo $specific_name; ?>" 
+                    />
+                </p>
+                <p>
+                    <label for="<?php echo esc_attr( $this->get_field_id( 'full_address' ) ); ?>"><?php esc_html_e( 'Full Address: ', $this->theme_id ); ?></label>
+                    <input 
+                        type="text" 
+                        name="<?php echo esc_attr( $this->get_field_name( 'full_address' ) ); ?>" 
+                        id="<?php echo esc_attr( $this->get_field_id( 'full_address' ) ); ?>" 
+                        class="widefat" 
+                        value="<?php echo $full_address; ?>" 
+                    />
+                </p>
+                <p>
+                    <label for="<?php echo esc_attr( $this->get_field_id( 'phone_num' ) ); ?>"><?php esc_html_e( 'Phone Number: ', $this->theme_id ); ?></label>
+                    <input 
+                        type="tel" 
+                        name="<?php echo esc_attr( $this->get_field_name( 'phone_num' ) ); ?>" 
+                        id="<?php echo esc_attr( $this->get_field_id( 'phone_num' ) ); ?>" 
+                        class="widefat" 
+                        value="<?php echo $phone_num; ?>" 
+                        placeholder="123-45-6789" 
+                        pattern="[0-9]{3}-[0-9]{2}-[0-9]{4}" 
+                    />
+                    <span class="description"><small><?php esc_html_e( 'Use format: 123-45-6789', $this->theme_id ); ?></small></span>
+                </p>
             </div>
             <?php
         }
@@ -229,12 +270,89 @@ if ( ! class_exists( 'Leaflet_Custom_Map_Widget' ) ) {
             $instance['map_container_id'] = ( ! empty( $new_instance['map_container_id'] ) ) ? esc_attr( $new_instance['map_container_id'] ) : esc_attr( $this->theme_id . '_map' );
             $instance['loc_lat'] = ( ! empty( $new_instance['loc_lat'] ) && is_numeric( $new_instance['loc_lat'] ) ) ? (float) $new_instance['loc_lat'] : '';
             $instance['loc_long'] = ( ! empty( $new_instance['loc_long'] ) && is_numeric( $new_instance['loc_long'] ) ) ? (float) $new_instance['loc_long'] : '';
-            $instance['zoom_level'] = ( ! empty( $new_instance['zoom_level'] ) && is_numeric( $new_instance['zoom_level'] ) ) ? ( absint( $new_instance['zoom_level'] ) >= 1 && absint( $new_instance['zoom_level'] ) <= 22 ) : '12';
+            $instance['zoom_level'] = ( ! empty( $new_instance['zoom_level'] ) && ( absint( $new_instance['zoom_level'] ) >= 1 && absint( $new_instance['zoom_level'] ) <= 22 ) ) ? absint( $new_instance['zoom_level'] ) : '12';
 
-            $instance['tile_max_zoom'] = ( ! empty( $new_instance['tile_max_zoom'] ) && is_numeric( $new_instance['tile_max_zoom'] ) ) ? ( absint( $new_instance['tile_max_zoom'] ) > 0 && absint( $new_instance['tile_max_zoom'] ) < 18 ) : '18';
+            $instance['tile_max_zoom'] = ( ! empty( $new_instance['tile_max_zoom'] ) && ( absint( $new_instance['tile_max_zoom'] ) > 0 && absint( $new_instance['tile_max_zoom'] ) < 18 ) ) ? absint( $new_instance['tile_max_zoom'] ) : '18';
+
+            $instance['specific_name'] = ( ! empty( $new_instance['specific_name'] ) ) ? sanitize_text_field( $new_instance['specific_name'] ) : esc_html__( 'Enter Name of Location', $this->theme_id );
+            $instance['full_address'] = ( ! empty( $new_instance['full_address'] ) ) ? sanitize_text_field( $new_instance['full_address'] ) : '';
+
+            // NOTE------needs phone number sanitizer------
+            $instance['phone_num'] = ( ! empty( $new_instance['phone_num'] ) ) ? sanitize_text_field( $new_instance['phone_num'] ) : '';
 
             // then return
             return $instance;
+        }
+        /**
+         * Displays parts of form fields for 
+         * entering weekdays and working hours
+         * 
+         * @param array $instance Current settings.
+         * @param int $field_rows Number of field rows
+         */
+        public function working_hour_fields( $instance, $field_rows = 4 ) {
+            ?>
+            <p class="fields-group-description"><?php esc_html_e( 'Weekdays and working hours ', $this->theme_id ); ?><small><?php esc_html_e( 'Weekday: From - To', $this->theme_id ); ?></small></p>
+            <?php
+            // stores weekdays' working hours
+            $week_working_hrs = isset( $instance['week_working_hrs'] ) ? $instance['week_working_hrs'] : array();
+
+            for ( $i = 0; $i < $field_rows; $i++ ) { 
+                $workDaysArr = array();
+
+                $week_working_hrs[ $i ] = isset( $week_working_hrs[ $i ] ) ? $week_working_hrs[ $i ] : array();
+
+                $work_days = ! empty( $week_working_hrs[ $i ]['work_days'] ) ? $week_working_hrs[ $i ]['work_days'] : esc_html__( 'Monday - Thursday', $this->theme_id );
+
+                if ( $i > 0 ) {
+                    $work_days = ! empty( $week_working_hrs[ $i ]['work_days'] ) ? $week_working_hrs[ $i ]['work_days'] : '';
+                }
+
+                $hrs_from = isset( $week_working_hrs[ $i ]['hrs_from'] ) ? $week_working_hrs[ $i ]['hrs_from'] : '';
+                $hrs_to = isset( $week_working_hrs[ $i ]['hrs_to'] ) ? $week_working_hrs[ $i ]['hrs_to'] : '';
+
+                if ( ! empty( $work_days ) && ! empty( $hrs_from ) && ! empty( $hrs_to ) ) {
+                    $workDaysArr['work_days'] = $work_days;
+                    $workDaysArr['hrs_from'] = $hrs_from;
+                    $workDaysArr['hrs_to'] = $hrs_to;
+                }
+                // add $$workDaysArr
+                if ( ! empty( $workDaysArr ) ) {
+                    $week_working_hrs[ $i ] = $workDaysArr;
+                } else {
+                    continue;
+                }
+                ?>
+                <div class="grid-container">
+                    <div class="grid-item">
+                        <input 
+                            type="text" 
+                            name="<?php echo esc_attr( $this->get_field_name( 'week_working_hrs' )[ $i ]['work_days'] ); ?>" 
+                            id="<?php echo esc_attr( $this->get_field_id( 'work_days_' . $i ) ); ?>" 
+                            value="<?php echo esc_attr( $work_days ); ?>" 
+                            placeholder="<?php esc_html_e( 'Active weekdays', $this->theme_id ); ?>"
+                        />
+                    </div>
+                    <div class="grid-item">
+                        <input 
+                            type="time" 
+                            name="<?php echo esc_attr( $this->get_field_name( 'week_working_hrs' )[ $i ]['hrs_from'] ); ?>" 
+                            id="<?php echo esc_attr( $this->get_field_id( 'hrs_from_' . $i ) ); ?>" 
+                            value="<?php echo esc_attr( $hrs_from ); ?>" 
+                        />
+                    </div>
+                    <div class="grid-item">
+                        <input 
+                            type="time" 
+                            name="<?php echo esc_attr( $this->get_field_name( 'week_working_hrs' )[ $i ]['hrs_to'] ); ?>" 
+                            id="<?php echo esc_attr( $this->get_field_id( 'hrs_to_' . $i ) ); ?>" 
+                            value="<?php echo esc_attr( $hrs_to ); ?>" 
+                        />
+                    </div>
+                </div>
+                <?php
+
+            } // End for ( $i = 0; $i < $field_rows; $i++ )
         }
         /**
          * Gets args to be used in leaflet js
@@ -292,6 +410,9 @@ if ( ! function_exists( 'wonkode_leaflet_map_widget_scripts' ) ) {
         $wonkode_leaflet_map_widget = new Leaflet_Custom_Map_Widget();
         // get theme id
         $theme_id = wp_get_theme()->get( 'TextDomain' );
+        // prefix for object
+        $obj_prefix = str_replace( '-', '_', $theme_id );
+
         // enqueue only when widget is active
         if ( is_active_widget( false, false, $theme_id . '-leaflet-map-widget', true ) ) {
             // enqueueing
@@ -309,10 +430,17 @@ if ( ! function_exists( 'wonkode_leaflet_map_widget_scripts' ) ) {
                     'loc_long'          =>  '',
                     'zoom_level'        =>  '',
                     'tile_max_zoom'     =>  '',
+                    'specific_name'     =>  '',
+                    'full_address'      =>  '',
+                    'phone_num'         =>  '',
                 ) 
             );
 
-            $obj_prefix = str_replace( '-', '_', $theme_id );
+            // create nonce ... repeatFieldsNonce
+            $leaflet_args['repeatFieldsNonce'] = wp_create_nonce( 'repeat-marker-fields' );
+
+            // add assets url
+            $leaflet_args['assets_url'] = WK_ASSETS_URL;
 
             wp_localize_script( $theme_id . '-init-leaflet', $obj_prefix . '_leaflet_args', $leaflet_args );
         }
