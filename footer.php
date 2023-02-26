@@ -18,7 +18,7 @@
         <!-- Footer End -->
 
         <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square rounded-circle back-to-top">
+        <a href="#" class="btn rounded-circle back-to-top">
             <?php
                 // use arrow_big_up svg icon
                 echo wonkode_get_svg_icon_use( 'arrow_big_up' );
