@@ -362,7 +362,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             // excerpt block class additions
             $excerpt_cls_additions = 'col-md-7 col-lg-8 py-4';
             // image wrapper column class additions
-            $img_col_classes = 'col-md-5 col-lg-4 pt-4';
+            $img_col_classes = 'col-md-5 col-lg-4 image-on-left';
             // args for image block
             $img_block_args = array();
             ?>
@@ -399,7 +399,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             // excerpt block class additions
             $excerpt_cls_additions = 'col-md-7 col-lg-8 p-4';
             // image wrapper column class additions
-            $img_col_classes = 'col-md-5 col-lg-4 pt-4';
+            $img_col_classes = 'col-md-5 col-lg-4 image-on-right';
             // args for image block
             $img_block_args = array();
             ?>
