@@ -540,8 +540,8 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 $row_class = WonKode_Helper::list_classes( $row_class );
                 ?>
                 <div class="row my-4">
-                    <div class="col-12">
-                        <h1><?php _e( 'Other Related Posts', 'wonkode' ); ?></h1>
+                    <div class="col-12 related-posts-header">
+                        <h1><?php _e( 'Other Related Posts', self::$txt_dom ); ?></h1>
                     </div>
                 </div>
                 <div class="<?php echo esc_attr( $row_class ); ?>">
@@ -963,7 +963,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 esc_attr( get_the_modified_date( 'c' ) ),
                 sprintf(
                     '<em class="small">%s</em> %s',
-                    esc_html__( 'Updated on', 'wonkode' ), 
+                    esc_html__( 'Updated on', self::$txt_dom ), 
                     esc_html( get_the_modified_date() )
                 )
             );
@@ -1013,7 +1013,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
             $html = '<span class="posted-on">';
             $html .= sprintf( 
                 /* translators: %s: Post published date */
-                esc_html__( '%s', 'wonkode' ), 
+                esc_html__( '%s', self::$txt_dom ), 
                 $posted_on_time // phpcs:ignore WordPress.Security.EscapeOutput
             );
             
@@ -1044,7 +1044,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 $html .= '<span class="posted-by byline">';
                 $html .= sprintf(
                     /* translators: %s: Author name. */
-                    esc_html__( 'By %s', 'wonkode' ),
+                    esc_html__( 'By %s', self::$txt_dom ),
                     '<a href="' . esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ) . '" class="small fst-italic" rel="author">' . esc_html( get_the_author() ) . '</a>'
                 );
                 $html .= '</span>';
