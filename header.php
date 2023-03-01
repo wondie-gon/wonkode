@@ -51,8 +51,9 @@
                     <img class="img-fluid" src="<?php echo esc_url( WK_ASSETS_URL . '/images/logo.svg' ); ?>" alt="<?php echo get_bloginfo( 'name' ) . ' ' . __( 'logo', WK_TXTDOM ); ?>">
                 </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="<?php echo esc_attr( '#' . WK_TXTDOM . '-primary-navbar' ); ?>" aria-controls="<?php echo esc_attr( WK_TXTDOM . '-primary-navbar' ); ?>" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                <button class="navbar-toggler menu-btn" type="button" data-bs-toggle="collapse" data-bs-target="<?php echo esc_attr( '#' . WK_TXTDOM . '-primary-navbar' ); ?>" aria-controls="<?php echo esc_attr( WK_TXTDOM . '-primary-navbar' ); ?>" aria-expanded="false" aria-label="Toggle navigation">
+                    <!-- <span class="navbar-toggler-icon toggler-bar"></span> -->
+                    <span class="navbar-toggler-icon toggler-grid"></span>
                 </button>
 
                 <?php 
