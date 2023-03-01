@@ -102,6 +102,29 @@ if ( ! class_exists( 'WonKode_SVG_Resources' ) ) {
             'vimeo'             =>  '<path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                     <path d="M3 8.5l1 1s1.5 -1.102 2 -.5c.509 .609 1.863 7.65 2.5 9c.556 1.184 1.978 2.89 4 1.5c2 -1.5 7.5 -5.5 8.5 -11.5c.444 -2.661 -1 -4 -2.5 -4c-2 0 -4.047 1.202 -4.5 4c2.05 -1.254 2.551 1.003 1.5 3c-1.052 2.005 -2 3 -2.5 3c-.49 0 -.924 -1.165 -1.5 -3.5c-.59 -2.42 -.5 -6.5 -3 -6.5s-5.5 4.5 -5.5 4.5z" />',
         );
+        /**
+         * Holds SVGs of polygon shapes
+         * 
+         * @since 1.0
+         * @var array
+         */
+        protected static $svg_polygons = array(
+            'triangle_up'   =>  '<polygon points="0.5 0, 0 1, 1 1" />', 
+            'triangle_right'    =>  '<polygon points="1 0.5, 0 0, 0 1" />', 
+            'triangle_left' =>  '<polygon points="0 0.5, 1 0, 1 1" />', 
+            'triangle_down' =>  '<polygon points="0 0, 1 0, 0.5 1" />', 
+            'trapezoid'     =>  '<polygon points="0.2 0, 0.8 0, 1 1, 0 1" />', 
+            'parallelogram' =>  '<polygon points="0.25 0, 1 0, 0.75 1, 0 1" />', 
+            'rhombus'       =>  '<polygon points="0.5 0, 1 0.5, 0.5 1, 0 0.5" />', 
+            'pentagon'      =>  '<polygon points="0.5 0, 1 0.38, 0.82 1, 0.18 1, 0 0.38" />', 
+            'hexagon'       =>  '<polygon points="0.25 0, 0.75 0, 1 0.50, 0.75 1, 0.25 1, 0 0.5" />', 
+            'left_point'    =>  '<polygon points="0.25 0, 1 0, 1 1, 0.25 1, 0 0.5" />', 
+            'right_point'   =>  '<polygon points="0 0, 0.75 0, 1 0.5, 0.75 1, 0 1" />', 
+            'left_chevron'  =>  '<polygon points="1 0, 0.75 0.5, 1 1, 0.25 1, 0 0.5, 0.25 0" />', 
+            'right_chevron' =>  '<polygon points="0.75 0, 1 0.5, 0.75 1, 0 1, 0.25 0.5, 0 0" />', 
+            'left_message'  =>  '<polygon points="0 0, 1 0, 1 0.75, 50 0.75, 0.25 1, 0.25 0.75, 0 0.75" />', 
+            'right_message' =>  '<polygon points="0 0, 1 0, 1 0.75, 0.75 0.75, 0.75 1, 0.5 0.75, 0 0.75" />', 
+        );
 
         /**
          * Holds SVGs for illustration images
@@ -562,6 +585,39 @@ if ( ! class_exists( 'WonKode_SVG_Resources' ) ) {
             }
             // return bg
             return $bg_svg_el;
+        }
+        /**
+         * Returns SVG polygon shapes for clip-path and other 
+         * css effects. 
+         * ===NOTE===
+         * Only used for svg shape elements using "polygon" tag with "points" attribute.
+         * In other words, not for, circle, ellipse, rect
+         * 
+         * @since 1.0
+         * @param string $polygon_name  Name of polygon you want to get
+         * @return mixed SVG shape to echo for using in css clip path
+         */
+        public static function get_clipper_svg_polygon_shape( $polygon_name = '' ) {
+            if ( empty( $polygon_name ) || ! array_key_exists( $polygon_name, self::$svg_polygons ) ) {
+                return;
+            }
+            // new line
+            $nl = "\n";
+            // tab
+            $tb = "\t";
+            // id for svg clipPath
+            $clip_path_id = $polygon_name . '-clipper';
+            // begin svg output
+            $svg_out = $nl . '<svg width="0" height="0" class="clip-path-svg">' . $nl;
+            $svg_out .= $tb . '<defs>' . $nl;
+            $svg_out .= $tb . $tb . '<clipPath id="' . esc_attr( $clip_path_id ) . '" clipPathUnits="objectBoundingBox">' . $nl;
+            $svg_out .= $tb . $tb . $tb . self::$svg_polygons[ $polygon_name ];
+            $svg_out .= $tb . $tb . '</clipPath>' . $nl;
+            $svg_out .= $tb . '</defs>' . $nl;
+            $svg_out .= '</svg>';
+
+            // return svg
+            return $svg_out;
         }
         /**
          * Returns arguments ready for use in svg resources
