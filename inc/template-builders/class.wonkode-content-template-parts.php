@@ -541,7 +541,8 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 ?>
                 <div class="row my-4">
                     <div class="col-12 related-posts-header">
-                        <h1><?php _e( 'Other Related Posts', self::$txt_dom ); ?></h1>
+                        <div class="header-shape"></div>
+                        <h1 class="header-title"><?php _e( 'Other Related Posts', self::$txt_dom ); ?></h1>
                     </div>
                 </div>
                 <div class="<?php echo esc_attr( $row_class ); ?>">
