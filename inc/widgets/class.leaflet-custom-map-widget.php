@@ -414,7 +414,7 @@ if ( ! function_exists( 'wonkode_leaflet_map_widget_scripts' ) ) {
         $obj_prefix = str_replace( '-', '_', $theme_id );
 
         // enqueue only when widget is active
-        if ( is_active_widget( false, false, $theme_id . '-leaflet-map-widget', true ) ) {
+        if ( is_active_widget( false, false, $theme_id . '-leaflet-map-widget', true ) && is_front_page() ) {
             // enqueueing
             wp_enqueue_script( $theme_id . '-leaflet-cdn' );
             wp_enqueue_script( $theme_id . '-init-leaflet' );
@@ -457,7 +457,7 @@ if ( ! function_exists( 'wonkode_leaflet_map_widget_styles' ) ) {
         // get theme id
         $theme_id = wp_get_theme()->get( 'TextDomain' );
         // enqueue only when widget is active
-        if ( is_active_widget( false, false, $theme_id . '-leaflet-map-widget', true ) ) {
+        if ( is_active_widget( false, false, $theme_id . '-leaflet-map-widget', true ) && is_front_page() ) {
             wp_enqueue_style( $theme_id . '-leaflet-css-cdn' );
             wp_enqueue_style( $theme_id . '-custom-leaflet' );
         }
