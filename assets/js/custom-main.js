@@ -24,6 +24,21 @@
             $('.sticky-top').removeClass('shadow-sm').css('top', '-100px');
         }
     });
+
+    // Small device navbar menu toggler
+    var menu_btn = $( '.menu-btn' );
+    var menu_is_open = false;
+    // click event handler
+    menu_btn.on( 'click', function( e ) {
+        e.preventDefault();
+        if ( ! menu_is_open ) {
+            $( this ).addClass( 'close' );
+            menu_is_open = true;
+        } else {
+            $( this ).removeClass( 'close' );
+            menu_is_open = false;
+        }
+    } );
     
     
     // Back to top button
