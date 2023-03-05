@@ -468,6 +468,62 @@ if ( ! function_exists( 'wonkode_get_svg_illustration_use' ) ) {
 }
 
 /**
+ * Template tag to display custom logo on site header
+ */
+if ( ! function_exists( 'wonkode_header_custom_logo' ) ) {
+	/**
+	 * Function that displays custom logo on site header
+	 * 
+	 * @since 1.0
+	 */
+    function wonkode_header_custom_logo() {
+        $logo_id = get_theme_mod( 'custom_logo' );
+        $logo = wp_get_attachment_image_src( $logo_id, array( '200', '40' ) );   
+        if ( has_custom_logo() ) {
+            ?>
+			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="navbar-brand d-flex align-items-center">
+            	<img class="img-fluid" src="<?php echo esc_url( $logo[0] ); ?>" alt="<?php echo get_bloginfo( 'name' ) . ' ' . __( 'logo', WK_TXTDOM ); ?>">
+            </a>
+            <?php
+        } else {
+            ?>
+            <a id="site-title" class="navbar-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+            	<?php bloginfo( 'name' ); ?>
+            </a>
+            <?php
+        }
+    }
+}
+
+/**
+ * Template tag to display custom logo on site footer
+ */
+if ( ! function_exists( 'wonkode_footer_custom_logo' ) ) {
+	/**
+	 * Function that displays custom logo on site footer
+	 * 
+	 * @since 1.0
+	 */
+    function wonkode_footer_custom_logo() {
+        $logo_id = get_theme_mod( 'custom_logo' );
+        $logo = wp_get_attachment_image_src( $logo_id, array( '200', '40' ) );   
+        if ( has_custom_logo() ) {
+            ?>
+			<a href="<?php echo esc_url( home_url( '/' ) ); ?>">
+            	<img class="img-fluid" src="<?php echo esc_url( $logo[0] ); ?>" alt="<?php echo get_bloginfo( 'name' ) . ' ' . __( 'logo', WK_TXTDOM ); ?>">
+            </a>
+            <?php
+        } else {
+            ?>
+            <a href="<?php echo esc_url( home_url( '/' ) ); ?>">
+            	<?php bloginfo( 'name' ); ?>
+            </a>
+            <?php
+        }
+    }
+}
+
+/**
  * Template function to get 
  * copyright info of site.
  */
@@ -553,4 +609,22 @@ if ( ! function_exists( 'wonkode_get_theme_name' ) ) {
 			return false;
 		}
 	}
+}
+
+/**
+ * Template tag to display social media nav menu
+ */
+if ( ! function_exists( 'wonkode_show_social_media_links_nav' ) ) {
+	/**
+	 * Initialize 'WonKode_Social_Media' class and 
+	 * show links nav
+	 * 
+	 * @since 1.0
+	 * @return void
+	 */
+    function wonkode_show_social_media_links_nav() {
+        // need to get class instance for __construct() function to execute
+        $social_media_links_nav = new WonKode_Social_Media();
+        $social_media_links_nav::show_social_nav();
+    }
 }
