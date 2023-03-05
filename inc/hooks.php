@@ -59,13 +59,14 @@ if ( ! function_exists( 'wonkode_get_archive_title_filter' ) ) {
 		return $title;
 	}
 }
-/**
- * Instantiates social media share feature hooks
- * 
- * @since 1.0
- * @return void
- */
+
 if ( ! function_exists( 'init_wonkode_social_share_hooks' ) ) {
+	/**
+	 * Instantiates social media share feature hooks
+	 * 
+	 * @since 1.0
+	 * @return void
+	 */
     function init_wonkode_social_share_hooks() {
         // need to get class instance for __construct() function to execute
         $social_media_share_feature = new WonKode_Social_Media_Share_Menu();
@@ -134,48 +135,73 @@ if ( ! function_exists( 'wonkode_append_ui_icons_svg_symbols' ) ) {
 }
 
 add_action( 'wonkode_append_ui_icons_symbols', 'wonkode_append_social_icons_svg_symbols', 12 );
-/**
- * Callback function to action hook 'wonkode_append_ui_icons_symbols' 
- * to print SVG symbols of social icons.
- * 
- * @since 1.0
- * @param array $args 		{
-	 * 		Array of arguments you want to modify in the <symbol> tag
-	 * 		while retrieving svg resources. Default is empty.
-	 * 			Default values are for icon svg resources
-	 * 			@type string 	'view_box'		Value for 'viewBox' attribute. Default "0 0 24 24"
-	 * 			@type int 		'size'			Value for 'size' attribute. Default 24
-	 * 			@type int 		'stroke_w'		Value for 'stroke-width' attribute. Default 2
-	 * 			@type string 	'stroke'		Value for 'stroke' (color) attribute. 
-	 * 											Default 'currentColor'
-	 * 			@type string 	'fill'			Value for 'fill' (color) attribute. Default 'none'
-	 * }
-	 * @return void
- */
-function wonkode_append_social_icons_svg_symbols( $args ) {
-	$names = array( 'facebook', 'twitter', 'instagram', 'linkedin' );
-	$symbols = WonKode_SVG_Resources::get_icon_symbols( 'social-icons', $names, $args );
-	if ( ! empty( $symbols ) ) {
-		echo $symbols;
+if ( ! function_exists( 'wonkode_append_social_icons_svg_symbols' ) ) {
+	/**
+	 * Callback function to action hook 'wonkode_append_ui_icons_symbols' 
+	 * to print SVG symbols of social icons.
+	 * 
+	 * @since 1.0
+	 * @param array $args 		{
+		 * 		Array of arguments you want to modify in the <symbol> tag
+		 * 		while retrieving svg resources. Default is empty.
+		 * 			Default values are for icon svg resources
+		 * 			@type string 	'view_box'		Value for 'viewBox' attribute. Default "0 0 24 24"
+		 * 			@type int 		'size'			Value for 'size' attribute. Default 24
+		 * 			@type int 		'stroke_w'		Value for 'stroke-width' attribute. Default 2
+		 * 			@type string 	'stroke'		Value for 'stroke' (color) attribute. 
+		 * 											Default 'currentColor'
+		 * 			@type string 	'fill'			Value for 'fill' (color) attribute. Default 'none'
+		 * }
+		 * @return void
+	 */
+	function wonkode_append_social_icons_svg_symbols( $args ) {
+		$names = array( 'facebook', 'twitter', 'instagram', 'linkedin' );
+		$symbols = WonKode_SVG_Resources::get_icon_symbols( 'social-icons', $names, $args );
+		if ( ! empty( $symbols ) ) {
+			echo $symbols;
+		}
 	}
 }
 
-/**
- * Action function to display post navigation. 
- * 
- * Hooked to: self::$unique_prefix . '_post_navigation' 
- * action hook.
- * 
- * @see https://developer.wordpress.org/reference/functions/get_the_post_navigation/
- * 
- * @since 1.0
- * 
- * @param string $class Class for post navigation wrapper
- * @param array $args 	Arguments for post navigation
- * @return mixed Post navigation html block
- */
-if ( ! function_exists( 'wonkode_get_post_navigation_template' ) ) {
-	function wonkode_get_post_navigation_template( $class, $args = array() ) {
+add_action( 'wonkode_page_section_title', 'wonkode_show_page_section_title', 99 );
+if ( ! function_exists( 'wonkode_show_page_section_title' ) ) {
+	/**
+	 * Callback function to display page section title
+	 * 
+	 * @since 1.0
+	 * @param string $section_title  Title for page section
+	 * @return void
+	 */
+	function wonkode_show_page_section_title( $section_title ) {
+		if ( empty( $section_title ) ) {
+			return;
+		}
+		?>
+		<div class="section-title-wrapper">
+			<div class="b4-title-shape"></div>
+			<h1 class="page-section-title"><?php echo esc_html( $section_title ); ?></h1>
+		</div>
+		<?php
+	}
+}
+
+
+if ( ! function_exists( 'wonkode_get_post_navigation_html' ) ) {
+	/**
+	 * Function to get post navigation html template.
+	 * 
+	 * Hooked to: self::$unique_prefix . '_post_navigation' 
+	 * action hook.
+	 * 
+	 * @see https://developer.wordpress.org/reference/functions/get_the_post_navigation/
+	 * 
+	 * @since 1.0
+	 * 
+	 * @param string $class Class for post navigation wrapper
+	 * @param array $args 	Arguments for post navigation
+	 * @return mixed Post navigation html block
+	 */
+	function wonkode_get_post_navigation_html( $class, $args = array() ) {
 		$args = wp_parse_args(
 			$args, 
 			array(
@@ -234,10 +260,10 @@ if ( ! function_exists( 'wonkode_get_post_navigation_template' ) ) {
  * @param string $class Class for post navigation wrapper
  * @return mixed Post navigation html
  */
-add_filter( 'navigation_markup_template', 'wonkode_get_post_navigation_template' );
-if ( ! function_exists( 'wonkode_get_post_navigation' ) ) {
-	function wonkode_get_post_navigation( $template, $class = 'post-navigation' ) {
-		$template = wonkode_get_post_navigation_template( $class );
+add_filter( 'navigation_markup_template', 'wonkode_get_post_navigation_template', 99, 2 );
+if ( ! function_exists( 'wonkode_get_post_navigation_template' ) ) {
+	function wonkode_get_post_navigation_template( $template, $class = 'post-navigation' ) {
+		$template = wonkode_get_post_navigation_html( $class );
 		return $template;
 	}
 }
