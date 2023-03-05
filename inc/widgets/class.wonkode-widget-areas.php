@@ -26,19 +26,24 @@ if ( ! class_exists( 'WonKode_Widget_Areas' ) ) {
         
         /**
          * Registering all widget areas
+         * 
+         * @since 1.0
+         * @return void
          */
         public function register_widget_areas() {
+            $this->full_width_page_container_widget_area();
             $this->primary_sidebar();
             $this->secondary_sidebar();
-            $this->primary_footer_widget_area();
+            $this->footer_half_columned_widget_area();
+            $this->footer_auto_resizing_columns_widget_area();
             $this->secondary_footer_widget_area();
-            $this->full_width_page_container_widget_area();
         }
         /**
          * Callback for registering primary 
          * sidebar widget area
          * 
          * @since 1.0
+         * @return void
          */
         public function primary_sidebar() {
             register_sidebar( 
@@ -62,6 +67,7 @@ if ( ! class_exists( 'WonKode_Widget_Areas' ) ) {
          * sidebar widget area
          * 
          * @since 1.0
+         * @return void
          */
         public function secondary_sidebar() {
             register_sidebar( 
@@ -81,23 +87,48 @@ if ( ! class_exists( 'WonKode_Widget_Areas' ) ) {
         }
 
         /**
-         * callback to register primary
+         * callback to register half columned 
          * footer widget area
          * 
          * @since 1.0
+         * @return void
          */
-        public function primary_footer_widget_area() {
+        public function footer_half_columned_widget_area() {
             register_sidebar( 
                 apply_filters(
-                    'wonkode_footer_one_widgetarea',
+                    'wonkode_footer_half_columned_widgetarea',
                     array(
-                        'name'              =>  __( 'Primary Footer Widget Area', WK_TXTDOM ),
-                        'id'                =>  'wonkode-primary-footer',
-                        'description'       =>  __( 'Add widgets to top footer section', WK_TXTDOM ),
-                        'before_widget'     =>  '<div id="%1$s" class="col-6 col-md widget footer-widget-t %2$s">',
+                        'name'              =>  __( 'Footer 2 Columns Widget Area', WK_TXTDOM ),
+                        'id'                =>  'wonkode-footer-half-columned',
+                        'description'       =>  __( 'Add 2 half columned widgets here', WK_TXTDOM ),
+                        'before_widget'     =>  '<div id="%1$s" class="col-md-6 widget footer-widget-half-columned %2$s">',
                         'after_widget'      =>  '</div>',
-                        'before_title'      =>  '<h4 class="widget-title">',
-                        'after_title'       =>  '</h4>',
+                        'before_title'      =>  '<h2 class="widget-title">',
+                        'after_title'       =>  '</h2>',
+                    )
+                )
+            );
+        }
+
+        /**
+         * callback to register primary auto resizing column 
+         * footer widget area
+         * 
+         * @since 1.0
+         * @return void
+         */
+        public function footer_auto_resizing_columns_widget_area() {
+            register_sidebar( 
+                apply_filters(
+                    'wonkode_footer_auto_resizing_column_widgetarea',
+                    array(
+                        'name'              =>  __( 'Footer Auto-resizing Columns', WK_TXTDOM ),
+                        'id'                =>  'wonkode-footer-auto-col-widgets',
+                        'description'       =>  __( 'Add widgets here. For example&comma; quick links&comma; category list', WK_TXTDOM ),
+                        'before_widget'     =>  '<div id="%1$s" class="col widget footer-widget-auto-col %2$s">',
+                        'after_widget'      =>  '</div>',
+                        'before_title'      =>  '<h2 class="widget-title">',
+                        'after_title'       =>  '</h2>',
                     )
                 )
             );
@@ -108,6 +139,7 @@ if ( ! class_exists( 'WonKode_Widget_Areas' ) ) {
          * footer widget area
          * 
          * @since 1.0
+         * @return void
          */
         public function secondary_footer_widget_area() {
             register_sidebar( 
@@ -131,6 +163,7 @@ if ( ! class_exists( 'WonKode_Widget_Areas' ) ) {
          * for frontpages and other page templates
          * 
          * @since 1.0
+         * @return void
          */
         public function full_width_page_container_widget_area() {
             register_sidebar( 
