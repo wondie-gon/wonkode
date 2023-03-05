@@ -540,10 +540,17 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 $row_class = WonKode_Helper::list_classes( $row_class );
                 ?>
                 <div class="row my-4">
-                    <div class="col-12 related-posts-header">
-                        <div class="header-shape"></div>
-                        <h1 class="header-title"><?php _e( 'Other Related Posts', self::$txt_dom ); ?></h1>
-                    </div>
+                    <?php 
+                        $_theme_prefix = self::$unique_prefix;
+                        $section_title = esc_html__( 'Other Related Posts', self::$txt_dom );
+                        /**
+                         * Action hook to display page section title
+                         * 
+                         * @since 1.0
+                         * @param string $section_title     Title of page section
+                         */
+                        do_action( "{$_theme_prefix}_page_section_title", $section_title );
+                    ?>
                 </div>
                 <div class="<?php echo esc_attr( $row_class ); ?>">
                 <?php
