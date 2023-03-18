@@ -17,9 +17,8 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
          */
         public function __construct() {
             parent::__construct();
-            if ( is_customize_preview() ) {
-                add_action( 'customize_register', array( $this, 'register' ) );
-            }
+            // register the customizer
+            add_action( 'customize_register', array( $this, 'register' ) );
         }
         
         /**
@@ -48,7 +47,7 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
                     'default'	        => false,
                     'capability'        => 'edit_theme_options', 
                     'type'              => 'theme_mod',  
-                    'sanitize_callback'	=>	array( $this->prefix_id . '_Sanitize', 'checkbox' )
+                    'sanitize_callback'	=>	array( 'WonKode_Sanitize', 'checkbox' )
                 )
             );
             $wp_customize->add_control(
@@ -259,7 +258,7 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
                     'default'	        => false,
                     'capability'        => 'edit_theme_options', 
                     'type'              => 'theme_mod',  
-                    'sanitize_callback'	=>	array( $this->prefix_id . '_Sanitize', 'checkbox' )
+                    'sanitize_callback'	=>	array( 'WonKode_Sanitize', 'checkbox' )
                 )
             );
             $wp_customize->add_control(

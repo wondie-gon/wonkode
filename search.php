@@ -9,7 +9,7 @@
  */
 get_header();
 ?>
-<div class="container-xxl bg-light mb-5">
+<div class="container-xxl mb-5">
     <div class="container">
         <div class="row g-5 align-center page-header">
             <div class="col-12 py-5 animated fadeIn text-center">
@@ -25,7 +25,7 @@ get_header();
             </div>
         </div><!-- .page-header -->
     <?php if ( have_posts() ) { ?>
-        <div class="row">
+        <div class="row bg-pure-light">
             <div class="col-12 search-result-count">
             <?php
                 printf(

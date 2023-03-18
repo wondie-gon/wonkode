@@ -6,14 +6,14 @@
  * @since 1.0
  */
 get_header();
-// open outer container
-WonKode_Site_Content_Area::open_outer_container( 'bg-light' );
-    // open inner container
-    WonKode_Site_Content_Area::open_inner_container();
+// open page template outer container
+WonKode_Site_Content_Area::open_section_outer_container();
+    // open page template inner container
+    WonKode_Site_Content_Area::open_section_inner_container();
         // get page header
         get_template_part( 'template-parts/page/page-header' );
         // open wrapping row
-        WonKode_Site_Content_Area::open_content_wrapper_row( 'page-posts-wrapper py-5 mb-4' );
+        WonKode_Site_Content_Area::open_content_wrapper_row( 'page-posts-wrapper bg-pure-light py-5 mb-4' );
             // page content loop
             while ( have_posts() ) {
                 the_post();
@@ -29,8 +29,8 @@ WonKode_Site_Content_Area::open_outer_container( 'bg-light' );
             }
         // close wrapping row
         WonKode_Site_Content_Area::close_content_wrapper_row();
-    // closing inner container
-    WonKode_Site_Content_Area::close_inner_container();
-// closing outer container
-WonKode_Site_Content_Area::close_outer_container();
+    // closing page template inner container
+    WonKode_Site_Content_Area::close_section_inner_container();
+// closing page template outer container
+WonKode_Site_Content_Area::close_section_outer_container();
 get_footer();

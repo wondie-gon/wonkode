@@ -23,8 +23,7 @@
     ?>
     <?php wp_head(); ?>
 </head>
-
-<body>
+<body <?php body_class(); ?>>
     <!-- svg resources starts here -->
     <?php
         // dump svg symbols here
@@ -38,15 +37,18 @@
             <div class="spinner-grow text-primary" role="status"></div>
         </div>
         <!-- Spinner End -->
-
-        <?php
-        if ( has_nav_menu( 'primary' ) ) {
-            // navbar wrapper class
-            $navbar_classes = array( 'navbar navbar-expand-lg bg-light bg-white ' . WK_TXTDOM . '-navbar ' . 'sticky-top p-0 px-4 px-lg-5' );
-        ?>
-        <!-- Navbar Start -->
-        <nav class="<?php echo esc_attr( implode( ' ', $navbar_classes ) ); ?>">
-            <div class="container-fluid">
+        <?php 
+        // open section outer container
+        WonKode_Site_Content_Area::open_section_outer_container( 'bg-primary-lightest' );
+            // open section inner container
+            WonKode_Site_Content_Area::open_section_inner_container( 'navbar-wrapper' );
+            // start displaying nav
+            if ( has_nav_menu( 'primary' ) ) : 
+                // navbar wrapper class
+                $navbar_classes = array( 'navbar navbar-expand-lg ' . WK_TXTDOM . '-navbar ' . 'sticky-top' );
+            ?>
+            <!-- Navbar Start -->
+            <nav class="<?php echo esc_attr( implode( ' ', $navbar_classes ) ); ?>">
                 <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="navbar-brand d-flex align-items-center">
                     <img class="img-fluid" src="<?php echo esc_url( WK_ASSETS_URL . '/images/logo.svg' ); ?>" alt="<?php echo get_bloginfo( 'name' ) . ' ' . __( 'logo', WK_TXTDOM ); ?>">
                 </a>
@@ -97,10 +99,16 @@
                     ?>
                     </a>
                 </div>
-            </div>
-        </nav>
-        <!-- Navbar End -->
-    <?php 
-        }
+            </nav>
+            <!-- Navbar End -->
+    <?php
+            // closing section inner container
+            WonKode_Site_Content_Area::close_section_inner_container();
+        // closing section outer container
+        WonKode_Site_Content_Area::close_section_outer_container();
+        else : 
+            // just use the default
+            wp_nav_menu(); 
+        endif; // if ( has_nav_menu( 'primary' ) )
         // open site content area
         WonKode_Site_Content_Area::open_wrappers();

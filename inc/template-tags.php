@@ -14,6 +14,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Defines custom conditional function to check 
+ * page is not a single post.
+ */
+if ( ! function_exists( 'wonkode_is_not_single_post' ) ) {
+	/**
+	 * Checks if query is not for a single post, 
+	 * or not singular of any post type, except page.
+	 * 
+	 * @since 1.0
+	 * @return bool True if query is not single post.
+	 */
+	function wonkode_is_not_single_post() {
+		return ! is_single() || ( ! is_singular() || is_page() );
+	}
+}
+
+/**
  * Prints HTML with meta information for 
  * the current post-date/time and author.
  */
@@ -627,4 +644,112 @@ if ( ! function_exists( 'wonkode_show_social_media_links_nav' ) ) {
         $social_media_links_nav = new WonKode_Social_Media();
         $social_media_links_nav::show_social_nav();
     }
+}
+
+/**
+ * Function checks if WordPress is running on localhost
+ */
+if ( ! function_exists( 'wonkode_is_on_localhost' ) ) {
+	/**
+	 * Returns true if WordPress is running on localhost
+	 * 
+	 * @since 1.0
+	 * @return bool 
+	 */
+	function wonkode_is_on_localhost() {
+		// get sitename
+		$sitename = wp_parse_url( network_home_url(), PHP_URL_HOST );
+		return in_array( strtolower( $sitename ), array( 'localhost', '127.0.0.1' ) );
+	}
+}
+
+/**
+ * Checks whether the given input is a well-formed telephone number.
+ */
+if ( ! function_exists( 'wonkode_is_tel' ) ) {
+	/**
+	 * Validates input value is a valid telephone number
+	 * 
+	 * @since 1.0
+	 * 
+	 * @param string $input   Value of input field
+	 * @return bool
+	 */
+	function wonkode_is_tel( $input ) {
+		$input = preg_replace( '%[()/.*#\s-]+%', '', $input );
+		$result = preg_match( '/^[+]?[0-9]+$/', $input );
+		return apply_filters( 'wonkode_is_tel', $result, $input );
+	}
+}
+
+/**
+ * Defines function to sanitize svg on 
+ * frontend.
+ */
+if ( ! function_exists( 'wonkode_sanitize_svg' ) ) {
+	/**
+	 * Sanitize SVG markup for front-end display.
+	 * 
+	 * @see https://developer.wordpress.org/reference/functions/wp_kses/#user-contributed-notes
+	 * Contributed by: Mahdi Yazdani
+	 * 
+	 * @param  string $svg SVG markup to sanitize.
+	 * @return string 	  Sanitized markup.
+	 */
+	function wonkode_sanitize_svg( $svg = '' ) {
+		$allowed_html = [
+			'svg'  => [
+				'xmlns'       => [],
+				'fill'        => [],
+				'viewbox'     => [],
+				'role'        => [],
+				'aria-hidden' => [],
+				'focusable'   => [],
+				'height'      => [],
+				'width'       => [],
+			],
+			'path' => [
+				'd'    => [],
+				'fill' => [],
+			],
+		];
+
+		return wp_kses( $svg, $allowed_html );
+	}
+}
+
+/**
+ * Defining function that checks contact-form-7 
+ * is active
+ */
+if ( ! function_exists( 'wonkode_is_wpcf7_active' ) ) {
+	/**
+	 * Checks if contact-form-7 plugin is active.
+	 * 
+	 * @since 1.0
+	 * @return bool true if plugin is active
+	 */
+	function wonkode_is_wpcf7_active() {
+		// include plugin
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			include_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+		return is_plugin_active( 'contact-form-7/wp-contact-form-7.php' );
+	}
+}
+
+/**
+ * Defining function that checks WooCommerce 
+ * is active
+ */
+if ( ! function_exists( 'wonkode_is_woocommerce_activated' ) ) {
+	/**
+	 * Checks if WooCommerce plugin is active.
+	 * 
+	 * @since 1.0
+	 * @return bool true if plugin is active
+	 */
+	function wonkode_is_woocommerce_activated() {
+		if ( class_exists( 'woocommerce' ) ) { return true; } else { return false; }
+	}
 }

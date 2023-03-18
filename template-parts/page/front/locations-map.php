@@ -5,8 +5,12 @@
  * @package WonKode
  * @since 1.0
  */
-// open custom location map wrapper
-WonKode_Site_Content_Area::open_inner_container( 'locations-map-section' );
+// direct access restricted
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+// open custom location map section wrapper
+WonKode_Site_Content_Area::open_section_inner_container( 'locations-map-section' );
     // row
     WonKode_Site_Content_Area::open_content_wrapper_row();
         // display widget
@@ -14,5 +18,5 @@ WonKode_Site_Content_Area::open_inner_container( 'locations-map-section' );
     // close row
     WonKode_Site_Content_Area::close_content_wrapper_row();
 
-// closing custom location map wrapper
-WonKode_Site_Content_Area::close_div_tag();
+// closing custom location map section wrapper
+WonKode_Site_Content_Area::close_section_inner_container();

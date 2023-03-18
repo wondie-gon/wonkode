@@ -16,12 +16,37 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 /**
- * Instantiates comment feature hooks
- * 
- * @since 1.0
- * @return void
+ * Defines action callback to auto detect page 
+ * to add pingback header.
+ */
+add_action( 'wp_head', 'wonkode_auto_pingback_header' );
+
+if ( ! function_exists( 'wonkode_auto_pingback_header' ) ) {
+	/**
+	 * Add a pingback url auto-discovery header 
+	 * for identifiable singular articles.
+	 * 
+	 * @since 1.0
+	 * @return void
+	 */
+	function wonkode_auto_pingback_header() {
+		if ( is_singular() && pings_open() ) {
+			printf( '<link rel="pingback" href="%s">' . "\n", esc_url( get_bloginfo( 'pingback_url' ) ) );
+		}
+	}
+}
+
+/**
+ * Defining function to initialize 
+ * custom comment features class.
  */
 if ( ! function_exists( 'init_wonkode_comment_feature_hooks' ) ) {
+	/**
+	 * Instantiates comment feature hooks
+	 * 
+	 * @since 1.0
+	 * @return void
+	 */
     function init_wonkode_comment_feature_hooks() {
         // No __construct() function, no need to instantiate class
         WonKode_Comments_Feature::init_hooks();
@@ -35,15 +60,16 @@ if ( ! function_exists( 'init_wonkode_comment_feature_hooks' ) ) {
  * @return mixed Modified title of archive pages
  */
 add_filter( 'get_the_archive_title', 'wonkode_get_archive_title_filter' );
-/**
- * Filters the default archive title and 
- * displays title without prefix
- * 
- * @since 1.0
- * @param mixed $title  Title of archive pages
- * @return mixed        Modified title of archive pages
- */
+
 if ( ! function_exists( 'wonkode_get_archive_title_filter' ) ) {
+	/**
+	 * Filters the default archive title and 
+	 * displays title without prefix
+	 * 
+	 * @since 1.0
+	 * @param mixed $title  Title of archive pages
+	 * @return mixed        Modified title of archive pages
+	 */
 	function wonkode_get_archive_title_filter( $title ) {
 		if ( is_category() ) {
 			$title  = single_cat_title( '', false );

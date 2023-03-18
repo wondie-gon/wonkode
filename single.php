@@ -11,14 +11,14 @@
 global $wonkode_content_template_parts;
 // header
 get_header();
-// open outer container
-WonKode_Site_Content_Area::open_outer_container( 'bg-light' );
-    // open inner container
-    WonKode_Site_Content_Area::open_inner_container();
+// open single template outer container
+WonKode_Site_Content_Area::open_section_outer_container();
+    // open single template inner container
+    WonKode_Site_Content_Area::open_section_inner_container();
         // get single post header
         get_template_part( 'template-parts/post/single-header' );
         // open wrapping row
-        WonKode_Site_Content_Area::open_content_wrapper_row( 'single-post-wrapper py-5' );
+        WonKode_Site_Content_Area::open_content_wrapper_row( 'single-post-wrapper bg-pure-light py-5' );
             // open post content column
             WonKode_Site_Content_Area::open_main_post_col( 'post-col' );
 
@@ -56,8 +56,8 @@ WonKode_Site_Content_Area::open_outer_container( 'bg-light' );
             get_sidebar();
         // close wrapping row
         WonKode_Site_Content_Area::close_content_wrapper_row();
-    // closing inner container
-    WonKode_Site_Content_Area::close_inner_container();
-// closing outer container
-WonKode_Site_Content_Area::close_outer_container();
+    // closing single template inner container
+    WonKode_Site_Content_Area::close_section_inner_container();
+// closing single template outer container
+WonKode_Site_Content_Area::close_section_outer_container();
 get_footer();

@@ -138,7 +138,7 @@ if ( ! class_exists( 'Leaflet_Custom_Map_Widget' ) ) {
 
             $full_address = ! empty( $instance['full_address'] ) ? $instance['full_address'] : '';
 
-            $phone_num = ! empty( $instance['phone_num'] ) ? $instance['phone_num'] : '';
+            $phone_num = ( ! empty( $instance['phone_num'] ) && wonkode_is_tel( $instance['phone_num'] ) ) ? $instance['phone_num'] : '';
             ?>
             <div class="widget-content">
                 <p>
@@ -278,7 +278,7 @@ if ( ! class_exists( 'Leaflet_Custom_Map_Widget' ) ) {
             $instance['full_address'] = ( ! empty( $new_instance['full_address'] ) ) ? sanitize_text_field( $new_instance['full_address'] ) : '';
 
             // NOTE------needs phone number sanitizer------
-            $instance['phone_num'] = ( ! empty( $new_instance['phone_num'] ) ) ? sanitize_text_field( $new_instance['phone_num'] ) : '';
+            $instance['phone_num'] = ( ! empty( $new_instance['phone_num'] ) && wonkode_is_tel( $new_instance['phone_num'] ) ) ? $new_instance['phone_num'] : '';
 
             // then return
             return $instance;

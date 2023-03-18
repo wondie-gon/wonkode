@@ -20,3 +20,5 @@ require WK_INC_PATH . '/widgets/class.leaflet-custom-map-widget.php';
 require WK_INC_PATH . '/widgets/class.wonkode-short-footer-about-site-text.php';
 // 'WonKode_Footer_Page_Links' widget
 require WK_INC_PATH . '/widgets/class.wonkode-footer-page-links.php';
+// 'WonKode_Category_Links_List' widget
+require WK_INC_PATH . '/widgets/class.wonkode-category-links-list.php';

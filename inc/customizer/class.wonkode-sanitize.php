@@ -162,4 +162,16 @@ class WonKode_Sanitize {
 		}
 		return $input;
 	}
+    /**
+	 * Validates input value is a valid telephone number
+	 * 
+	 * @since 1.0
+     * @param string $input   Value of input field
+	 * @return bool
+	 */
+    public static function is_telephone_num( $input ) {
+        $input = preg_replace( '%[()/.*#\s-]+%', '', $input );
+		return preg_match( '/^[+]?[0-9]+$/', $input );
+    }
+
 } // ENDS -- class

@@ -110,7 +110,7 @@ if ( ! class_exists( 'WonKode_SVG_Resources' ) ) {
          */
         protected static $svg_polygons = array(
             'triangle_up'   =>  '<polygon points="0.5 0, 0 1, 1 1" />', 
-            'triangle_right'    =>  '<polygon points="1 0.5, 0 0, 0 1" />', 
+            'triangle_right'=>  '<polygon points="1 0.5, 0 0, 0 1" />', 
             'triangle_left' =>  '<polygon points="0 0.5, 1 0, 1 1" />', 
             'triangle_down' =>  '<polygon points="0 0, 1 0, 0.5 1" />', 
             'trapezoid'     =>  '<polygon points="0.2 0, 0.8 0, 1 1, 0 1" />', 
@@ -124,6 +124,8 @@ if ( ! class_exists( 'WonKode_SVG_Resources' ) ) {
             'right_chevron' =>  '<polygon points="0.75 0, 1 0.5, 0.75 1, 0 1, 0.25 0.5, 0 0" />', 
             'left_message'  =>  '<polygon points="0 0, 1 0, 1 0.75, 50 0.75, 0.25 1, 0.25 0.75, 0 0.75" />', 
             'right_message' =>  '<polygon points="0 0, 1 0, 1 0.75, 0.75 0.75, 0.75 1, 0.5 0.75, 0 0.75" />', 
+            'top_left_tag' =>  '<polygon points="0 0, 0.5 0, 1 0.5, 0.5 1, 0 0.5" />',
+            'top_right_tag' =>  '<polygon points="0.5 0, 1 0, 1 0.5, 0.5 1, 0 0.5" />',  
         );
 
         /**

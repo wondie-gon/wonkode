@@ -125,7 +125,7 @@ if ( ! class_exists( 'WonKode_Widget_Areas' ) ) {
                         'name'              =>  __( 'Footer Auto-resizing Columns', WK_TXTDOM ),
                         'id'                =>  'wonkode-footer-auto-col-widgets',
                         'description'       =>  __( 'Add widgets here. For example&comma; quick links&comma; category list', WK_TXTDOM ),
-                        'before_widget'     =>  '<div id="%1$s" class="col widget footer-widget-auto-col %2$s">',
+                        'before_widget'     =>  '<div id="%1$s" class="col-12 col-sm-6 col-md widget %2$s">',
                         'after_widget'      =>  '</div>',
                         'before_title'      =>  '<h2 class="widget-title">',
                         'after_title'       =>  '</h2>',

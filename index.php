@@ -14,10 +14,10 @@
  */
 // header
 get_header();
-// open outer container
-WonKode_Site_Content_Area::open_outer_container( 'bg-light' );
-    // open inner container
-    WonKode_Site_Content_Area::open_inner_container();
+// open section outer container
+WonKode_Site_Content_Area::open_section_outer_container();
+    // open section inner container
+    WonKode_Site_Content_Area::open_section_inner_container();
         // if home page
         if ( is_home() && ! is_front_page() && ! empty( single_post_title( '', false ) ) ) {
             // get page header
@@ -26,7 +26,7 @@ WonKode_Site_Content_Area::open_outer_container( 'bg-light' );
         // starting loop
         if ( have_posts() ) {
         ?>
-        <div class="row py-5 posts-list-wrapper">
+        <div class="row py-5 posts-list-wrapper bg-pure-light">
         <?php 
             // open post content column
             WonKode_Site_Content_Area::open_main_post_col( 'posts-list-col' );
@@ -45,8 +45,8 @@ WonKode_Site_Content_Area::open_outer_container( 'bg-light' );
         } else {
             get_template_part( 'template-parts/content/content-none' );
         }
-    // closing inner container
-    WonKode_Site_Content_Area::close_div_tag();
-// closing outer container
-WonKode_Site_Content_Area::close_div_tag();
+    // closing section inner container
+    WonKode_Site_Content_Area::close_section_inner_container();
+// closing section outer container
+WonKode_Site_Content_Area::close_section_outer_container();
 get_footer();

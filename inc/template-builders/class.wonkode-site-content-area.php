@@ -177,28 +177,29 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
             ';
         }
         /**
-         * Returns outer container opening tag for main content area
+         * Renders section outer container opening tag 
+         * for major page sections
+         * 
+         * @since 1.0
+         * @param string/array $additional_class    Additional classes. Defaults ''
+         * @return void
+         */
+        public static function open_section_outer_container( $additional_class = '' ) {
+            echo self::get_section_outer_container_opener( $additional_class );
+        }
+        /**
+         * Returns section outer container opening tag 
+         * for major page sections
          * 
          * @since 1.0
          * @param string/array $additional_class    Additional classes. Defaults ''
          * @return mixed outer container html tag with class attributes
          */
-        public static function get_outer_container_opener( $additional_class = '' ) {
+        public static function get_section_outer_container_opener( $additional_class = '' ) {
             $class_arr = array();
             // container classes from customizer
             $class_arr[] = get_theme_mod( self::$unique_prefix . '_outer_container_bs_class', WK_DEFAULTS['_outer_container_bs_class'] );
-            $mt = get_theme_mod( self::$unique_prefix . '_outer_container_margin_top', WK_DEFAULTS['_outer_container_margin_top'] );
-            $mt_class = ! ( '' === $mt || 'unset' === $mt ) ? $mt : '';
-            // add margin top class
-            if ( ! empty( $mt_class ) ) {
-                $class_arr[] = $mt_class;
-            }
-            $mb = get_theme_mod( self::$unique_prefix . '_outer_container_margin_bottom', WK_DEFAULTS['_outer_container_margin_bottom'] );
-            $mb_class = ! ( '' === $mb || 'unset' === $mb ) ? $mb : '';
-            // add margin bottom class
-            if ( ! empty( $mb_class ) ) {
-                $class_arr[] = $mb_class;
-            }
+
             // if additional class passed
             if ( ! empty( $additional_class ) ) {
                 self::add_to_classes( $additional_class, $class_arr );
@@ -216,34 +217,38 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
             // return the outer container
             return '<div class="' . esc_attr( $class_list ) . '">';
         }
+        
         /**
-         * Renders outer container opening tag for main content area
+         * Renders section outer container closing tag 
+         * for major page sections
+         * 
+         * @since 1.0
+         * @return void
+         */
+        public static function close_section_outer_container() {
+            echo '</div>';
+        }
+        
+        /**
+         * Renders section inner container opening tag 
+         * for major page sections
          * 
          * @since 1.0
          * @param string/array $additional_class    Additional classes. Defaults ''
          * @return void
          */
-        public static function open_outer_container( $additional_class = '' ) {
-            echo self::get_outer_container_opener( $additional_class );
+        public static function open_section_inner_container( $additional_class = '' ) {
+            echo self::get_section_inner_container_opener( $additional_class );
         }
         /**
-         * Renders outer container closing tag 
-         * for the main content area
-         * 
-         * @since 1.0
-         * @return void
-         */
-        public static function close_outer_container() {
-            echo '</div>';
-        }
-        /**
-         * Returns inner container opening tag
+         * Returns section inner container opening tag 
+         * for major page sections
          * 
          * @since 1.0
          * @param string/array $additional_class    Additional classes. Defaults ''
          * @return mixed inner container html tag with class attributes
          */
-        public static function get_inner_container_opener( $additional_class = '' ) {
+        public static function get_section_inner_container_opener( $additional_class = '' ) {
             $class_arr = array();
             // container classes from customizer
             $class_arr[] = get_theme_mod( self::$unique_prefix . '_inner_container_bs_class', WK_DEFAULTS['_inner_container_bs_class'] );
@@ -264,26 +269,19 @@ if ( ! class_exists( 'WonKode_Site_Content_Area' ) ) {
             // return the inner container
             return '<div class="' . esc_attr( $class_list ) . '">';
         }
+        
+        
         /**
-         * Renders inner container opening tag for main content area
-         * 
-         * @since 1.0
-         * @param string/array $additional_class    Additional classes. Defaults ''
-         * @return void
-         */
-        public static function open_inner_container( $additional_class = '' ) {
-            echo self::get_inner_container_opener( $additional_class );
-        }
-        /**
-         * Renders inner container closing tag 
-         * for the main content area
+         * Renders section inner container closing tag 
+         * for major page sections
          * 
          * @since 1.0
          * @return void
          */
-        public static function close_inner_container() {
+        public static function close_section_inner_container() {
             echo '</div>';
         }
+        
         /**
          * Returns posts content wrapping row opening tag
          * 

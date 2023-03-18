@@ -106,6 +106,7 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
             // start displaying widget
             echo $args['before_widget'];
             echo '<div class="col-lg-6">' . "\n";
+            echo "\t" . '<div class="h-100">' . "\n";
             /**
              * Filters widget title  and echoes 
              * whole title element
@@ -116,18 +117,19 @@ if ( ! class_exists( 'WonKode_Image_And_Text_Equal_Columns' ) ) {
                 echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
             }
             // displaying text paragraph
-            echo '<p class="' . esc_attr( $text_classes ) . '">';
+            echo "\t\t" . '<p class="' . esc_attr( $text_classes ) . '">';
             echo esc_html__( $instance['text'], $this->theme_id );
             echo '</p>' . "\n";
             // displaying link button
             if ( $instance['display_btn'] ) {
-                echo '<a href="' . esc_url( $instance['link_to'], $this->theme_id ) . '" class="' . esc_attr( $btn_classes ) . '">';
+                echo "\t\t" . '<a href="' . esc_url( $instance['link_to'], $this->theme_id ) . '" class="' . esc_attr( $btn_classes ) . '">';
                 echo esc_html__( $instance['btn_text'], $this->theme_id );
                 echo '</a>' . "\n";
             }
-            echo '</div>' . "\n";
+            echo "\t</div>\n";
+            echo "</div>\n";
             echo '<div class="' . esc_attr( $img_wrapper_classes ) . '">' . "\n";
-            echo '<img class="' . esc_attr( $img_classes ) . '"' . $style_anim_duration . ' src="' . esc_url( $instance['img_src'] ) . '" alt="' . esc_html__( $instance['title'], $this->theme_id ) . '">';
+            echo "\t" . '<img class="' . esc_attr( $img_classes ) . '"' . $style_anim_duration . ' src="' . esc_url( $instance['img_src'] ) . '" alt="' . esc_html__( $instance['title'], $this->theme_id ) . '">' . "\n";
             echo '</div>' . "\n";
             echo $args['after_widget'];
 

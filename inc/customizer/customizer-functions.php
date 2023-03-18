@@ -37,10 +37,29 @@ if ( ! defined( 'WK_DEFAULTS' ) ) {
         '_double_sidebar_right_col_size_md'     =>  '3',
         '_outer_container_margin_top'           =>  '',
         '_outer_container_margin_bottom'        =>  'mb-5',
+
+        // categorized latest posts section defaults
+        '_front_categorized_latest_posts_section_title'    =>  esc_html__( 'Latest Posts', WK_TXTDOM ),
+
+        // selected posts section defaults
+        '_front_selected_posts_enabled'         => false,
+        '_front_selected_posts_section_title'     =>  esc_html__( 'Popular Posts', WK_TXTDOM ),
+        '_num_of_front_selected_posts'              =>  6,
+        '_front_selected_posts_cols_sm'              =>  1,
+        '_front_selected_posts_cols_md'              =>  3,
+        '_front_selected_posts_cols_lg'              =>  4,
+        '_front_selected_post_default'       =>  '',
+
+        // woocommerce customize defaults
+        '_enable_woo_featured_products'         =>  false,
+        '_woo_featured_products_block_title'    =>  esc_html__( 'Featured Products', WK_TXTDOM ),
+        '_woo_featured_products_block_text_one' =>  '',
+        '_woo_featured_products_block_text_two' =>  '',
+        '_woo_featured_products_block_link'     =>  '#',
+        '_woo_featured_products_block_link_text'    =>  esc_html__( 'Go To Shop', WK_TXTDOM ),
+        '_woo_featured_products_link_btn_text'      =>  esc_html__( 'View Now', WK_TXTDOM ),
     ) );
 }
 
-// include customizers
-// require_once( WK_CUSTOMIZER_PATH . '/class.wonkode-customize-base.php' );
-// require_once( WK_CUSTOMIZER_PATH . '/class.wonkode-customize-site-general.php' );
-require_once( WK_CUSTOMIZER_PATH . '/class.wonkode-customize-init.php' );
+// include customize initializer
+require_once WK_CUSTOMIZER_PATH . '/class.wonkode-customize-init.php';

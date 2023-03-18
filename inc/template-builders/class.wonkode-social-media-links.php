@@ -236,7 +236,7 @@ if ( ! class_exists( 'WonKode_Social_Media' ) ) {
             $title = get_theme_mod( self::$prefix_id . '_social_media_nav_title' );
             // prepare title format
             $nav_title = sprintf( 
-                '<h5>' . esc_html__( '%s', self::$txt_dom ) . '</h5>',
+                '<h2 class="social-nav-title">' . esc_html__( '%s', self::$txt_dom ) . '</h2>',
                 $title
             );
 
