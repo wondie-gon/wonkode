@@ -797,6 +797,7 @@ img.card-img-bottom {
 ------------------------------------------ */
 /**----Frontpage Sections Vertical Padding----*/
 .hero-wrapper,
+.selected-posts-wrapper,
 .featured-products-wrapper {
   padding-top: 3rem;
   padding-bottom: 3rem;
@@ -804,6 +805,7 @@ img.card-img-bottom {
 
 @media (min-width: 576px) {
   .hero-wrapper,
+.selected-posts-wrapper,
 .featured-products-wrapper {
     padding-top: 5rem;
     padding-bottom: 5rem;
@@ -811,11 +813,14 @@ img.card-img-bottom {
 }
 @media (min-width: 768px) {
   .hero-wrapper,
+.selected-posts-wrapper,
 .featured-products-wrapper {
     padding-top: 5rem;
     padding-bottom: 5rem;
   }
 }
+/* Frontpage selected posts section
+------------------------------------------ */
 /* Frontpage featured products section
 ------------------------------------------ */
 .featured-products-wrapper .intro-block {
