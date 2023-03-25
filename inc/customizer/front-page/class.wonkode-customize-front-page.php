@@ -24,9 +24,7 @@ if ( ! class_exists( 'WonKode_Customize_Front_Page' ) ) {
 
             // register customizers
             add_action( 'customize_register', array( $this, 'register' ) );
-            // adding live preview
-            add_action( 'customize_preview_init', array( $this, 'live_preview_js' ) );
-
+            
             // load customizers
             $this->load_customizers();
         }
@@ -39,31 +37,15 @@ if ( ! class_exists( 'WonKode_Customize_Front_Page' ) ) {
          * @return void
          */
         public function register( $wp_customize ) {
-            /**
-             * Front page customize section
-             */
-            $wp_customize->add_section(
-                $this->prefix_id . '_frontpage_section',
+            $wp_customize->add_panel( 
+                $this->prefix_id . '_frontpage_panel',
                 array(
-                    'priority'          =>  130, 
-                    'title'             =>  esc_html__( 'WonKode Front Page', $this->theme_id ), 
-                    'description'       =>  esc_html__( 'Customize front page sections.', $this->theme_id ), 
-                    'capability'        =>  'edit_theme_options',
+                    'title'             => __( 'Frontpage Customizer', $this->theme_id ),
+                    'description'       => esc_html__( 'Allows you to customize your frontpage sections and other features.', $this->theme_id ),
+                    'priority'          =>  160,
                     'active_callback'   =>  'is_front_page',
                 )
             );
-        }
-        /**
-         * Enqueues JavaScript for the live settings preview
-         * 
-         * Used by hook: 'customize_preview_init'
-         * 
-         * @since 1.0
-         * @return void
-         */
-        public function live_preview_js() {
-            $customize_assets_url = $this->get_customizer_assets_uri();
-            wp_enqueue_script( $this->theme_id . '-front-customizer', $customize_assets_url . '/js/front-customizer-preview.js', array( 'jquery', 'customize-preview' ), '', true );
         }
 
         /**
