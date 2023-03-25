@@ -29,42 +29,18 @@ if ( ! class_exists( 'WonKode_Customize_Categorized_Latest_Posts' ) ) {
          * @return void
          */
         public function register( $wp_customize ) {
-            // Customizer heading custom separator control
-            $wp_customize->add_setting(
-                $this->prefix_id . '_front_categorized_latest_posts_customize_heading', 
+            /**
+             * Front page customize section for 
+             * latest posts of selected category.
+             */
+            $wp_customize->add_section(
+                $this->prefix_id . '_customize_section_categorized_latest_posts',
                 array(
-                    'sanitize_callback'	=>	array( 'WonKode_Sanitize', 'html' )
-                )
-            );
-            $wp_customize->add_control( 
-                new WonKode_Separator_Custom_Control(
-                    $wp_customize, 
-                    $this->prefix_id . '_front_categorized_latest_posts_customize_heading',
-                    array(
-                        'label'             =>  esc_html__( 'Categorized Latest Posts Block', $this->theme_id ),
-                        'section'	        =>	$this->prefix_id . '_frontpage_section',
-                        'settings'	        =>	$this->prefix_id . '_front_categorized_latest_posts_customize_heading',
-                        'type'	            =>	'section_heading',
-                    )
-                )
-            );
-            // separator description
-            $wp_customize->add_setting(
-                $this->prefix_id . '_front_categorized_latest_posts_customize_description', 
-                array(
-                    'sanitize_callback'	=>	array( 'WonKode_Sanitize', 'html' )
-                )
-            );
-            $wp_customize->add_control( 
-                new WonKode_Separator_Custom_Control(
-                    $wp_customize, 
-                    $this->prefix_id . '_front_categorized_latest_posts_customize_description',
-                    array(
-                        'description'       =>  esc_html__( 'Allows to display and customize latest posts block of a selected category on frontpage. Check to display and customize the block.', $this->theme_id ),
-                        'section'	        =>	$this->prefix_id . '_frontpage_section',
-                        'settings'	        =>	$this->prefix_id . '_front_categorized_latest_posts_customize_description',
-                        'type'	            =>	'section_text',
-                    )
+                    'priority'          =>  10, 
+                    'title'             =>  esc_html__( 'Categorized Latest Posts Section', $this->theme_id ), 
+                    'description'       =>  esc_html__( 'Allows to display and customize latest posts block of a selected category on frontpage. Check to display and customize the block.', $this->theme_id ), 
+                    'capability'        =>  'edit_theme_options',
+                    'panel'             =>  $this->prefix_id . '_frontpage_panel',
                 )
             );
             /*
@@ -73,8 +49,9 @@ if ( ! class_exists( 'WonKode_Customize_Categorized_Latest_Posts' ) ) {
             $wp_customize->add_setting(
                 $this->prefix_id . '_front_categorized_latest_posts_enabled',
                 array(
-                    'default'			=>	0,
+                    'default'			=>	WK_DEFAULTS['_front_categorized_latest_posts_enabled'],
                     'sanitize_callback'	=>	array( 'WonKode_Sanitize', 'checkbox' ),
+                    'transport'			=>	'postMessage',
                 )
             );
 
@@ -84,7 +61,7 @@ if ( ! class_exists( 'WonKode_Customize_Categorized_Latest_Posts' ) ) {
                 $wp_customize,
                 $this->prefix_id . '_front_categorized_latest_posts_enabled',
                     array(
-                        'section'		=>	$this->prefix_id . '_frontpage_section',
+                        'section'		=>	$this->prefix_id . '_customize_section_categorized_latest_posts',
                         'label'			=>	esc_html__( 'Enable Categorized Posts Block', $this->theme_id ),
                         'settings'		=>	$this->prefix_id . '_front_categorized_latest_posts_enabled',
                         'type'			=>	'checkbox',
@@ -108,7 +85,7 @@ if ( ! class_exists( 'WonKode_Customize_Categorized_Latest_Posts' ) ) {
                         $wp_customize, $this->prefix_id . '_front_categorized_latest_posts_category', 
                         array(
                             'label'				=>	esc_html__( 'Select category of posts', $this->theme_id ),
-                            'section'			=>	$this->prefix_id . '_frontpage_section',
+                            'section'			=>	$this->prefix_id . '_customize_section_categorized_latest_posts',
                             'settings'			=>	$this->prefix_id . '_front_categorized_latest_posts_category',
                             'type'            	=>	'dropdown-category',
                             'active_callback'	=>	array( $this, 'section_display_enabled' ),
@@ -134,7 +111,7 @@ if ( ! class_exists( 'WonKode_Customize_Categorized_Latest_Posts' ) ) {
                     $this->prefix_id . '_num_of_front_categorized_latest_posts',
                     array(
                         'label'				=>	esc_html__('Number of posts', $this->theme_id),
-                        'section'			=>	$this->prefix_id . '_frontpage_section',
+                        'section'			=>	$this->prefix_id . '_customize_section_categorized_latest_posts',
                         'settings'			=>	$this->prefix_id . '_num_of_front_categorized_latest_posts',
                         'active_callback'	=>	array( $this, 'section_display_enabled' ),
                         'type' 				=>	'number',
@@ -158,7 +135,7 @@ if ( ! class_exists( 'WonKode_Customize_Categorized_Latest_Posts' ) ) {
                     $this->prefix_id . '_front_categorized_latest_posts_section_title', 
                     array(
                         'label'				=>	esc_html__( 'Section title: ', $this->theme_id ),
-                        'section'			=> 	$this->prefix_id . '_frontpage_section',
+                        'section'			=> 	$this->prefix_id . '_customize_section_categorized_latest_posts',
                         'settings'			=>	$this->prefix_id . '_front_categorized_latest_posts_section_title',
                         'active_callback'	=>	array( $this, 'section_display_enabled' ),
                     )
@@ -181,7 +158,7 @@ if ( ! class_exists( 'WonKode_Customize_Categorized_Latest_Posts' ) ) {
                     $this->prefix_id . '_front_categorized_latest_posts_section_bg_color', 
                     array(
                         'label'				=> 	esc_html__( 'Section Background Color', $this->theme_id ),
-                        'section'			=> 	$this->prefix_id . '_frontpage_section',
+                        'section'			=> 	$this->prefix_id . '_customize_section_categorized_latest_posts',
                         'settings'			=> 	$this->prefix_id . '_front_categorized_latest_posts_section_bg_color',
                         'active_callback'	=>	array( $this, 'section_display_enabled' ),
                     ) 
@@ -203,7 +180,7 @@ if ( ! class_exists( 'WonKode_Customize_Categorized_Latest_Posts' ) ) {
                     $this->prefix_id . '_front_categorized_latest_posts_section_title_color', 
                     array(
                         'label'				=> 	esc_html__( 'Section Heading Color', $this->theme_id ),
-                        'section'			=> 	$this->prefix_id . '_frontpage_section',
+                        'section'			=> 	$this->prefix_id . '_customize_section_categorized_latest_posts',
                         'settings'			=> 	$this->prefix_id . '_front_categorized_latest_posts_section_title_color',
                         'active_callback'	=>	array( $this, 'section_display_enabled' ),
                     ) 
