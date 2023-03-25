@@ -50,6 +50,9 @@ if ( ! defined( 'WK_DEFAULTS' ) ) {
         '_front_selected_posts_cols_lg'              =>  4,
         '_front_selected_post_default'       =>  '',
 
+        // categorized posts section defaults
+        '_front_categorized_latest_posts_enabled'         => false,
+
         // woocommerce customize defaults
         '_enable_woo_featured_products'         =>  false,
         '_woo_featured_products_block_title'    =>  esc_html__( 'Featured Products', WK_TXTDOM ),
