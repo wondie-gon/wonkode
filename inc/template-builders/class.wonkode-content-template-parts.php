@@ -79,7 +79,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
                 // action callback that appends icon symbols
                 add_action( self::$unique_prefix . '_append_ui_icons_symbols', array( 'WonKode_Content_Template_Parts', 'taxonomy_ui_icons_svg_symbols' ), 10 );
                 
-                // callback to get modified pot liks nav
+                // callback to get modified post links nav
                 add_action( self::$unique_prefix . '_post_navigation', array( 'WonKode_Content_Template_Parts', 'get_post_links_nav' ) );
             }
             return self::$instance;
