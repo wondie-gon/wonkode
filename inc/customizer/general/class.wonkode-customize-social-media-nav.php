@@ -47,7 +47,8 @@ if ( ! class_exists( 'WonKode_Customize_Social_Media_Nav' ) ) {
                     'default'	        => false,
                     'capability'        => 'edit_theme_options', 
                     'type'              => 'theme_mod',  
-                    'sanitize_callback'	=>	array( 'WonKode_Sanitize', 'checkbox' )
+                    'sanitize_callback'	=>	array( 'WonKode_Sanitize', 'checkbox' ),
+                    'transport'         =>  'postMessage',
                 )
             );
             $wp_customize->add_control(

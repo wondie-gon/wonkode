@@ -23,8 +23,7 @@ if ( ! class_exists( 'WonKode_Customize_Site_General' ) ) {
 
             // add action to hook to register customizer
             add_action( 'customize_register', array( $this, 'register' ) );
-            // adding live preview
-            add_action( 'customize_preview_init', array( $this, 'live_preview_js' ) );
+            
             // adding style to head
             add_action( 'wp_head', array( $this, 'style_output' ) );
         }
@@ -54,18 +53,6 @@ if ( ! class_exists( 'WonKode_Customize_Site_General' ) ) {
             // Customizer styles
             $this->generate_css( '#site-title a, #site-title, .site-description', 'color', 'header_textcolor', '#', '', false ); 
             $this->generate_css( 'body.custom-background', 'background-color', 'background_color', '#', '', false ); 
-        }
-
-        /**
-         * Enqueues JavaScript for the live settings preview
-         * 
-         * Used by hook: 'customize_preview_init'
-         * 
-         * @since 1.0
-         * @return void
-         */
-        public function live_preview_js() {
-            wp_enqueue_script( $this->theme_id . '-site-general', get_template_directory_uri() . '/inc/customizer/assets/js/site-general-preview.js', array( 'jquery', 'customize-preview' ), '', true );
         }
         
     } // ENDS -- class
