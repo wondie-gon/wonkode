@@ -24,8 +24,6 @@ if ( ! class_exists( 'WonKode_Customize_Woo_Featured_Products' ) ) {
             parent::__construct();
             // register cusomizer
             add_action( 'customize_register', array( $this, 'register' ) );
-            // adding live preview
-            add_action( 'customize_preview_init', array( $this, 'live_preview_js' ) );
         }
         /**
          * Register featured products block 
@@ -217,18 +215,6 @@ if ( ! class_exists( 'WonKode_Customize_Woo_Featured_Products' ) ) {
                     )
                 )
             );
-        }
-
-        /**
-         * Enqueues JavaScript for the live settings preview
-         * 
-         * Used by hook: 'customize_preview_init'
-         * 
-         * @since 1.0
-         * @return void
-         */
-        public function live_preview_js() {
-            wp_enqueue_script( $this->theme_id . '-woo-featured', get_template_directory_uri() . '/inc/customizer/assets/js/woo-featured-preview.js', array( 'jquery', 'customize-preview' ), '', true );
         }
 
         /**
