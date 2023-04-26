@@ -29,7 +29,13 @@ if ( ! class_exists( 'WonKode_Comments_Feature' ) ) {
          * @since 1.0
          */
         public static function init_hooks() {
+            // add hook to enable threaded comments reply
+            add_action( 'get_header', array( 'WonKode_Comments_Feature', 'enable_threaded_comments_reply' ) );
+
+            // filter to comment form defaults
             add_filter( 'comment_form_defaults', array( 'WonKode_Comments_Feature', 'get_floating_label_form_fields' ) );
+
+            // filter to comment closing note
             add_action( 'comment_form_comments_closed', array( 'WonKode_Comments_Feature', 'closed_note' ) );
         }
 
@@ -384,6 +390,20 @@ if ( ! class_exists( 'WonKode_Comments_Feature' ) ) {
              * closed
              */
             return apply_filters( 'wonkode_comments_closed_note', $closed_note );
+        }
+        /**
+         * Callback function for action that enqueues 
+         * script to enable threaded comment reply.
+         * 
+         * @since 1.0
+         * @return void 
+         */
+        public static function enable_threaded_comments_reply() {
+            if ( ! is_admin() ) {
+                if ( is_singular() && comments_open() && ( get_option('thread_comments') == 1 ) ) {
+                    wp_enqueue_script( 'comment-reply' );
+                }
+            }
         }
 
     } // ENDS -- class

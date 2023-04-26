@@ -44,19 +44,29 @@ if ( ! class_exists( 'WonKode_Selected_Posts_Section_Templates' ) ) {
          * customizer.
          * 
          * @since 1.0
-         * @param array $class_additions  Array of additional classes 
+         * @param array $args   Array of arguments for additional classes 
+         *                      and other attributes 
          *              array(
-         *                @type string 'row_class' additional classes for row 
-         *                @type string 'col_class' additional classes for post columns 
+         *                  @type string 'row_class' additional classes for row 
+         *                  @type string 'col_class' additional classes for post columns 
+         *                  @type string   'col_class_additions'    additional class. Default: ''
+         *                  @type string   'animation_classes'      class names for animation. 
+         *                                                          Default: 'wow fadeInUp'
+         *                  @type string   'animation_delay'        Data attribute value for 
+         *                                                          animation delay in seconds. 
+         *                                                          Default: '0.3s'.
          *              )
          * @return mixed|html               
          */
-        public static function main_section_content( $class_additions = array() ) {
-            $classes = wp_parse_args( 
-                $class_additions, 
+        public static function main_section_content( $args = array() ) {
+            $main_content_args = wp_parse_args( 
+                $args, 
                 array(  
                     'row_class' =>  '',
-                    'col_class' =>  '',
+                    'col_class'             =>  'col',
+                    'col_class_additions'   =>  '',
+                    'animation_classes'     =>  'wow fadeInUp',
+                    'animation_delay'       =>  '0.3s'
                 ) 
             );
             /**
@@ -71,13 +81,13 @@ if ( ! class_exists( 'WonKode_Selected_Posts_Section_Templates' ) ) {
             
             // get row-cols-*
             $row_cols_classes = "row row-cols-1 row-cols-sm-{$sm_cols} row-cols-md-{$md_cols} row-cols-lg-{$lg_cols}";
-            $row_classes = WonKode_Helper::list_classes( $row_cols_classes, $classes['col_class'] );
+            $row_classes = WonKode_Helper::list_classes( $row_cols_classes, $main_content_args['row_class'] );
             ?>
             <div class="<?php echo esc_attr( $row_classes ); ?>">
-                <?php 
-                    // post columns
-                    self::selected_posts_blocks( $classes['col_class'] );
-                ?>
+            <?php 
+                // post columns
+                self::post_content_columns( $main_content_args );
+            ?>
             </div>
             <?php
         }
@@ -86,89 +96,99 @@ if ( ! class_exists( 'WonKode_Selected_Posts_Section_Templates' ) ) {
          * Renders selected posts section title
          * 
          * @since 1.0
-         * @param string $wrapper_classes     Additional classes for section title 
-         *                                    wrapper, string separated by space.
-         * @return html/mixed Section title html.
+         * 
+         * @return void
          */
-        public static function section_title_block( $wrapper_classes = '' ) {
+        public static function section_title_block() {
             // get section title
             $section_title = get_theme_mod( self::$unique_prefix . '_front_selected_posts_section_title', self::$defaults['_front_selected_posts_section_title'] );
 
-            echo self::get_section_title_block( $section_title, $wrapper_classes );
+            self::render_section_title( $section_title );
         }
 
         /**
-         * Renders selected posts block on 
-         * front page from theme customize.
+         * Renders post columns with default column class 
+         * and additional passed class. It also includes classes 
+         * for animation, and data attribute for animation delay.
          * 
          * @since 1.0
+         * 
+         * @param array $col_args = array(
+         *      Defaults []
+         *          @type string   'col_class'              column class. Default: 'col'
+         *          @type string   'col_class_additions'    additional class. Default: ''
+         *          @type string   'animation_classes'      class names for animation. 
+         *                                                  Default: 'wow fadeInUp'
+         *          @type string   'animation_delay'        Data attribute value for 
+         *                                                  animation delay in seconds. 
+         *                                                  Default: '0.3s'.
+         *      )
+         * @return void.
          */
-        public static function selected_posts_blocks( $col_classes = '' ) {
+        public static function post_content_columns( $col_args = array() ) {
+            $args = wp_parse_args(
+                $col_args,
+                array(
+                    'col_class'             =>  'col',
+                    'col_class_additions'   =>  '',
+                    'animation_classes'     =>  'wow fadeInUp',
+                    'animation_delay'       =>  '0.3s'
+                )
+            );
+            // column classes
+            $col_additionals = array();
+            if ( ! empty( $args['col_class_additions'] ) ) {
+                $col_additionals[] = $args['col_class_additions'];
+            }
+            if ( ! empty( $args['animation_classes'] ) ) {
+                $col_additionals[] = $args['animation_classes'];
+            }
+            // list classes for wrapper column
+            $col_cls_list = WonKode_Helper::list_classes( $args['col_class'], $col_additionals );
+
+            // ---NEEDS SANITIZATION AND VALIDATION----
+            $col_data_attrs = ' data-wow-delay="' . $args['animation_delay'] . '"';
             // number of posts
             $num_of_posts = absint( get_theme_mod( self::$unique_prefix . '_num_of_front_selected_posts', self::$defaults['_num_of_front_selected_posts'] ) );
-    
-            // get column class
-            $col_classes = WonKode_Helper::list_classes( 'col', $col_classes );
-    
+            // stores post ids
+            $ids = array();
             // build the posts blocks
             for ( $i = 0; $i  < $num_of_posts; $i++ ) { 
                 // get selected post id
                 $selected_post = get_theme_mod( self::$unique_prefix . '_front_selected_post_' . $i, self::$defaults['_front_selected_post_default'] );
                 $_post_id = $selected_post ? absint( $selected_post ) : null;
-        
                 if ( null !== $_post_id ) {
-                    $_post_title = get_the_title( $_post_id );
-                    $_post_link = get_permalink( $_post_id );
-                    $_post_excerpt = get_the_excerpt( $_post_id );
-                    ?>
-                    <div id="selected-post-<?php echo $_post_id; ?>" class="<?php echo esc_attr( $col_classes ); ?>">
-                        <div class="card">
-                            <?php  
-                            if ( has_post_thumbnail( $_post_id ) ) {
-                                echo get_the_post_thumbnail( 
-                                    $_post_id, 
-                                    'medium', 
-                                    array(
-                                        'class' =>  'card-img-top',
-                                        'alt'   =>  the_title_attribute( array( 'echo'  =>  false ) ),
-                                    ) 
-                                );  
-                            }
-                            ?>
-                            <div class="card-body">
-                            <?php
-                                // card title
-                                echo sprintf(
-                                    '<h4 class="card-title"><a href="%1$s">%2$s</a></h4>',
-                                    esc_url( $_post_link ),
-                                    esc_html( $_post_title )
-                                );
-                                // the excerpt
-                                echo sprintf(
-                                    wp_kses(
-                                        __( '<p class="card-text">%s</p>', self::$txt_dom ),
-                                        array(
-                                            'p' => array(
-                                                'class' => array(),
-                                            ),
-                                        )
-                                    ),
-                                    wp_kses_post( $_post_excerpt )
-                                );
-                                // the btn link
-                                echo sprintf(
-                                    '<a class="btn-main-dark" href="%1$s">%2$s<i class="fa fa-arrow-right"></i></a>',
-                                    esc_url( $_post_link ),
-                                    __( 'View More ', self::$txt_dom )
-                                );
-                            ?>
-                            </div>
+                    $ids[] = $_post_id;
+                }
+            }
+            if ( ! empty( $ids ) ) {
+                // prepare query args
+                $qry_args = array(
+                    'post_type'             =>  'post',
+                    'post_status'           =>  'publish',
+                    'post__in'              =>  $ids,
+                    'order'                 =>  'DESC',
+                    'orderby'               =>  'date',
+                    'ignore_sticky_posts'   =>  true,
+                );
+                $query = new WP_Query( $qry_args );
+                if ( $query->have_posts() ) {
+                    while ( $query->have_posts() ) {
+                        $query->the_post();
+                        ?>
+                        <div class="<?php echo esc_attr( $col_cls_list ); ?>"<?php echo $col_data_attrs; ?>>
+                        <?php 
+                            // show post card
+                            self::show_image_overlay_post_card();
+                        ?>
                         </div>
-                    </div>
-                    <?php
+                        <?php
+                    }
+                    wp_reset_postdata();
                 }
             }
         }
+        
     } // ENDS --- class
 }
 return new WonKode_Selected_Posts_Section_Templates;

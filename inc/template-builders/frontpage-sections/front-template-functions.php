@@ -14,17 +14,104 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once dirname( __FILE__ ) . '/class.wonkode-frontpage-customize-builder.php';
 // class for selected posts section
 require_once dirname( __FILE__ ) . '/class.wonkode-selected-posts-section-templates.php';
+// class for latest posts of selected category section
+require_once dirname( __FILE__ ) . '/class.wonkode-categorized-latest-posts-section.php';
 
 /**
  * Frontpage templates action hooks
  * 
  * @since 1.0
  */
+// action hooks for selected category latest posts section
+add_action( 'wonkode_before_front_categorized_latest_posts_content', 'wonkode_open_frontpage_categorized_latest_posts_section' );
+add_action( 'wonkode_before_front_categorized_latest_posts_content', 'wonkode_frontpage_categorized_latest_posts_section_title' );
+add_action( 'wonkode_front_categorized_latest_posts_content', 'wonkode_frontpage_categorized_latest_posts_section_main_content' );
+add_action( 'wonkode_after_front_categorized_latest_posts_content', 'wonkode_close_frontpage_categorized_latest_posts_section' );
+
+// selected posts section hooks
 add_action( 'wonkode_before_front_selected_posts_content', 'wonkode_open_frontpage_selected_posts_section' );
 add_action( 'wonkode_before_front_selected_posts_content', 'wonkode_frontpage_selected_posts_section_title' );
 add_action( 'wonkode_front_selected_posts_content', 'wonkode_frontpage_selected_posts_section_main_content' );
 add_action( 'wonkode_after_front_selected_posts_content', 'wonkode_close_frontpage_selected_posts_section' );
 
+// -------selected category posts section---------------------------
+/**
+ * Defines function to open latest posts of selected category section.
+ */
+if ( ! function_exists( 'wonkode_open_frontpage_categorized_latest_posts_section' ) ) {
+  /**
+   * Callback to render before frontpage 
+   * latest posts of selected category section. Opens the section.
+   * 
+   * @since 1.0
+   */
+  function wonkode_open_frontpage_categorized_latest_posts_section() {
+    // open section container
+    WonKode_Categorized_Latest_Posts_Section::before_section_content( 'category-posts-wrapper', 'frontSelectedCategorySection' );
+  }
+}
+
+/**
+ * Defines function for latest posts of selected category section title.
+ */
+if ( ! function_exists( 'wonkode_frontpage_categorized_latest_posts_section_title' ) ) {
+  /**
+   * Callback to render frontpage 
+   * latest posts of selected category section title.
+   * 
+   * @since 1.0
+   */
+  function wonkode_frontpage_categorized_latest_posts_section_title() {
+    // section title
+    WonKode_Categorized_Latest_Posts_Section::section_title_block();
+  }
+}
+
+/**
+ * Defines function for latest posts of selected category 
+ * section main content.
+ */
+if ( ! function_exists( 'wonkode_frontpage_categorized_latest_posts_section_main_content' ) ) {
+  /**
+   * Callback to render latest posts of selected category 
+   * section main content.
+   * 
+   * @since 1.0
+   */
+  function wonkode_frontpage_categorized_latest_posts_section_main_content() {
+    ?>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+    <?php
+      // render content
+      WonKode_Categorized_Latest_Posts_Section::post_content_columns( 
+        array( 
+          'col_class_additions' => 'mb-4' 
+        ) 
+      );
+    ?>
+    </div>
+    <?php
+  }
+}
+
+/**
+ * Defines function to close latest posts of selected category section.
+ */
+if ( ! function_exists( 'wonkode_close_frontpage_categorized_latest_posts_section' ) ) {
+  /**
+   * Callback to render after frontpage 
+   * latest posts of selected category 
+   * section, closes section.
+   * 
+   * @since 1.0
+   */
+  function wonkode_close_frontpage_categorized_latest_posts_section() {
+    // close section container
+    WonKode_Categorized_Latest_Posts_Section::after_section_content();
+  }
+}
+
+// -------selected posts section---------------------------
 /**
  * Defines function to open selected posts section.
  */
@@ -71,7 +158,7 @@ if ( ! function_exists( 'wonkode_frontpage_selected_posts_section_main_content' 
     WonKode_Selected_Posts_Section_Templates::main_section_content(  
       array(
         'row_class' =>  'g-4',
-        // 'col_class' =>  ''
+        'col_class_additions' =>  'mb-4'
       )
     );
   }

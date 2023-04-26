@@ -127,7 +127,7 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
             
         }
         /**
-         * Returns an opening tag for a div element.
+         * Returns an opening tag for an html element.
          * 
          * @since 1.0
          * @param string/array $new_classes List of class to add.
@@ -139,7 +139,7 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
          * @param string $tagname           Name for html tag. Defaults: ''
          * @return mixed A div opening tag with passed attributes.
          */
-        public static function get_html_elem_open( $new_classes = '', &$old_classes = array(), $id = '', $tagname = '' ) {
+        public static function get_html_tag_open( $new_classes = '', &$old_classes = array(), $id = '', $tagname = '' ) {
             // init element
             $html = '';
             // add to existing classes
@@ -158,6 +158,7 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
             // return the tag
             return $html;
         }
+        
         /**
          * Returns column html opening tag 
          * filled with its classes and id attribtes.
@@ -271,10 +272,10 @@ if ( ! class_exists( 'WonKode_UI_Components' ) ) {
              * Get an html element opening tag using 
              * existing method, that returns a div opening tag
              * by default. 
-             * @see self::get_html_elem_open( $new_classes, $old_classes, $id, '' ) 
+             * @see self::get_html_tag_open( $new_classes, $old_classes, $id, '' ) 
              * for details.
              */
-            $open_div = self::get_html_elem_open( $new_classes, $old_classes, $id );
+            $open_div = self::get_html_tag_open( $new_classes, $old_classes, $id );
             // return the tag
             return $open_div;
         }

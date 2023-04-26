@@ -351,7 +351,7 @@ if ( ! class_exists( 'WonKode_Content_Template_Parts' ) ) {
         /**
          * Renders post excerpt with image on left side.
          * 
-         * @param string/array $wrapper_classes List of classes 
+         * @param string|array $wrapper_classes List of classes 
          *                                      for post excerpt wrapper.
          *                                      Defaults: ''
          * @return void

@@ -281,13 +281,6 @@ if ( ! class_exists( 'WonKode_Cards' ) ) {
             $args = wp_parse_args( $args, self::$card_config );
             return $args;
         }
-        
-        /**
-         * Returns post card by post id.
-         */
-        public static function get_post_card_by_id( $post = null, $args = array() ) {}
-
-
         /**
          * Returns opening tag for default card element.
          * 
@@ -425,7 +418,7 @@ if ( ! class_exists( 'WonKode_Cards' ) ) {
             // default card title classes
             $card_title_classes = array( 'card-title' );
             // get element tag
-            $card_title_elem = self::get_html_elem_open( $new_classes, $card_title_classes, '', $h_tag );
+            $card_title_elem = self::get_html_tag_open( $new_classes, $card_title_classes, '', $h_tag );
             // return opening tag
             return $card_title_elem;
         }
@@ -473,7 +466,7 @@ if ( ! class_exists( 'WonKode_Cards' ) ) {
             // default card text classes
             $card_text_classes = array( 'card-text' );
             // get element tag
-            $card_text_elem = self::get_html_elem_open( $new_classes, $card_text_classes, '', 'p' );
+            $card_text_elem = self::get_html_tag_open( $new_classes, $card_text_classes, '', 'p' );
             // return opening tag
             return $card_text_elem;
         }

@@ -333,4 +333,50 @@ if ( ! function_exists( 'wonkode_post_nav_link_filter' ) ) {
 	}
 }
 
+/**
+ * Filter to modify default excerpt length
+ */
+add_filter( 'excerpt_length', 'wonkode_modified_excerpt_length', 999 );
+
+if ( ! function_exists( 'wonkode_modified_excerpt_length' ) ) {
+	/**
+	 * Callback that filters the maximum 
+	 * number of words in a post excerpt.
+	 * 
+	 * @since 1.0
+	 * 
+	 * @param int $length 	The maximum number of words. Default 55
+	 * @return int 			Modified number of words on frontpage. 
+	 * 						The default on other pages.
+	 */
+	function wonkode_modified_excerpt_length( $length ) {
+		if ( is_front_page() && is_home() ) {
+			return 20;
+		} else {
+			return $length;
+		}
+	}
+}
+
+/**
+ * Custom filter that modifies excerpt ellipses 
+ * from [...] to ...
+ */
+add_filter( 'excerpt_more', 'wonkode_excerpt_more_ellipses' );
+
+if ( ! function_exists( 'wonkode_excerpt_more_ellipses' ) ) {
+	/**
+	 * Callback that filters the string 
+	 * in the “more” link displayed 
+	 * after a trimmed excerpt.
+	 * 
+	 * @since 1.0
+	 * @param string $more	The string shown within the more link.
+	 * @return string 		Modified string after the trimmed excerpt.
+	 */
+	function wonkode_excerpt_more_ellipses( $more ) {
+		return "&nbsp;&hellip;";
+	}
+}
+
 
