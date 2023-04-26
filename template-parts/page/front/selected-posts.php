@@ -9,13 +9,24 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-// open section container
-WonKode_Site_Content_Area::open_section_inner_container( 'selected-posts-section' );
-    // show customized section content
-    WonKode_Selected_Posts_Section_Templates::show_section_content(  
-        array( 
-            'row_class'     =>  'g-4'
-        )
-    );
-// closing section container
-WonKode_Site_Content_Area::close_section_inner_container();
+/**
+ * Hook: wonkode_before_front_selected_posts_content.
+ * 
+ * @hooked wonkode_open_frontpage_selected_posts_section
+ * @hooked wonkode_frontpage_selected_posts_section_title
+ */
+do_action( 'wonkode_before_front_selected_posts_content' );
+
+/**
+ * Hook: wonkode_front_selected_posts_content.
+ * 
+ * @hooked wonkode_frontpage_selected_posts_section_main_content
+ */
+do_action( 'wonkode_front_selected_posts_content' );
+
+/**
+ * Hook: wonkode_after_front_selected_posts_content.
+ * 
+ * @hooked wonkode_close_frontpage_selected_posts_section
+ */
+do_action( 'wonkode_after_front_selected_posts_content' );
