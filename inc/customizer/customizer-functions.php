@@ -51,7 +51,9 @@ if ( ! defined( 'WK_DEFAULTS' ) ) {
         '_front_selected_post_default'       =>  '',
 
         // categorized posts section defaults
-        '_front_categorized_latest_posts_enabled'         => false,
+        '_front_categorized_latest_posts_enabled'       => false,
+        '_front_categorized_latest_posts_category'      => '0',
+        '_num_of_front_categorized_latest_posts'      => 4,
 
         // woocommerce customize defaults
         '_enable_woo_featured_products'         =>  false,

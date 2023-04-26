@@ -75,7 +75,7 @@ if ( ! class_exists( 'WonKode_Customize_Categorized_Latest_Posts' ) ) {
             $wp_customize->add_setting(
                 $this->prefix_id . '_front_categorized_latest_posts_category',
                     array(
-                        'default'			=>	'0',
+                        'default'			=>	WK_DEFAULTS['_front_categorized_latest_posts_category'],
                         'sanitize_callback'	=>	'absint',
                         )
                 );
@@ -99,7 +99,7 @@ if ( ! class_exists( 'WonKode_Customize_Categorized_Latest_Posts' ) ) {
             $wp_customize->add_setting(
                 $this->prefix_id . '_num_of_front_categorized_latest_posts',
                     array(
-                        'default'			=>	'4',
+                        'default'			=>	WK_DEFAULTS['_num_of_front_categorized_latest_posts'],
                         'transport'			=>	'refresh',
                         'sanitize_callback'	=>	array( 'WonKode_Sanitize', 'number' ),
                     )
