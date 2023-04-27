@@ -86,8 +86,8 @@ require_once WK_INC_PATH . '/template-builders/class.wonkode-site-content-area.p
 // Cards template class
 require_once WK_INC_PATH . '/template-builders/ui-classes/class.wonkode-cards.php';
 
-// frontpage builder classes loader
-require_once WK_INC_PATH . '/template-builders/front-page-sections/classes-loader.php';
+// frontpage template builders
+require_once WK_INC_PATH . '/template-builders/frontpage-sections/front-template-functions.php';
 
 // class for content template parts
 require_once WK_INC_PATH . '/template-builders/class.wonkode-content-template-parts.php';
