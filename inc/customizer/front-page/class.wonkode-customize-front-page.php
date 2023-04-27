@@ -57,7 +57,12 @@ if ( ! class_exists( 'WonKode_Customize_Front_Page' ) ) {
         public function load_customizers() {
             // categorized latest posts
             require_once WK_CUSTOMIZER_PATH . '/front-page/class.wonkode-customize-categorized-latest-posts.php';
+
+            // latest posts
             require_once WK_CUSTOMIZER_PATH . '/front-page/class.wonkode-customize-selected-posts-section.php';
+            
+            // custom carousel section
+            require_once WK_CUSTOMIZER_PATH . '/front-page/class.wonkode-customize-bs-custom-carousel-section.php';
         }
         
     } // ENDS -- class
