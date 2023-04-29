@@ -24,7 +24,7 @@ if ( ! class_exists( 'WonKode_Selected_Posts_Section_Templates' ) ) {
          * 
          * @since 1.0
          * @param string|array $new_classes List of class to add. Defaults: ''
-         * @param string $id                Value for id attribute for card.
+         * @param string $id                Value for id attribute for section.
          *                                  Defaults: ''
          * @return void
          */

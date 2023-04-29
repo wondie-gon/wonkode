@@ -28,7 +28,7 @@ if ( ! class_exists( 'WonKode_Categorized_Latest_Posts_Section' ) ) {
          * 
          * @since 1.0
          * @param string|array $new_classes List of class to add. Defaults: ''
-         * @param string $id                Value for id attribute for card.
+         * @param string $id                Value for id attribute for section.
          *                                  Defaults: ''
          * @return void
          */
