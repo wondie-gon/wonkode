@@ -26,7 +26,7 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
             add_action( 'customize_register', array( $this, 'register' ) );
 
             // styles output action hook
-            if ( is_front_page() ) {
+            if ( is_front_page() && $this->carousel_section_enabled( $this->theme_id . '_enable_bs_carousel' ) ) {
                 add_action( 'wp_head', array( $this, 'style_output' ) );
             }
         }
@@ -59,7 +59,7 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
             $wp_customize->add_setting(
                 $this->prefix_id . '_enable_bs_carousel',
                 array(
-                    'default'			=>	true,
+                    'default'			=>	WK_DEFAULTS['_enable_bs_carousel'],
                     'sanitize_callback'	=>	array( 'WonKode_Sanitize', 'checkbox' ),
                 )
             );
@@ -84,7 +84,7 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
             $wp_customize->add_setting(
                 $this->prefix_id . '_number_of_custom_carousel_items',
                     array(
-                        'default'			=>	'3',
+                        'default'			=>	WK_DEFAULTS['_number_of_custom_carousel_items'],
                         'sanitize_callback'	=>	array( 'WonKode_Sanitize', 'number' ),
                         'transport'			=>	'refresh',
                     )
@@ -116,7 +116,7 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
          * @param object $wp_customize Customizer reference.
          */
         public function custom_carousel_settings( $wp_customize ) {
-            $num_of_slides = absint( get_theme_mod( $this->prefix_id . '_number_of_custom_carousel_items', '3' ) );
+            $num_of_slides = absint( get_theme_mod( $this->prefix_id . '_number_of_custom_carousel_items', WK_DEFAULTS['_number_of_custom_carousel_items'] ) );
 
             $i = 0;
 
@@ -148,7 +148,7 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
                 $wp_customize->add_setting(
                     $this->prefix_id . '_custom_carousel_top_caption_title_' . $i,
                         array(
-                            'default'			=>	'',
+                            'default'			=>	WK_DEFAULTS['_custom_carousel_top_caption_title_'],
                             'transport'			=>	'refresh',
                             'sanitize_callback'	=>	'sanitize_text_field',
                         )
@@ -171,7 +171,7 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
                 $wp_customize->add_setting(
                     $this->prefix_id . '_custom_carousel_top_caption_text_' . $i,
                         array(
-                            'default'			=>	'',
+                            'default'			=>	WK_DEFAULTS['_custom_carousel_top_caption_text_'],
                             'transport'			=>	'refresh',
                             'sanitize_callback'	=>	'sanitize_textarea_field',
                         )
@@ -199,7 +199,7 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
                 $wp_customize->add_setting(
                     $this->prefix_id . '_custom_carousel_bottom_caption_title_' . $i,
                         array(
-                            'default'			=>	'',
+                            'default'			=>	WK_DEFAULTS['_custom_carousel_bottom_caption_title_'],
                             'transport'			=>	'refresh',
                             'sanitize_callback'	=>	'sanitize_text_field',
                         )
@@ -222,7 +222,7 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
                 $wp_customize->add_setting(
                     $this->prefix_id . '_custom_carousel_bottom_caption_text_' . $i,
                         array(
-                            'default'			=>	'',
+                            'default'			=>	WK_DEFAULTS['_custom_carousel_bottom_caption_text_'],
                             'transport'			=>	'refresh',
                             'sanitize_callback'	=>	'sanitize_textarea_field',
                         )
@@ -250,7 +250,7 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
                 $wp_customize->add_setting(
                     $this->prefix_id . '_custom_carousel_link_' . $i,
                         array(
-                            'default'			=>	'',
+                            'default'			=>	WK_DEFAULTS['_custom_carousel_link_'],
                             'sanitize_callback'	=>	'esc_url_raw',
                         )
                     );
@@ -272,7 +272,7 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
                 $wp_customize->add_setting(
                     $this->prefix_id . '_custom_carousel_link_text_' . $i,
                     array(
-                        'default' 			=>	esc_html__( 'Meet all our coaches ', $this->theme_id ),
+                        'default' 			=>	WK_DEFAULTS['_custom_carousel_link_text_'],
                         'sanitize_callback' =>	'sanitize_text_field',
                         'transport'			=>	'refresh',
                     )
@@ -351,8 +351,8 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
             $wp_customize->add_setting( 
                 $this->prefix_id . '_custom_carousel_caption_title_color', 
                 array(
-                    'default'			=>	'#ffffff',
-                    'transport'			=> 	'postMessage',
+                    'default'			=>	WK_DEFAULTS['_custom_carousel_caption_title_color'],
+                    'transport'			=> 	'refresh',
                     'sanitize_callback'	=> 	array( 'WonKode_Sanitize', 'hex_color' ),
                 ) 
             );
@@ -373,8 +373,8 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
             $wp_customize->add_setting( 
                 $this->prefix_id . '_custom_carousel_caption_text_color', 
                 array(
-                    'default'			=>	'#ffffff',
-                    'transport'			=> 	'postMessage',
+                    'default'			=>	WK_DEFAULTS['_custom_carousel_caption_text_color'],
+                    'transport'			=> 	'refresh',
                     'sanitize_callback'	=> 	array( 'WonKode_Sanitize', 'hex_color' ),
                 ) 
             );
@@ -395,8 +395,8 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
             $wp_customize->add_setting( 
                 $this->prefix_id . '_custom_carousel_caption_link_color', 
                 array(
-                    'default'			=>	'#eeedff',
-                    'transport'			=> 	'postMessage',
+                    'default'			=>	WK_DEFAULTS['_custom_carousel_caption_link_color'],
+                    'transport'			=> 	'refresh',
                     'sanitize_callback'	=> 	array( 'WonKode_Sanitize', 'hex_color' ),
                 ) 
             );
@@ -427,15 +427,15 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
             <?php
                 // custom_carousel_caption_title_color
                 if ( ! empty( get_theme_mod( $this->prefix_id . '_custom_carousel_caption_title_color' ) ) ) {
-                    $this->generate_css( '.caption-top .section-title, .caption-bottom .small-title', 'color', $this->prefix_id . '_custom_carousel_caption_title_color' );
+                    $this->generate_css( '.caption-top .car-main-title, .caption-bottom .car-sub-title', 'color', $this->prefix_id . '_custom_carousel_caption_title_color' );
                 }
                 // custom_carousel_caption_text_color
                 if ( ! empty( get_theme_mod( $this->prefix_id . '_custom_carousel_caption_text_color' ) ) ) {
-                    $this->generate_css( '.caption-top p, .caption-bottom .small-p', 'color', $this->prefix_id . '_custom_carousel_caption_text_color' );
+                    $this->generate_css( '.caption-top .car-main-text, .caption-bottom .car-extra-text', 'color', $this->prefix_id . '_custom_carousel_caption_text_color' );
                 }
                 // custom_carousel_caption_link_color
                 if ( ! empty( get_theme_mod( $this->prefix_id . '_custom_carousel_caption_link_color' ) ) ) {
-                    $this->generate_css( '.caption-bottom .dark-bg-link, .caption-bottom a.dark-bg-link', 'color', $this->prefix_id . '_custom_carousel_caption_link_color' );
+                    $this->generate_css( '.caption-bottom .btn-outline-primary, .caption-bottom a.btn-outline-primary', 'color', $this->prefix_id . '_custom_carousel_caption_link_color' );
                 }
             ?>
             </style>
@@ -456,3 +456,5 @@ if ( ! class_exists( 'WonKode_Customize_BS_Custom_Carousel_Section' ) ) {
 
     } // End of class
 }
+// initialize class
+return new WonKode_Customize_BS_Custom_Carousel_Section;
