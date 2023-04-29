@@ -55,6 +55,19 @@ if ( ! defined( 'WK_DEFAULTS' ) ) {
         '_front_categorized_latest_posts_category'      => '0',
         '_num_of_front_categorized_latest_posts'      => 4,
 
+        // Bootstrap custom carousel customize defaults
+        '_enable_bs_carousel'  =>  false,
+        '_number_of_custom_carousel_items'  =>  4,
+        '_custom_carousel_top_caption_title_'   =>  esc_html__( 'Carousel Item Top Title', WK_TXTDOM ),
+        '_custom_carousel_top_caption_text_'   =>  '',
+        '_custom_carousel_bottom_caption_title_'   =>  esc_html__( 'Bottom caption sub-title', WK_TXTDOM ),
+        '_custom_carousel_bottom_caption_text_'   =>  esc_html__( 'Bottom caption text', WK_TXTDOM ),
+        '_custom_carousel_link_'   =>  '',
+        '_custom_carousel_link_text_'   =>  esc_html__( 'View More', WK_TXTDOM ),
+        '_custom_carousel_caption_title_color'   =>  '#ffffff',
+        '_custom_carousel_caption_text_color'   =>  '#ffffff',
+        '_custom_carousel_caption_link_color'   =>  '#eeedff',
+
         // woocommerce customize defaults
         '_enable_woo_featured_products'         =>  false,
         '_woo_featured_products_block_title'    =>  esc_html__( 'Featured Products', WK_TXTDOM ),
