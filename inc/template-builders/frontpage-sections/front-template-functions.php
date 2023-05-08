@@ -34,6 +34,68 @@ add_action( 'wonkode_before_front_selected_posts_content', 'wonkode_frontpage_se
 add_action( 'wonkode_front_selected_posts_content', 'wonkode_frontpage_selected_posts_section_main_content' );
 add_action( 'wonkode_after_front_selected_posts_content', 'wonkode_close_frontpage_selected_posts_section' );
 
+// Custom Bootstrap carousel section hooks
+add_action( 'wonkode_before_custom_bs_carousel_content', 'wonkode_open_custom_bs_carousel_section' );
+add_action( 'wonkode_custom_bs_carousel_content', 'wonkode_custom_bs_carousel_section_main_content' );
+add_action( 'wonkode_after_custom_bs_carousel_content', 'wonkode_close_custom_bs_carousel_section' );
+
+
+// -------Custom Bootstrap carousel section---------------------------
+/**
+ * Defines function that opens custom carousel section.
+ */
+if ( ! function_exists( 'wonkode_open_custom_bs_carousel_section' ) ) {
+  /**
+   * Callback to render before custom carousel block. Opens the section.
+   * 
+   * @since 1.0
+   */
+  function wonkode_open_custom_bs_carousel_section() {
+    // open section container
+    WonKode_Custom_BS_Carousel_Section::before_section_content( 'custom-carousel-section', 'customBsCarouselSection' );
+  }
+}
+
+/**
+ * Defines function for custom carousel
+ * section main content.
+ */
+if ( ! function_exists( 'wonkode_custom_bs_carousel_section_main_content' ) ) {
+  /**
+   * Callback to render custom carousel
+   * section main content.
+   * 
+   * @since 1.0
+   */
+  function wonkode_custom_bs_carousel_section_main_content() {
+    // render content
+    WonKode_Custom_BS_Carousel_Section::render_carousel_block( 
+      array( 
+        'carousel_id'   =>  'frontCustomBsCarousel',
+        'carousel_new_classes'   =>  'custom-bs-carousel',
+        'inner_carousel_new_classes'   =>  '',
+      ) 
+    );
+  }
+}
+
+/**
+ * Defines function that closes custom carousel section.
+ */
+if ( ! function_exists( 'wonkode_close_custom_bs_carousel_section' ) ) {
+  /**
+   * Callback to render after custom carousel
+   * section. 
+   * Closes section.
+   * 
+   * @since 1.0
+   */
+  function wonkode_close_custom_bs_carousel_section() {
+    // close section container
+    WonKode_Custom_BS_Carousel_Section::after_section_content();
+  }
+}
+
 // -------selected category posts section---------------------------
 /**
  * Defines function to open latest posts of selected category section.
