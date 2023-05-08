@@ -26,6 +26,11 @@ WonKode_Site_Content_Area::open_section_outer_container( 'bg-pure-light' );
             get_template_part( 'template-parts/page/front/woocommerce-featured-products' );
         }
 
+        // custom BS carousel section
+        if ( get_theme_mod( 'wonkode_enable_bs_carousel', WK_DEFAULTS['_enable_bs_carousel'] ) === true ) {
+            get_template_part( 'template-parts/page/front/custom-bs-carousel' );
+        }
+
         // selected category section
         if ( get_theme_mod( 'wonkode_front_categorized_latest_posts_enabled', WK_DEFAULTS['_front_categorized_latest_posts_enabled'] ) === true ) {
             get_template_part( 'template-parts/page/front/latest-category-posts' );
