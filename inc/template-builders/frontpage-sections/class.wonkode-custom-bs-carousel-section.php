@@ -46,6 +46,55 @@ if ( ! class_exists( 'WonKode_Custom_BS_Carousel_Section' ) ) {
         }
 
         /**
+         * Renders the main content of customized 
+         * carousel block.
+         * 
+         * @since 1.0
+         * 
+         * @param array $args   Array of arguments to display carousel 
+         *              array(
+         *                  @type string 'carousel_id'                  Id for carousel. Default: ''.
+         *                  @type string 'carousel_new_classes'         Additional class for carousel. 
+         *                                                              Default: ''.
+         *                  @type string 'inner_carousel_new_classes'   Additional class for 
+         *                                                              carousel inner wrapping 
+         *                                                              carousel items. Default: ''
+         *              )
+         * @return void
+         */
+        public static function render_carousel_block( $args = array() ) {
+            // parse arguments
+            $args = wp_parse_args( 
+                $args, 
+                array(
+                    'carousel_id'   =>  '',
+                    'carousel_new_classes'   =>  '',
+                    'inner_carousel_new_classes'   =>  '',
+                ) 
+            );
+
+            // set id for carousel
+            $args['carousel_id'] = ( ! empty( $args['carousel_id'] ) ) ? esc_attr( $args['carousel_id'] ) : self::$unique_prefix . 'BsCustomCar';
+            // number of sliders
+            $num_of_slides = absint( get_theme_mod( self::$unique_prefix . '_number_of_custom_carousel_items', self::$defaults['_number_of_custom_carousel_items'] ) );
+            
+            // open carousel
+            self::open_carousel_block( $args['carousel_id'], $args['carousel_new_classes'] );
+            // indicators
+            self::carousel_indicators( $args['carousel_id'], $num_of_slides );
+
+            // render inner carousel
+            self::open_carousel_inner( $args['inner_carousel_new_classes'] );
+            self::render_carousel_items( $num_of_slides );
+            self::close_carousel_inner();
+
+            // controls
+            self::carousel_controls( $args['carousel_id'] );
+            // close carousel
+            self::close_carousel_block();
+        }
+
+        /**
          * Renders opening html for Bootstrap carousel section. 
          * 
          * @since 1.0
@@ -74,6 +123,19 @@ if ( ! class_exists( 'WonKode_Custom_BS_Carousel_Section' ) ) {
         }
 
         /**
+         * Renders Carousel indicators
+         * 
+         * @since 1.0
+         * @param string $id id attribute for carousel
+         * @param int $num Number of carousel items
+         * 
+         * @return void
+         */
+        public static function carousel_indicators( $id, $num = 0 ) {
+            echo self::get_carousel_indicators( $id, $num );
+        }
+
+        /**
          * Returns Carousel indicators
          * 
          * @since 1.0
@@ -82,20 +144,22 @@ if ( ! class_exists( 'WonKode_Custom_BS_Carousel_Section' ) ) {
          * 
          * @return html|mixed Indicators block for carousel
          */
-        public static function carousel_indicators( $id, $num = 0 ) {
+        public static function get_carousel_indicators( $id, $num = 0 ) {
+            // check items number
             $num = absint( $num );
+            // html output
             $html = '';
-            if ( empty( $id ) || $num < 1 ) {
-                return;
+            // no need for 1 slide
+            if ( $num > 1 ) {
+                $html .= '<div class="carousel-indicators">';
+                for ( $i = 0; $i < $num; $i++ ) { 
+                    $aria_label = 'Slide ' . $i + 1;
+                    $html .= '<button type="button" data-bs-target="#' . esc_attr( $id ) . '" data-bs-slide-to="' . $i . '"';
+                    $html .= $i === 0 ? ' class="active" aria-current="true"' : '';
+                    $html .= ' aria-label="' . esc_attr( $aria_label ) . '"></button>';
+                }
+                $html .= '</div>';
             }
-            $html .= '<div class="carousel-indicators">';
-            for ( $i = 0; $i < $num; $i++ ) { 
-                $aria_label = 'Slide ' . $i + 1;
-                $html .= '<button type="button" data-bs-target="#' . esc_attr( $id ) . '" data-bs-slide-to="' . $i . '"';
-                $html .= $i === 0 ? ' class="active" aria-current="true"' : '';
-                $html .= ' aria-label="' . esc_attr( $aria_label ) . '"></button>';
-            }
-            $html .= '</div>';
             // return indicators
             return $html;
         }
@@ -117,17 +181,23 @@ if ( ! class_exists( 'WonKode_Custom_BS_Carousel_Section' ) ) {
         }
 
         /**
-         * Renders carousel items.
+         * Renders carousel items iterating by the passed 
+         * number of items.
          * 
          * @since 1.0
          * 
+         * @param int $items_num    Integer for the number of carousel 
+         *                          items to display. Default = 0
          * @return void
          */
-        public static function render_carousel_items() {
+        public static function render_carousel_items( $items_num = 0 ) {
             // number of sliders
-            $num_of_slides = absint( get_theme_mod( self::$unique_prefix . '_number_of_custom_carousel_items', self::$defaults['_number_of_custom_carousel_items'] ) );
+            // $num_of_slides = absint( get_theme_mod( self::$unique_prefix . '_number_of_custom_carousel_items', self::$defaults['_number_of_custom_carousel_items'] ) );
+            
+            // number of carousel items
+            $itemsNum = ! is_int( $items_num ) ? (int) $items_num : absint( $items_num );
             // loop through carousel items
-            for ( $i = 0; $i < $num_of_slides; $i++ ) { 
+            for ( $i = 0; $i < $itemsNum; $i++ ) { 
                 // caption title
                 $top_title = esc_html( get_theme_mod( self::$unique_prefix . '_custom_carousel_top_caption_title_' . $i, self::$defaults['_custom_carousel_top_caption_title_'] ) );
                 $top_text = get_theme_mod( self::$unique_prefix . '_custom_carousel_top_caption_text_' . $i, self::$defaults['_custom_carousel_top_caption_text_'] );
@@ -210,7 +280,7 @@ if ( ! class_exists( 'WonKode_Custom_BS_Carousel_Section' ) ) {
          * @return void
          */
         public static function carousel_controls( $carousel_id = '' ) {
-            // $id = ( ! empty( $carousel_id ) ) ? esc_attr( $carousel_id ) : self::$unique_prefix . 'BsCustomCar';
+            // set value for carousel target attribute
             $carousel_target = '#' . esc_attr( $carousel_id );
             ?>
             <button class="carousel-control-prev" type="button" data-bs-target="<?php echo $carousel_target; ?>" data-bs-slide="prev">
